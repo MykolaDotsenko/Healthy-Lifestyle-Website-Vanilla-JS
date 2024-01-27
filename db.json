@@ -1,0 +1,26 @@
+{
+  "menu": [
+    {
+      "img": "img/tabs/vegy.jpg",
+      "altimg": "vegy",
+      "title": "Fitness Menu",
+      "descr": "The 'Fitness' Menu is a new approach to preparing dishes: more fresh vegetables and fruits. It's a product for active and healthy individuals. This is an entirely new product with an optimal price and high quality!",
+      "price": 9
+    },
+    {
+      "img": "img/tabs/post.jpg",
+      "altimg": "post",
+      "title": "Vegetarian Menu",
+      "descr": "The 'Vegetarian' Menu involves a careful selection of ingredients: complete absence of animal products, almond, oat, coconut, or buckwheat milk, the right amount of protein through tofu and imported vegetarian steaks.",
+      "price": 14
+    },
+    {
+      "img": "img/tabs/elite.jpg",
+      "altimg": "elite",
+      "title": "Premium Menu",
+      "descr": "In the 'Premium' Menu, we use not only beautiful packaging design but also high-quality dish execution. Red fish, seafood, fruits - a restaurant menu without going to a restaurant!",
+      "price": 21
+    }
+  ],
+  "requests": []
+}

@@ -88,6 +88,10 @@ The original JPEG binaries remain source assets because the connected GitHub API
 
 The live page is explicitly positioned as **NourishFlow**, a portfolio product concept rather than a functioning meal-delivery company. Fake social links, hard-coded public phone numbers, and delivery-business claims were removed. The document includes a focused title/description, canonical URL, Open Graph metadata, Twitter card metadata, and WebApplication structured data.
 
+## Recruiter-facing first screen
+
+The hero makes the engineering signal explicit without turning the page into a résumé: visible product positioning, zero-framework architecture, semantic/native interaction approach, 320px reflow, and the local-only privacy boundary are readable before the first interactive demo. Primary actions work as normal links without JavaScript.
+
 ## Quality checks
 
 ```bash

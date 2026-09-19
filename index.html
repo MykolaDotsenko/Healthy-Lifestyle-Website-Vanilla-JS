@@ -178,9 +178,13 @@
     <section class="calculating" id="calculator" aria-labelledby="calculator-title">
       <div class="container">
         <h2 class="title" id="calculator-title">Let's Calculate Your Daily Caloric Needs</h2>
+        <p class="calculating__guidance" id="calculator-guidance">
+          Adult estimate only. This calculator is for general information and is not medical advice.
+        </p>
+
         <div class="calculating__field">
           <fieldset class="calculating__group">
-            <legend class="calculating__subtitle">Your Gender</legend>
+            <legend class="calculating__subtitle">Sex Used by the Estimate</legend>
             <div class="calculating__choose" id="gender">
               <input
                 class="calculating__choice-input visually-hidden"
@@ -204,40 +208,61 @@
           </fieldset>
 
           <fieldset class="calculating__group">
-            <legend class="calculating__subtitle">Your Body Constitution</legend>
+            <legend class="calculating__subtitle">Your Details</legend>
             <div class="calculating__choose calculating__choose_medium">
-              <label class="visually-hidden" for="height">Height in centimeters</label>
-              <input
-                type="number"
-                id="height"
-                inputmode="numeric"
-                min="1"
-                step="1"
-                placeholder="Height (cm)"
-                class="calculating__choose-item"
-              >
+              <div class="calculating__input-group">
+                <label class="calculating__input-label" for="height">Height (cm)</label>
+                <input
+                  type="number"
+                  id="height"
+                  inputmode="decimal"
+                  min="100"
+                  max="250"
+                  step="0.1"
+                  placeholder="e.g. 180"
+                  class="calculating__choose-item"
+                  aria-describedby="calculator-guidance height-error"
+                  aria-invalid="false"
+                  required
+                >
+                <p class="calculating__error" id="height-error" hidden></p>
+              </div>
 
-              <label class="visually-hidden" for="weight">Weight in kilograms</label>
-              <input
-                type="number"
-                id="weight"
-                inputmode="decimal"
-                min="1"
-                step="0.1"
-                placeholder="Weight (kg)"
-                class="calculating__choose-item"
-              >
+              <div class="calculating__input-group">
+                <label class="calculating__input-label" for="weight">Weight (kg)</label>
+                <input
+                  type="number"
+                  id="weight"
+                  inputmode="decimal"
+                  min="30"
+                  max="350"
+                  step="0.1"
+                  placeholder="e.g. 75.5"
+                  class="calculating__choose-item"
+                  aria-describedby="calculator-guidance weight-error"
+                  aria-invalid="false"
+                  required
+                >
+                <p class="calculating__error" id="weight-error" hidden></p>
+              </div>
 
-              <label class="visually-hidden" for="age">Age in years</label>
-              <input
-                type="number"
-                id="age"
-                inputmode="numeric"
-                min="1"
-                step="1"
-                placeholder="Age"
-                class="calculating__choose-item"
-              >
+              <div class="calculating__input-group">
+                <label class="calculating__input-label" for="age">Age</label>
+                <input
+                  type="number"
+                  id="age"
+                  inputmode="numeric"
+                  min="18"
+                  max="120"
+                  step="1"
+                  placeholder="e.g. 36"
+                  class="calculating__choose-item"
+                  aria-describedby="calculator-guidance age-error"
+                  aria-invalid="false"
+                  required
+                >
+                <p class="calculating__error" id="age-error" hidden></p>
+              </div>
             </div>
           </fieldset>
 
@@ -286,14 +311,19 @@
           <div class="calculating__divider" aria-hidden="true"></div>
 
           <div class="calculating__total">
-            <span class="calculating__subtitle">Your Daily Caloric Requirement:</span>
+            <span class="calculating__subtitle">Estimated Daily Energy Requirement:</span>
             <output
               class="calculating__result"
               for="female male height weight age low small medium high"
+              aria-describedby="calculator-guidance calculator-status"
+              aria-live="polite"
             >
-              <span>2700</span> kcal
+              <span>—</span> kcal/day
             </output>
           </div>
+          <p class="calculating__status" id="calculator-status" aria-live="polite">
+            Enter your details to calculate an estimate.
+          </p>
         </div>
       </div>
     </section>

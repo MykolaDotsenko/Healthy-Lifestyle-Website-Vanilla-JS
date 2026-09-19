@@ -9,7 +9,6 @@ const sourceFiles = [
   "js/app.js",
   "js/ui/tabs.js",
   "js/ui/modal.js",
-  "js/features/timer.js",
   "js/features/menu.js",
   "js/features/forms.js",
   "js/features/carousel.js",

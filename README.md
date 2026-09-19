@@ -32,6 +32,10 @@ The existing form flow still uses the legacy local JSON API. Run it in a second 
 npm run api
 ```
 
+## Responsive CSS foundation
+
+The interface now uses a mobile-first Vanilla CSS architecture with cascade layers, design tokens, fluid containers, CSS Grid/Flexbox, `clamp()` typography/spacing, accessible focus states, reduced-motion support, and content-driven breakpoints. The layout is designed to reflow down to a 320 CSS-pixel viewport without relying on the old fixed desktop widths.
+
 ## Quality checks
 
 ```bash

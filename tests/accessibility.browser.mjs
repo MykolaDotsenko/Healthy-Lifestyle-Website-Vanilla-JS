@@ -5,6 +5,7 @@ import { chromium } from "playwright";
 const baseUrl = process.env.BASE_URL ?? "http://127.0.0.1:8080";
 const viewports = [
   { width: 320, height: 800 },
+  { width: 390, height: 844 },
   { width: 1440, height: 1000 },
 ];
 

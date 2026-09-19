@@ -3,8 +3,43 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Food</title>
+  <meta
+    name="description"
+    content="NourishFlow is an accessible nutrition UX portfolio demo built with semantic HTML, Vanilla CSS, and native JavaScript."
+  >
+  <meta name="theme-color" content="#ffffff">
+  <meta name="robots" content="index,follow">
+
+  <title>NourishFlow — Accessible Vanilla JS Nutrition Demo</title>
+
+  <link rel="canonical" href="https://mykoladotsenko.github.io/Healthy-Lifestyle-Website-Vanilla-JS/">
+  <link rel="icon" href="icons/logo.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="NourishFlow — Accessible Vanilla JS Nutrition Demo">
+  <meta
+    property="og:description"
+    content="A responsive, accessible web-platform demo with meal tabs, a calorie estimator, an accessible carousel, and local-only form UX."
+  >
+  <meta property="og:url" content="https://mykoladotsenko.github.io/Healthy-Lifestyle-Website-Vanilla-JS/">
+  <meta
+    property="og:image"
+    content="https://mykoladotsenko.github.io/Healthy-Lifestyle-Website-Vanilla-JS/img/tabs/vegy.jpg"
+  >
+  <meta name="twitter:card" content="summary_large_image">
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "NourishFlow",
+      "url": "https://mykoladotsenko.github.io/Healthy-Lifestyle-Website-Vanilla-JS/",
+      "description": "An accessible nutrition UX portfolio demo built with the native web platform.",
+      "applicationCategory": "Lifestyle",
+      "operatingSystem": "Any"
+    }
+  </script>
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -12,32 +47,22 @@
   <header class="header">
     <div class="header__left-block">
       <div class="header__logo">
-        <img src="icons/logo.svg" alt="Healthy Lifestyle" decoding="async">
+        <img src="icons/logo.svg" alt="NourishFlow" decoding="async">
       </div>
       <nav class="header__links" aria-label="Primary navigation">
-        <a href="#menu" class="header__link">Food Delivery</a>
-        <a href="#calculator" class="header__link">Second Item</a>
+        <a href="#menu" class="header__link">Meal Styles</a>
+        <a href="#calculator" class="header__link">Calorie Estimate</a>
       </nav>
     </div>
     <div class="header__right-block">
-      <button class="btn btn_white" type="button" data-modal>Contact Us</button>
+      <button class="btn btn_white" type="button" data-modal>Preview Request</button>
     </div>
   </header>
 
-  <aside class="sidepanel" aria-label="Social media">
-    <div class="sidepanel__text"><span>Social Media</span></div>
-    <div class="sidepanel__divider" aria-hidden="true"></div>
-    <span class="sidepanel__icon" aria-hidden="true">
-      <img src="icons/instagram.svg" alt="">
-    </span>
-    <span class="sidepanel__icon" aria-hidden="true">
-      <img src="icons/facebook.svg" alt="">
-    </span>
-  </aside>
 
   <main id="main-content">
     <section class="preview" aria-labelledby="main-title">
-      <h1 id="main-title" class="visually-hidden">Healthy meal delivery for an active lifestyle</h1>
+      <h1 id="main-title" class="visually-hidden">NourishFlow accessible nutrition UX demo</h1>
       <div class="bgc_blue" aria-hidden="true"></div>
       <div class="container">
         <div class="tabcontainer">
@@ -116,7 +141,7 @@
             </div>
           </div>
         </div>
-        <p class="preview__life">Live a full life!</p>
+        <p class="preview__life">Explore. Calculate. Inspect the interaction details.</p>
       </div>
     </section>
 
@@ -126,25 +151,25 @@
       <div class="bgc_y" aria-hidden="true"></div>
       <div class="container">
         <div class="offer__text">
-          <h2 class="title" id="offer-title">What Can We Offer You?</h2>
+          <h2 class="title" id="offer-title">What This Demo Demonstrates</h2>
           <p class="offer__descr">
-            Our main idea is healthy eating. It can be simple and delicious. We are not just a delivery service, we are a service! We have taken care of all the calculations of macronutrients, calories, portion volumes, and other important but boring aspects. All you have to do is enjoy the healthy, hearty, and correct food that we deliver right to your door.
+            NourishFlow is a portfolio product concept for exploring accessible, responsive interaction patterns without a framework. The interface combines meal-style comparison, a transparent calorie estimate, an accessible carousel, and a local-only request flow.
           </p>
         </div>
         <div class="offer__action">
-          <button class="btn btn_dark" type="button" data-modal>Contact Us</button>
+          <button class="btn btn_dark" type="button" data-modal>Preview Request</button>
         </div>
       </div>
 
       <div class="container">
         <div class="offer__advantages">
-          <h3>Quick and Healthy</h3>
+          <h3>Accessible by Default</h3>
           <p class="offer__advantages-text">
-            Cooking at home takes a lot of energy, time, and nerves. We deliver food for the whole day at once, and you can act as you please, without adjusting to anyone and being confident in the quality of the product!
+            Keyboard interaction, visible focus, native controls, semantic landmarks, reduced-motion support, and resilient responsive layouts are part of the product rather than afterthoughts.
           </p>
-          <h3>Proper Nutrition</h3>
+          <h3>Platform-First Engineering</h3>
           <p class="offer__advantages-text">
-            We have developed a special menu where all the nuances of proper nutrition are taken into account, from the balance of macronutrients to their preparation and ration splitting.
+            Native ES modules, CSS Grid, cascade layers, the Dialog API, browser validation, and local storage are used directly so the architecture stays easy to inspect and maintain.
           </p>
         </div>
 
@@ -338,7 +363,7 @@
     <div class="divider" aria-hidden="true"></div>
 
     <section class="menu" id="menu" aria-labelledby="menu-title">
-      <h2 class="title" id="menu-title">Our Daily Menu</h2>
+      <h2 class="title" id="menu-title">Meal Concept Cards</h2>
       <div class="menu__field">
         <div class="container" id="menu-list"></div>
       </div>
@@ -410,21 +435,22 @@
 
   <footer class="footer">
     <div class="container">
-      <div class="social">
-        <p class="subtitle">Find Us on Social Media:</p>
-        <span class="link">Instagram</span>
-        <span class="link">Facebook</span>
+      <div class="footer__about">
+        <p class="subtitle">NourishFlow</p>
+        <p class="footer__meta">
+          A semantic HTML, Vanilla CSS, and native JavaScript portfolio project focused on accessibility, maintainability, and honest product behavior.
+        </p>
       </div>
 
-      <div class="pepper" aria-hidden="true">
-        <img src="icons/veg.svg" alt="" loading="lazy" decoding="async">
-      </div>
-
-      <div class="call">
-        <p class="subtitle">Or Call Us</p>
-        <a href="tel:+380938235311" class="link">+380938235311</a>
-        <a href="tel:+358466224959" class="link">+358466224959</a>
-      </div>
+      <nav class="footer__links" aria-label="Project links">
+        <a
+          class="link"
+          href="https://github.com/MykolaDotsenko/Healthy-Lifestyle-Website-Vanilla-JS"
+        >
+          View source on GitHub
+        </a>
+        <a class="link" href="#main-content">Back to top</a>
+      </nav>
     </div>
   </footer>
 

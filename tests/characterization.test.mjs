@@ -18,6 +18,7 @@ const menu = await read("js/features/menu.js");
 const carousel = await read("js/features/carousel.js");
 const calculator = await read("js/features/calculator.js");
 const calculatorDomain = await read("js/domain/calculator.js");
+const calculatorStorage = await read("js/features/calculator-storage.js");
 
 function countMatches(value, pattern) {
   return [...value.matchAll(pattern)].length;
@@ -51,8 +52,12 @@ test("baseline timer, modal, slider, and calculator hooks remain present", () =>
   assert.match(timer, /DEFAULT_DEADLINE = "2024-03-18"/);
   assert.match(modal, /document\.querySelector\("\.modal"\)/);
   assert.match(carousel, /document\.querySelectorAll\("\.offer__slide"\)/);
-  assert.match(calculator, /localStorage\.setItem\("sex"/);
-  assert.match(calculator, /localStorage\.setItem\("ratio"/);
+  assert.match(calculator, /loadCalculatorPreferences/);
+  assert.match(calculator, /saveCalculatorPreferences/);
+  assert.match(
+    calculatorStorage,
+    /healthy-lifestyle\.calculator\.preferences/,
+  );
   assert.match(
     calculatorDomain,
     /447\.6[\s\S]*9\.2 \* input\.weightKg[\s\S]*3\.1 \* input\.heightCm[\s\S]*4\.3 \* input\.ageYears/,
@@ -72,6 +77,7 @@ test("legacy monolith patterns do not return", () => {
     carousel,
     calculator,
     calculatorDomain,
+    calculatorStorage,
   ].join("\n");
 
   assert.doesNotMatch(combined, /async function getResource\(/);

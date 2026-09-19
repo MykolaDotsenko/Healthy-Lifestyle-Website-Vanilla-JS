@@ -1,67 +1,93 @@
-const AUTO_OPEN_DELAY_MS = 300_000;
-
 export function initModal() {
-  const modal = document.querySelector(".modal");
-  const triggers = document.querySelectorAll("[data-modal]");
+  const dialog = document.querySelector("#contact-dialog");
+  const triggers = [...document.querySelectorAll("[data-modal]")];
 
-  if (!modal) {
+  if (!(dialog instanceof HTMLDialogElement)) {
     return {
       open() {},
       close() {},
+      showStatus() {},
     };
   }
 
-  let autoOpenTimerId = window.setTimeout(open, AUTO_OPEN_DELAY_MS);
+  const formView = dialog.querySelector("[data-dialog-form]");
+  const statusView = dialog.querySelector("[data-dialog-status]");
+  const statusMessage = dialog.querySelector("[data-dialog-status-message]");
+  const initialFocus = dialog.querySelector("[data-dialog-initial-focus]");
+  let returnFocusTarget = null;
 
-  function close() {
-    modal.classList.add("hide");
-    modal.classList.remove("show");
-    document.body.style.overflow = "";
+  function showForm() {
+    if (formView) {
+      formView.hidden = false;
+    }
+    if (statusView) {
+      statusView.hidden = true;
+    }
   }
 
   function open() {
-    modal.classList.add("show");
-    modal.classList.remove("hide");
-    document.body.style.overflow = "hidden";
-
-    if (autoOpenTimerId) {
-      window.clearTimeout(autoOpenTimerId);
-      autoOpenTimerId = null;
+    if (dialog.open) {
+      return;
     }
+
+    returnFocusTarget =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
+
+    showForm();
+    dialog.showModal();
+    initialFocus?.focus();
+  }
+
+  function close() {
+    if (dialog.open) {
+      dialog.close();
+    }
+  }
+
+  function showStatus(message) {
+    if (formView) {
+      formView.hidden = true;
+    }
+    if (statusView) {
+      statusView.hidden = false;
+    }
+    if (statusMessage) {
+      statusMessage.textContent = message;
+    }
+
+    if (!dialog.open) {
+      returnFocusTarget =
+        document.activeElement instanceof HTMLElement
+          ? document.activeElement
+          : null;
+      dialog.showModal();
+    }
+
+    dialog.querySelector("[data-dialog-status] [data-close]")?.focus();
   }
 
   triggers.forEach((trigger) => {
     trigger.addEventListener("click", open);
   });
 
-  modal.addEventListener("click", (event) => {
+  dialog.addEventListener("click", (event) => {
     const target = event.target;
 
-    if (target === modal || target.closest?.("[data-close]")) {
+    if (target === dialog || target.closest?.("[data-close]")) {
       close();
     }
   });
 
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && modal.classList.contains("show")) {
-      close();
+  dialog.addEventListener("close", () => {
+    showForm();
+
+    if (returnFocusTarget?.isConnected) {
+      returnFocusTarget.focus();
     }
+    returnFocusTarget = null;
   });
 
-  function openAtPageEnd() {
-    const reachedBottom =
-      window.scrollY + document.documentElement.clientHeight >=
-      document.documentElement.scrollHeight;
-
-    if (!reachedBottom) {
-      return;
-    }
-
-    open();
-    window.removeEventListener("scroll", openAtPageEnd);
-  }
-
-  window.addEventListener("scroll", openAtPageEnd, { passive: true });
-
-  return { open, close };
+  return { open, close, showStatus };
 }

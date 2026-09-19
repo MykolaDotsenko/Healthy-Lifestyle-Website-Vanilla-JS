@@ -6,10 +6,6 @@
 
 [Live demo](https://mykoladotsenko.github.io/Healthy-Lifestyle-Website-Vanilla-JS/) · [Architecture](ARCHITECTURE.md) · [Quality strategy](QUALITY.md)
 
-## Preview
-
-![NourishFlow full-page preview](docs/nourishflow-preview.png)
-
 ## Why this project exists
 
 NourishFlow is a portfolio product concept designed to demonstrate frontend fundamentals that frameworks can hide: semantic HTML, accessible interaction patterns, responsive CSS architecture, explicit state management, pure domain logic, browser APIs, and automated quality gates.
@@ -55,7 +51,7 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for boundaries and trade-offs.
 
 ## Visual direction
 
-NourishFlow uses an editorial product-engineering visual language: warm off-white canvas, deep forest primary, lime interaction accent, restrained coral detail, a serif display face for the hero, a custom CSS brand mark, numbered proof cards, and a consistent rounded-card/photo treatment. The design avoids external font requests and decorative JavaScript.
+NourishFlow keeps the character of the original healthy-lifestyle interface while polishing it for a modern portfolio: a light canvas, pale blue and yellow section fields, a restrained bright-green interaction accent, the original image-led meal selector, compact typography, and product content before implementation commentary. The redesign deliberately avoids a large recruiter-facing hero or engineering-scorecard UI; technical evidence lives in the repository documentation instead of competing with the product experience.
 
 ## Accessibility
 

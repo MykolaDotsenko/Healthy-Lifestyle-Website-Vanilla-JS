@@ -165,7 +165,7 @@ try {
       `${viewport.width}px after carousel interaction`,
     );
 
-    const contactTrigger = page.getByRole("button", { name: "Contact Us" }).first();
+    const contactTrigger = page.getByRole("button", { name: "Preview Request" }).first();
     await contactTrigger.focus();
     await contactTrigger.click();
 

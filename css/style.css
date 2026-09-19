@@ -359,7 +359,7 @@
   .footer .container {
     display: grid;
     gap: var(--space-6);
-    align-items: end;
+    align-items: start;
   }
 
   .modal {
@@ -438,10 +438,6 @@
     z-index: -1;
     block-size: 0.45rem;
     background: var(--color-accent);
-  }
-
-  .sidepanel {
-    display: none;
   }
 
   .preview__life {
@@ -808,12 +804,16 @@
     overflow-wrap: anywhere;
   }
 
-  .footer .call {
-    text-align: start;
+  .footer__meta {
+    max-inline-size: 48rem;
+    margin-block-start: var(--space-2);
+    color: rgba(255, 255, 255, 0.74);
   }
 
-  .pepper {
-    display: none;
+  .footer__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-5);
   }
 
   .modal__close {
@@ -993,15 +993,11 @@
     }
 
     .footer .container {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: minmax(0, 1fr) auto;
     }
 
-    .footer .call {
-      text-align: end;
-    }
-
-    .footer .call .link {
-      margin-inline-start: auto;
+    .footer__links {
+      justify-content: end;
     }
   }
 
@@ -1083,43 +1079,6 @@
 
     .pepper img {
       inline-size: clamp(2.5rem, 4vw, 4rem);
-    }
-  }
-
-  @media (min-width: 80rem) {
-    .sidepanel {
-      position: fixed;
-      inset-block-start: 15rem;
-      inset-inline-start: max(1rem, calc((100vw - var(--container-max)) / 2 - 4rem));
-      z-index: 5;
-      display: flex;
-      block-size: 20rem;
-      inline-size: 2rem;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .sidepanel__text {
-      inline-size: 7.5rem;
-      block-size: 7.5rem;
-      font-size: 0.875rem;
-    }
-
-    .sidepanel__text span {
-      display: flex;
-      transform: rotate(-90deg) translateX(-3rem);
-    }
-
-    .sidepanel__divider {
-      inline-size: 1px;
-      block-size: 6rem;
-      background: var(--color-text);
-    }
-
-    .sidepanel__icon {
-      inline-size: 1.5rem;
-      block-size: 1.5rem;
     }
   }
 

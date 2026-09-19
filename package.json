@@ -2,13 +2,13 @@
   "name": "healthy-lifestyle-website-vanilla-js",
   "version": "1.0.0",
   "private": true,
-  "description": "A healthy lifestyle landing page built with HTML, vanilla CSS, and vanilla JavaScript.",
+  "description": "A healthy lifestyle landing page built with semantic HTML, vanilla CSS, and vanilla JavaScript.",
   "scripts": {
     "dev": "node scripts/serve.mjs",
     "api": "json-server --watch db.json --port 3000",
-    "lint": "node --check js/script.js && node --check scripts/check-static.mjs && node --check scripts/serve.mjs && node --check tests/characterization.test.mjs",
+    "lint": "node --check js/script.js && node --check scripts/check-static.mjs && node --check scripts/serve.mjs && node --check tests/characterization.test.mjs && node --check tests/semantics.test.mjs",
     "check:static": "node scripts/check-static.mjs",
-    "test": "node --test tests/characterization.test.mjs",
+    "test": "node --test tests/characterization.test.mjs tests/semantics.test.mjs",
     "check": "npm run lint && npm run check:static && npm test"
   },
   "author": "Mykola Dotsenko",

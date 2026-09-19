@@ -25,9 +25,13 @@ try {
 
     const page = await context.newPage();
     const pageErrors = [];
+    const requestedUrls = [];
 
     page.on("pageerror", (error) => {
       pageErrors.push(error.message);
+    });
+    page.on("request", (request) => {
+      requestedUrls.push(request.url());
     });
 
     await page.goto(baseUrl, { waitUntil: "domcontentloaded" });
@@ -176,6 +180,21 @@ try {
     const modalBox = await dialog.boundingBox();
 
     assert.ok(modalBox, `${viewport.width}px: modal dialog should be visible`);
+
+    await page.locator("#modal-name").fill("Demo User");
+    await page.locator("#modal-phone").fill("+358401234567");
+    await page.getByRole("button", { name: "Preview Request" }).last().click();
+
+    assert.match(
+      (await page.locator("[data-dialog-status-message]").textContent()) ?? "",
+      /Nothing was sent or stored/,
+      `${viewport.width}px: demo form must disclose that it does not transmit data`,
+    );
+    assert.equal(
+      requestedUrls.some((url) => url.includes("localhost:3000")),
+      false,
+      `${viewport.width}px: demo form must not call the removed local API`,
+    );
     assert.ok(
       modalBox.width <= viewport.width + 1,
       `${viewport.width}px: modal width ${modalBox.width}px exceeds viewport`,

@@ -26,7 +26,7 @@ test("responsive foundation is fluid instead of desktop-fixed", () => {
 test("small-screen controls and content retain accessible sizing", () => {
   assert.match(css, /--control-min-size:\s*2\.75rem/);
   assert.match(css, /min-block-size:\s*var\(--control-min-size\)/);
-  assert.match(css, /\.carousel-indicators button\s*\{[^}]*min-block-size:\s*var\(--control-min-size\)/s);
+  assert.match(css, /\.carousel-indicator\s*\{[^}]*min-block-size:\s*var\(--control-min-size\)/s);
   assert.match(css, /:focus-visible/);
   assert.doesNotMatch(css, /outline:\s*0\s*[;}]/);
 });

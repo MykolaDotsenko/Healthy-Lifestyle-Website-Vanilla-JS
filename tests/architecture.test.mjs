@@ -15,6 +15,8 @@ const modules = [
   "js/features/forms.js",
   "js/features/carousel.js",
   "js/features/calculator.js",
+  "js/features/calculator-storage.js",
+  "js/domain/calculator.js",
 ];
 
 async function read(relativePath) {
@@ -60,13 +62,25 @@ test("feature modules remain focused and reviewable", async () => {
   }
 });
 
-test("feature modules do not form an import graph behind app.js", async () => {
+test("module dependencies stay explicit and acyclic", async () => {
+  const allowedImports = new Map([
+    [
+      "js/features/calculator.js",
+      ["../domain/calculator.js", "./calculator-storage.js"],
+    ],
+    ["js/features/calculator-storage.js", ["../domain/calculator.js"]],
+  ]);
+
   for (const modulePath of modules.slice(1)) {
     const source = await read(modulePath);
-    assert.doesNotMatch(
-      source,
-      /^import\s/m,
-      `${modulePath} should be composed by app.js rather than importing sibling features`,
+    const imports = [...source.matchAll(/from\s+["']([^"']+)["']/g)].map(
+      (match) => match[1],
+    );
+
+    assert.deepEqual(
+      imports.sort(),
+      [...(allowedImports.get(modulePath) ?? [])].sort(),
+      `${modulePath} has an unexpected dependency`,
     );
   }
 });

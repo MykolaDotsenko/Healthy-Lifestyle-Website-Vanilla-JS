@@ -85,6 +85,14 @@ test("module dependencies stay explicit and acyclic", async () => {
   }
 });
 
+test("calculator domain stays pure", async () => {
+  const domain = await read("js/domain/calculator.js");
+
+  assert.doesNotMatch(domain, /\bdocument\b/);
+  assert.doesNotMatch(domain, /\bwindow\b/);
+  assert.doesNotMatch(domain, /\blocalStorage\b/);
+});
+
 test("legacy monolith is removed", async () => {
   await assert.rejects(access(resolve(root, "js/script.js")));
 });

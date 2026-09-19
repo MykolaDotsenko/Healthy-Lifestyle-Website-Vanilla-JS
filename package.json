@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "node scripts/serve.mjs",
     "api": "json-server --watch db.json --port 3000",
-    "lint": "node --check js/script.js && node --check scripts/check-static.mjs && node --check scripts/serve.mjs && node --check tests/characterization.test.mjs && node --check tests/semantics.test.mjs && node --check tests/responsive-css.test.mjs",
+    "lint": "node --check js/script.js && node --check scripts/check-static.mjs && node --check scripts/serve.mjs && node --check tests/characterization.test.mjs && node --check tests/semantics.test.mjs && node --check tests/responsive-css.test.mjs && node --check tests/reflow.browser.mjs",
     "check:static": "node scripts/check-static.mjs",
     "test": "node --test tests/characterization.test.mjs tests/semantics.test.mjs tests/responsive-css.test.mjs",
     "check": "npm run lint && npm run check:static && npm test"

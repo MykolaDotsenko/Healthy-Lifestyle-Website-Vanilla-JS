@@ -78,6 +78,12 @@ The portfolio is intentionally static. Request forms validate with native HTML c
 
 The original 2024 countdown and 20% scarcity message were removed instead of being silently moved into the future. The replacement section communicates product principles without fabricated urgency, eliminating a stale timer module and a permanent interval from the runtime.
 
+## Loading performance
+
+The first visible meal image is the only eager raster and receives high fetch priority. Inactive tabs, carousel imagery, menu cards, and below-fold decorative imagery use native lazy loading and asynchronous decoding. Below-fold sections use `content-visibility: auto` with an intrinsic-size fallback. A repository test enforces a 400 KB eager-raster budget.
+
+The original JPEG binaries remain source assets because the connected GitHub API does not expose repository binary blobs to this workflow for safe local re-encoding; the implementation does not pretend those files were converted.
+
 ## Quality checks
 
 ```bash

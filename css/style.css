@@ -193,6 +193,16 @@
     padding-block: var(--section-space);
   }
 
+  .offer,
+  .calculating,
+  .menu,
+  .order,
+  .promotion,
+  .footer {
+    content-visibility: auto;
+    contain-intrinsic-block-size: auto 40rem;
+  }
+
   .preview {
     padding-block-start: clamp(2rem, 5vw, 4rem);
   }

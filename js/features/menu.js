@@ -4,7 +4,7 @@ const MENU_ITEMS = [
     alt: "Fresh vegetables prepared for the Fitness menu",
     title: "Fitness Menu",
     description:
-      "The Fitness Menu is a new approach to preparing dishes: more fresh vegetables and fruits. It's a product for active and healthy individuals. This is an entirely new product with an optimal price and high quality!",
+      'The "Fitness" Menu is a new approach to preparing dishes: more fresh vegetables and fruits. It\'s a product for active and healthy individuals. This is an entirely new product with an optimal price and high quality!',
     price: 9,
   },
   {
@@ -12,7 +12,7 @@ const MENU_ITEMS = [
     alt: "Plant-based Vegetarian menu",
     title: "Vegetarian Menu",
     description:
-      "The Vegetarian Menu involves a careful selection of ingredients: complete absence of animal products, almond, oat, coconut, or buckwheat milk, the right amount of protein through tofu and imported vegetarian steaks.",
+      'The "Vegetarian" Menu involves a careful selection of ingredients: complete absence of animal products, almond, oat, coconut, or buckwheat milk, the right amount of protein through tofu and imported vegetarian steaks.',
     price: 14,
   },
   {
@@ -20,7 +20,7 @@ const MENU_ITEMS = [
     alt: "Premium seafood and fruit meal",
     title: "Premium Menu",
     description:
-      "In the Premium Menu, we use not only beautiful packaging design but also high-quality dish execution. Red fish, seafood, fruits - a restaurant menu without going to a restaurant!",
+      'In the "Premium" Menu, we use not only beautiful packaging design but also high-quality dish execution. Red fish, seafood, fruits - a restaurant menu without going to a restaurant!',
     price: 21,
   },
 ];

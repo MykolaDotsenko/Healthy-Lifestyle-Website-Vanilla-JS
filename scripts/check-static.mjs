@@ -14,6 +14,8 @@ const sourceFiles = [
   "js/features/forms.js",
   "js/features/carousel.js",
   "js/features/calculator.js",
+  "js/features/calculator-storage.js",
+  "js/domain/calculator.js",
   "package.json",
   "README.md",
 ];

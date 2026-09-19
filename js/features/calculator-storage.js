@@ -17,7 +17,11 @@ function readJsonPreferences(storage) {
   }
 
   try {
-    return JSON.parse(raw);
+    const parsed = JSON.parse(raw);
+
+    return parsed?.version === DEFAULT_CALCULATOR_PREFERENCES.version
+      ? parsed
+      : null;
   } catch {
     return null;
   }

@@ -435,13 +435,19 @@
     </div>
   </footer>
 
-  <div class="modal">
-    <div class="modal__dialog">
-      <div class="modal__content">
-        <form>
-          <button class="modal__close" type="button" data-close aria-label="Close contact form">&times;</button>
-          <h2 class="modal__title">We Will Contact You as Soon as Possible!</h2>
+  <dialog
+    class="modal"
+    id="contact-dialog"
+    aria-labelledby="contact-dialog-title"
+  >
+    <div class="modal__content">
+      <button class="modal__close" type="button" data-close aria-label="Close contact dialog">&times;</button>
 
+      <div data-dialog-form>
+        <h2 class="modal__title" id="contact-dialog-title">
+          Request a Call Back
+        </h2>
+        <form>
           <label class="visually-hidden" for="modal-name">Your Name</label>
           <input
             required
@@ -451,6 +457,7 @@
             type="text"
             autocomplete="name"
             class="modal__input"
+            data-dialog-initial-focus
           >
 
           <label class="visually-hidden" for="modal-phone">Your Phone Number</label>
@@ -467,8 +474,13 @@
           <button class="btn btn_dark btn_min" type="submit">Call Me Back</button>
         </form>
       </div>
+
+      <div class="modal__status-view" data-dialog-status hidden>
+        <p class="modal__title" data-dialog-status-message role="status"></p>
+        <button class="btn btn_dark btn_min" type="button" data-close>Close</button>
+      </div>
     </div>
-  </div>
+  </dialog>
 
   <script type="module" src="js/app.js"></script>
 </body>

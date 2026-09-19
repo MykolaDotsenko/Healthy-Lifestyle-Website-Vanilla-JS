@@ -364,23 +364,24 @@
   }
 
   .modal {
-    position: fixed;
-    inset: 0;
-    z-index: 1050;
-    display: none;
-    overflow: auto;
-    padding: var(--page-gutter);
-    background: var(--color-overlay);
+    inline-size: min(calc(100% - (2 * var(--page-gutter))), 31.25rem);
+    max-inline-size: 31.25rem;
+    max-block-size: min(90vh, 42rem);
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-md);
+    background: transparent;
+    color: var(--color-text);
+    overflow: visible;
   }
 
-  .modal__dialog {
-    inline-size: min(100%, 31.25rem);
-    margin: max(1rem, 5vh) auto;
+  .modal::backdrop {
+    background: var(--color-overlay);
   }
 
   .modal__content {
     position: relative;
-    max-block-size: min(80vh, 42rem);
+    max-block-size: min(90vh, 42rem);
     overflow-y: auto;
     padding: clamp(1.5rem, 5vw, 2.5rem);
     border: 1px solid var(--color-border);
@@ -842,6 +843,16 @@
 
   .modal .btn {
     inline-size: 100%;
+  }
+
+  .modal__status-view {
+    display: grid;
+    gap: var(--space-5);
+    padding-block: var(--space-4);
+  }
+
+  .modal__status-view[hidden] {
+    display: none;
   }
 
   .carousel-indicators {

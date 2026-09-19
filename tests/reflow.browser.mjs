@@ -161,8 +161,19 @@ try {
       `${viewport.width}px after carousel interaction`,
     );
 
-    await page.getByRole("button", { name: "Contact Us" }).first().click();
-    const modalBox = await page.locator(".modal__dialog").boundingBox();
+    const contactTrigger = page.getByRole("button", { name: "Contact Us" }).first();
+    await contactTrigger.focus();
+    await contactTrigger.click();
+
+    const dialog = page.locator("#contact-dialog");
+    assert.equal(await dialog.evaluate((element) => element.open), true);
+    assert.equal(
+      await page.evaluate(() => document.activeElement?.id),
+      "modal-name",
+      `${viewport.width}px: dialog should focus the first meaningful field`,
+    );
+
+    const modalBox = await dialog.boundingBox();
 
     assert.ok(modalBox, `${viewport.width}px: modal dialog should be visible`);
     assert.ok(
@@ -175,7 +186,13 @@ try {
       `${viewport.width}px with modal open`,
     );
 
-    await page.getByRole("button", { name: "Close contact form" }).click();
+    await page.keyboard.press("Escape");
+    assert.equal(await dialog.evaluate((element) => element.open), false);
+    assert.equal(
+      await contactTrigger.evaluate((element) => document.activeElement === element),
+      true,
+      `${viewport.width}px: closing dialog should restore trigger focus`,
+    );
 
     assert.deepEqual(
       pageErrors,

@@ -27,47 +27,6 @@ function createStatusSpinner() {
   return spinner;
 }
 
-function showThanksModal(message, modal) {
-  const previousDialog = document.querySelector(".modal__dialog");
-  const modalRoot = document.querySelector(".modal");
-
-  if (!previousDialog || !modalRoot) {
-    return;
-  }
-
-  previousDialog.classList.add("hide");
-  modal.open();
-
-  const dialog = document.createElement("div");
-  dialog.className = "modal__dialog";
-
-  const content = document.createElement("div");
-  content.className = "modal__content";
-
-  const closeButton = document.createElement("button");
-  closeButton.className = "modal__close";
-  closeButton.type = "button";
-  closeButton.dataset.close = "";
-  closeButton.setAttribute("aria-label", "Close message");
-  closeButton.textContent = "×";
-
-  const status = document.createElement("p");
-  status.className = "modal__title";
-  status.setAttribute("role", "status");
-  status.textContent = message;
-
-  content.append(closeButton, status);
-  dialog.append(content);
-  modalRoot.append(dialog);
-
-  window.setTimeout(() => {
-    dialog.remove();
-    previousDialog.classList.add("show");
-    previousDialog.classList.remove("hide");
-    modal.close();
-  }, 4000);
-}
-
 function bindForm(form, modal) {
   form.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -80,13 +39,13 @@ function bindForm(form, modal) {
 
     postData(API_URL, payload)
       .then(() => {
-        showThanksModal(messages.success, modal);
-        spinner.remove();
+        modal.showStatus(messages.success);
       })
       .catch(() => {
-        showThanksModal(messages.failure, modal);
+        modal.showStatus(messages.failure);
       })
       .finally(() => {
+        spinner.remove();
         form.reset();
       });
   });

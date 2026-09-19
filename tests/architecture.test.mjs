@@ -10,7 +10,6 @@ const modules = [
   "js/app.js",
   "js/ui/tabs.js",
   "js/ui/modal.js",
-  "js/features/timer.js",
   "js/features/menu.js",
   "js/features/forms.js",
   "js/features/carousel.js",
@@ -38,7 +37,6 @@ test("composition root stays intentionally small", async () => {
 
   for (const name of [
     "initTabs",
-    "initTimer",
     "initModal",
     "renderMenu",
     "initForms",

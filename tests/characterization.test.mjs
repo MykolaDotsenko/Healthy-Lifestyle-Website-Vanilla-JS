@@ -12,7 +12,6 @@ async function read(relativePath) {
 
 const html = await read("index.html");
 const app = await read("js/app.js");
-const timer = await read("js/features/timer.js");
 const modal = await read("js/ui/modal.js");
 const menu = await read("js/features/menu.js");
 const carousel = await read("js/features/carousel.js");
@@ -47,9 +46,7 @@ test("baseline interactive surface remains intact", () => {
   );
 });
 
-test("baseline timer, modal, slider, and calculator hooks remain present", () => {
-  assert.match(app, /initTimer\(\)/);
-  assert.match(timer, /DEFAULT_DEADLINE = "2024-03-18"/);
+test("modal, slider, and calculator hooks remain present", () => {
   assert.match(modal, /document\.querySelector\("#contact-dialog"\)/);
   assert.match(carousel, /document\.querySelectorAll\("\.offer__slide"\)/);
   assert.match(calculator, /loadCalculatorPreferences/);
@@ -71,7 +68,6 @@ test("baseline timer, modal, slider, and calculator hooks remain present", () =>
 test("legacy monolith patterns do not return", () => {
   const combined = [
     app,
-    timer,
     modal,
     menu,
     carousel,
@@ -83,4 +79,5 @@ test("legacy monolith patterns do not return", () => {
   assert.doesNotMatch(combined, /async function getResource\(/);
   assert.doesNotMatch(combined, /console\.log\(/);
   assert.doesNotMatch(combined, /DOMContentLoaded/);
+  assert.doesNotMatch(combined, /setInterval\(/);
 });

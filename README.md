@@ -7,7 +7,6 @@ A healthy-lifestyle landing page built with semantic HTML, Vanilla CSS, and Vani
 ## Current feature baseline
 
 - eating-style tabs;
-- promotion countdown;
 - contact modal;
 - menu cards;
 - order/contact forms;
@@ -75,6 +74,10 @@ Contact UI uses the platform `<dialog>` element with `showModal()`/`close()`, ex
 
 The portfolio is intentionally static. Request forms validate with native HTML constraints and demonstrate the UX flow locally, but they do not transmit or persist personal data. No request payload leaves the browser. The old localhost `json-server`, `db.json`, spinner asset, and network submission path were removed rather than simulating a successful backend request.
 
+## Honest promotion state
+
+The original 2024 countdown and 20% scarcity message were removed instead of being silently moved into the future. The replacement section communicates product principles without fabricated urgency, eliminating a stale timer module and a permanent interval from the runtime.
+
 ## Quality checks
 
 ```bash
@@ -85,4 +88,4 @@ The refactor baseline now includes regression checks plus a semantic HTML founda
 
 ## Known baseline limitations
 
-The remaining major legacy behavior is the hard-coded expired promotion. Final performance, product positioning, and repository presentation are handled in later roadmap PRs.
+Expired promotion/countdown behavior has been removed rather than moved to an arbitrary future date. Final performance, product positioning, and repository presentation are handled in later roadmap PRs.

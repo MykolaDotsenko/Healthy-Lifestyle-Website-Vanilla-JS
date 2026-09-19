@@ -304,9 +304,6 @@
   .offer__advantages,
   .offer__slider,
   .promotion__text,
-  .promotion__timer {
-    min-inline-size: 0;
-  }
 
   .offer__action {
     display: flex;
@@ -505,12 +502,6 @@
     font-weight: 800;
     letter-spacing: 0.07em;
     text-transform: uppercase;
-  }
-
-  .preview__life {
-    margin-block-start: var(--space-5);
-    font-size: 1.125rem;
-    font-weight: 700;
   }
 
   .bgc_blue {
@@ -1146,14 +1137,6 @@
 
     .footer .container {
       grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-    }
-
-    .pepper {
-      display: block;
-    }
-
-    .pepper img {
-      inline-size: clamp(2.5rem, 4vw, 4rem);
     }
   }
 

@@ -65,7 +65,7 @@ CI runs axe against mobile and desktop states and exercises the critical journey
 
 ## Performance
 
-The initial page keeps only one authored raster eager. Inactive tabs, carousel media, and generated menu images use browser-native lazy loading and asynchronous decoding. Below-fold sections use `content-visibility: auto`.
+The initial page keeps only one authored raster eager. Inactive tabs, carousel media, and generated menu images use browser-native lazy loading and asynchronous decoding. The CSS deliberately avoids section-level rendering skips so accessibility and visual state remain deterministic.
 
 A repository test enforces the current eager-raster budget. The original JPEG source assets remain an explicit optimization opportunity for future AVIF/WebP conversion.
 

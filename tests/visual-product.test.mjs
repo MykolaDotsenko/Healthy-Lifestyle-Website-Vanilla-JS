@@ -10,36 +10,35 @@ const [html, css] = await Promise.all([
   readFile(resolve(root, "css/style.css"), "utf8"),
 ]);
 
-test("first screen communicates product and engineering value directly", () => {
-  assert.match(html, /<h1 id="main-title">Nutrition UX, built on the web platform\.<\/h1>/);
-  assert.match(html, /Zero-framework frontend portfolio project/);
-  assert.match(html, /ES modules \+ pure domain logic/);
-  assert.match(html, /320px reflow/);
-  assert.match(html, /No personal data transmitted/);
-  assert.doesNotMatch(html, /id="main-title" class="visually-hidden"/);
+test("first screen is product-first rather than portfolio-meta UI", () => {
+  assert.match(html, /id="main-title" class="visually-hidden"/);
+  assert.match(html, /class="tabcontainer"/);
+  assert.match(html, /class="preview__life"/);
+  assert.doesNotMatch(html, /class="preview__intro"/);
+  assert.doesNotMatch(html, /class="preview__proof"/);
+  assert.doesNotMatch(html, /Zero-framework frontend portfolio project/);
 });
 
-test("hero exposes two useful next actions without JavaScript dependency", () => {
-  assert.match(html, /href="#calculator">Try the calculator<\/a>/);
-  assert.match(html, /href="https:\/\/github\.com\/MykolaDotsenko\/Healthy-Lifestyle-Website-Vanilla-JS"/);
+test("header restores the original lightweight NourishFlow logo treatment", () => {
+  assert.match(html, /class="header__logo"/);
+  assert.match(html, /src="icons\/logo\.svg"/);
+  assert.doesNotMatch(html, /class="brand__mark"/);
 });
 
-test("hero layout remains fluid rather than viewport-sized", () => {
-  assert.match(css, /\.preview__intro\s*\{/);
-  assert.match(css, /grid-template-columns: minmax\(0, 1\.2fr\) minmax\(20rem, 0\.8fr\)/);
-  assert.doesNotMatch(css, /\.preview__intro[^}]*100vh/s);
-});
-
-
-test("art direction exposes a coherent brand system without external font requests", () => {
-  assert.match(html, /class="brand"/);
-  assert.match(html, /class="brand__mark"/);
-  assert.match(html, />NourishFlow<\/strong>/);
-  assert.match(css, /--font-display:/);
-  assert.match(css, /--color-brand:\s*#1f6847/);
-  assert.match(css, /--color-coral:\s*#e78368/);
-  assert.match(css, /\.preview::before/);
-  assert.match(css, /counter-reset:\s*proof/);
-  assert.match(css, /font-family:\s*var\(--font-display\)/);
+test("restored visual system keeps the original light product language", () => {
+  assert.match(css, /--color-surface:\s*#ffffff/);
+  assert.match(css, /--color-surface-blue:\s*rgba\(146, 242, 255, 0\.18\)/);
+  assert.match(css, /--color-surface-yellow:\s*rgba\(249, 254, 126, 0\.28\)/);
+  assert.match(css, /--color-accent:\s*#54ed39/);
+  assert.match(css, /\.bgc_blue\s*\{/);
+  assert.match(css, /\.offer \.bgc_y\s*\{/);
   assert.doesNotMatch(css, /fonts\.googleapis\.com/);
+});
+
+test("visual polish stays responsive and accessible", () => {
+  assert.match(css, /--page-gutter:\s*clamp\(/);
+  assert.match(css, /--control-min-size:\s*2\.75rem/);
+  assert.match(css, /:focus-visible/);
+  assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
+  assert.match(css, /@media \(forced-colors: active\)/);
 });

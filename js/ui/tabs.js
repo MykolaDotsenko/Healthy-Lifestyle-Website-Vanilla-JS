@@ -26,7 +26,7 @@ export function initTabs() {
   }
 
   tabList.addEventListener("click", (event) => {
-    const target = event.target.closest(".tabheader__item");
+    const target = event.target.closest?.(".tabheader__item");
 
     if (!target || !tabList.contains(target)) {
       return;

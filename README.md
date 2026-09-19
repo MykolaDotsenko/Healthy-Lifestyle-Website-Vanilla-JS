@@ -65,6 +65,10 @@ The calorie estimator keeps formula and validation logic independent from the DO
 
 The current formula is preserved for continuity. The UI labels the result as an adult general-information estimate rather than medical advice.
 
+## Accessible tabs
+
+The eating-style selector implements the WAI-ARIA tabs pattern with one roving tab stop, explicit `tablist/tab/tabpanel` semantics, automatic activation, vertical `ArrowUp/ArrowDown` navigation, and `Home/End` shortcuts.
+
 ## Quality checks
 
 ```bash

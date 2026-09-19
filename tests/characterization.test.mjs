@@ -12,6 +12,7 @@ async function read(relativePath) {
 
 const html = await read("index.html");
 const app = await read("js/app.js");
+const timer = await read("js/features/timer.js");
 const modal = await read("js/ui/modal.js");
 const menu = await read("js/features/menu.js");
 const carousel = await read("js/features/carousel.js");
@@ -68,6 +69,7 @@ test("modal, slider, and calculator hooks remain present", () => {
 test("legacy monolith patterns do not return", () => {
   const combined = [
     app,
+    timer,
     modal,
     menu,
     carousel,

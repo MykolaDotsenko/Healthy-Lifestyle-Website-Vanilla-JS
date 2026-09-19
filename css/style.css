@@ -340,17 +340,6 @@
     gap: clamp(2rem, 6vw, 5rem);
   }
 
-  .promotion__timer {
-    display: grid;
-    gap: var(--space-5);
-  }
-
-  .timer {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-3);
-  }
-
   .footer {
     background: var(--color-dark);
     color: var(--color-surface);
@@ -763,36 +752,37 @@
     block-size: 70%;
   }
 
-  .promotion__descr strong {
-    color: var(--color-text);
-    font-size: 1.25rem;
+  .promotion__eyebrow {
+    margin-block-end: var(--space-3);
+    color: var(--color-text-muted);
+    font-size: 0.8125rem;
     font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
 
-  .promotion__timer .title {
-    text-align: start;
-  }
-
-  .timer__block {
+  .promotion__principles {
     display: grid;
-    min-block-size: 6.5rem;
-    place-items: center;
-    align-content: center;
-    padding: var(--space-3);
+    gap: var(--space-3);
+  }
+
+  .promotion__principle {
+    display: grid;
+    gap: var(--space-1);
+    padding: var(--space-4);
     border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
     background: var(--color-surface);
     box-shadow: var(--shadow-sm);
-    text-align: center;
   }
 
-  .timer__block span {
-    display: block;
-    margin-block-end: var(--space-1);
-    font-size: clamp(2rem, 7vw, 3.5rem);
-    font-weight: 800;
-    font-variant-numeric: tabular-nums;
-    line-height: 1;
+  .promotion__principle strong {
+    font-size: 1rem;
+  }
+
+  .promotion__principle span {
+    color: var(--color-text-muted);
+    font-size: 0.9375rem;
   }
 
   .footer .subtitle {
@@ -992,10 +982,6 @@
       justify-self: center;
     }
 
-    .timer {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-
     .footer .container {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -1075,10 +1061,6 @@
     .promotion .container {
       grid-template-columns: minmax(0, 1fr) minmax(26rem, 1fr);
       align-items: start;
-    }
-
-    .promotion__timer .title {
-      text-align: end;
     }
 
     .footer .container {
@@ -1172,7 +1154,6 @@
     .btn,
     .tabheader__item,
     .calculating__choose-item,
-    .timer__block,
     .menu__item {
       border: 1px solid ButtonText;
     }

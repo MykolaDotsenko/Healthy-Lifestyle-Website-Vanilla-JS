@@ -749,6 +749,7 @@
     inline-size: fit-content;
     min-block-size: var(--control-min-size);
     padding-block: 0.65rem;
+    overflow-wrap: anywhere;
   }
 
   .footer .call {
@@ -796,7 +797,7 @@
   }
 
   .carousel-indicators button {
-    min-block-size: 1.75rem;
+    min-block-size: var(--control-min-size);
   }
 }
 
@@ -961,7 +962,7 @@
     }
 
     .order__form {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto auto;
     }
 
     .order__form > img {

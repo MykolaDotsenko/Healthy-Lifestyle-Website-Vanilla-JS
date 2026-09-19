@@ -15,6 +15,7 @@ const modules = [
   "js/features/carousel.js",
   "js/features/calculator.js",
   "js/features/calculator-storage.js",
+  "js/features/timer.js",
   "js/domain/calculator.js",
 ];
 
@@ -37,6 +38,7 @@ test("composition root stays intentionally small", async () => {
 
   for (const name of [
     "initTabs",
+    "initTimer",
     "initModal",
     "renderMenu",
     "initForms",

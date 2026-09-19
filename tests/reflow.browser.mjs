@@ -131,6 +131,31 @@ try {
     );
 
     await page.getByRole("button", { name: "Next slide" }).click();
+    assert.equal(
+      await page.locator("#current").textContent(),
+      "02",
+      `${viewport.width}px: next control should advance exactly one slide`,
+    );
+    assert.equal(
+      await page.locator('.carousel-indicator[aria-current="true"]').getAttribute("data-slide-to"),
+      "1",
+      `${viewport.width}px: active slide picker should track state`,
+    );
+
+    if (viewport.width === 390) {
+      await page.setViewportSize({ width: 1024, height: viewport.height });
+      assert.equal(
+        await page.locator("#current").textContent(),
+        "02",
+        "carousel state should survive viewport resize",
+      );
+      assert.match(
+        (await page.locator(".offer__slider-inner").getAttribute("style")) ?? "",
+        /translateX\(-100%\)/,
+      );
+      await page.setViewportSize(viewport);
+    }
+
     assertNoHorizontalDocumentOverflow(
       await readDocumentMetrics(),
       `${viewport.width}px after carousel interaction`,

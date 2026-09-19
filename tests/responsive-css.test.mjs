@@ -20,11 +20,13 @@ test("responsive foundation is fluid instead of desktop-fixed", () => {
   assert.match(css, /grid-template-columns:\s*repeat\(auto-fit, minmax\(min\(100%, 17rem\), 1fr\)\)/);
   assert.doesNotMatch(css, /width:\s*(?:1130|930|850|743|650|580|550|490|330|320|280|220|200|180|170|120|102)px/);
   assert.doesNotMatch(css, /min-width:\s*550px/);
+  assert.doesNotMatch(css, /overflow-x:\s*(?:hidden|clip)/);
 });
 
 test("small-screen controls and content retain accessible sizing", () => {
   assert.match(css, /--control-min-size:\s*2\.75rem/);
   assert.match(css, /min-block-size:\s*var\(--control-min-size\)/);
+  assert.match(css, /\.carousel-indicators button\s*\{[^}]*min-block-size:\s*var\(--control-min-size\)/s);
   assert.match(css, /:focus-visible/);
   assert.doesNotMatch(css, /outline:\s*0\s*[;}]/);
 });

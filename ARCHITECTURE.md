@@ -20,6 +20,7 @@ flowchart TD
     APP --> MENU[features/menu.js]
     APP --> FORMS[features/forms.js]
     APP --> CAROUSEL[features/carousel.js]
+    APP --> TIMER[features/timer.js]
     APP --> CALC[features/calculator.js]
 
     FORMS -->|modal API| MODAL
@@ -77,6 +78,12 @@ Menu data is local, static product-demo data. Cards are created with DOM APIs ra
 
 Forms are explicitly local-only demonstrations. Native constraint validation is used and no network/persistence layer exists.
 
+### Weekly countdown
+
+`features/timer.js` owns the informational menu-refresh countdown. It derives the next Monday 09:00 deadline from the viewer's local calendar instead of storing a fixed historical date. Remaining time is clamped at zero and the deadline rolls forward automatically after each weekly boundary.
+
+The timer has no persistence and no product-critical side effects; it is a presentation feature driven by the current clock.
+
 ### Calculator
 
 The calculator is split into three responsibilities:
@@ -111,6 +118,6 @@ The only persisted state is calculator preference data in a versioned local-stor
 - custom design-system package;
 - repository/service/factory layers for static local data;
 - autoplay interactions;
-- artificial urgency mechanics.
+- fabricated scarcity or discount deadlines.
 
 These would add more code and conceptual load than product value at this scale.

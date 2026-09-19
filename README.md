@@ -1,37 +1,33 @@
 # NourishFlow
 
-An accessible nutrition UX portfolio demo built with semantic HTML, Vanilla CSS, and native JavaScript. The project deliberately demonstrates modern web-platform architecture without a framework or bundler.
+[![Quality](https://github.com/MykolaDotsenko/Healthy-Lifestyle-Website-Vanilla-JS/actions/workflows/quality.yml/badge.svg)](https://github.com/MykolaDotsenko/Healthy-Lifestyle-Website-Vanilla-JS/actions/workflows/quality.yml)
 
-**Live demo:** https://mykoladotsenko.github.io/Healthy-Lifestyle-Website-Vanilla-JS/
+**Accessible nutrition UX built with the native web platform — no framework, no bundler, no production dependencies.**
 
-## Current feature baseline
+[Live demo](https://mykoladotsenko.github.io/Healthy-Lifestyle-Website-Vanilla-JS/) · [Architecture](ARCHITECTURE.md) · [Quality strategy](QUALITY.md)
 
-- eating-style tabs;
-- contact modal;
-- menu cards;
-- order/contact forms;
-- image carousel;
-- calorie calculator;
-- saved gender and activity preferences via `localStorage`.
+## Why this project exists
 
-## Local development
+NourishFlow is a portfolio product concept designed to demonstrate frontend fundamentals that frameworks can hide: semantic HTML, accessible interaction patterns, responsive CSS architecture, explicit state management, pure domain logic, browser APIs, and automated quality gates.
 
-Requirements: Node.js 22+.
+It is intentionally **not** presented as a functioning meal-delivery company. Request forms are local-only demos and no personal data is transmitted or stored.
 
-```bash
-npm install
-npm run dev
-```
+## What it demonstrates
 
-The static site is then available at `http://127.0.0.1:8080`.
+| Area | Implementation |
+| --- | --- |
+| HTML | Semantic landmarks, native controls, labels, fieldsets, skip link |
+| CSS | Mobile-first cascade layers, design tokens, Grid/Flexbox, fluid sizing |
+| JavaScript | Native ES modules with a small composition root |
+| Tabs | WAI-style keyboard model with roving focus and automatic activation |
+| Carousel | Index-based, resize-safe, button-controlled, no autoplay |
+| Dialog | Native `<dialog>`, initial focus, Escape, focus restoration |
+| Calculator | Pure domain calculation, validation, safe versioned preferences |
+| Forms | Native validation, explicit local-only privacy boundary |
+| Performance | One eager raster, lazy below-fold media, rendering containment |
+| Quality | Unit/static checks, HTML validation, axe, responsive and cross-browser journeys |
 
-## Responsive CSS foundation
-
-The interface now uses a mobile-first Vanilla CSS architecture with cascade layers, design tokens, fluid containers, CSS Grid/Flexbox, `clamp()` typography/spacing, accessible focus states, reduced-motion support, and content-driven breakpoints. The layout is designed to reflow down to a 320 CSS-pixel viewport without relying on the old fixed desktop widths.
-
-## JavaScript architecture
-
-The browser code uses native ES modules with a deliberately shallow structure:
+## Architecture at a glance
 
 ```text
 js/
@@ -46,56 +42,72 @@ js/
     ├── calculator-storage.js
     ├── carousel.js
     ├── forms.js
-    ├── menu.js
-    └── timer.js
+    └── menu.js
 ```
 
-`app.js` is the composition root. Feature modules do not import each other; the only explicit cross-feature dependency is the modal API passed into forms. This keeps the Vanilla JavaScript architecture easy to trace without introducing a framework, bundler, global event bus, repository layer, or unnecessary abstraction.
+`app.js` is the composition root. The calculator keeps formula/validation logic independent from the DOM. Persistence is isolated behind a small storage adapter. Features stay shallow and explicit rather than introducing framework-like abstractions.
 
-## Calculator domain
+See [ARCHITECTURE.md](ARCHITECTURE.md) for boundaries and trade-offs.
 
-The calorie estimator keeps formula and validation logic independent from the DOM. `js/domain/calculator.js` is pure and unit-tested, while `calculator.js` owns browser interaction and `calculator-storage.js` owns the versioned local-storage boundary. Invalid or corrupted saved preferences fall back safely, legacy `sex`/`ratio` keys migrate automatically, and invalid numeric input never renders `NaN`.
+## Accessibility
 
-The current formula is preserved for continuity. The UI labels the result as an adult general-information estimate rather than medical advice.
+The interface is designed around native semantics first:
 
-## Accessible tabs
+- keyboard-operable tabs with `ArrowUp`, `ArrowDown`, `Home`, and `End`;
+- visible `:focus-visible` states;
+- native dialog modality and Escape behavior;
+- labeled inputs and validation feedback;
+- reduced-motion and forced-colors support;
+- 44px interaction baseline for primary controls;
+- responsive reflow down to 320 CSS pixels without hiding horizontal overflow bugs.
 
-The eating-style selector implements the WAI-ARIA tabs pattern with one roving tab stop, explicit `tablist/tab/tabpanel` semantics, automatic activation, vertical `ArrowUp/ArrowDown` navigation, and `Home/End` shortcuts.
+CI runs axe against mobile and desktop states and exercises the critical journey in Chromium, Firefox, and WebKit.
 
-## Accessible carousel
+## Performance
 
-The meal carousel uses index-based percentage transforms instead of pixel measurements, so resize cannot corrupt the active slide. It has no autoplay, exposes carousel/slide semantics, uses native buttons for previous/next and slide pickers, and keeps visual layout rules in CSS rather than inline JavaScript.
+The initial page keeps only one authored raster eager. Inactive tabs, carousel media, and generated menu images use browser-native lazy loading and asynchronous decoding. The CSS deliberately avoids section-level rendering skips so accessibility and visual state remain deterministic.
 
-## Native dialog
+A repository test enforces the current eager-raster budget. The original JPEG source assets remain an explicit optimization opportunity for future AVIF/WebP conversion.
 
-Contact UI uses the platform `<dialog>` element with `showModal()`/`close()`, explicit initial focus, deterministic focus return, native Escape behavior, and a CSS `::backdrop`. Intrusive timed and scroll-triggered popups were removed.
+## Privacy and product integrity
 
-## Static form boundary
+- request forms do not call a backend;
+- no request payload is persisted;
+- expired countdown/scarcity mechanics were removed instead of moved to a fake future date;
+- intrusive timed/scroll-triggered modal opening was removed;
+- calorie output is labeled as a general-information adult estimate, not medical advice.
 
-The portfolio is intentionally static. Request forms validate with native HTML constraints and demonstrate the UX flow locally, but they do not transmit or persist personal data. No request payload leaves the browser. The old localhost `json-server`, `db.json`, spinner asset, and network submission path were removed rather than simulating a successful backend request.
+## Run locally
 
-## Honest promotion state
+Requirements: Node.js 22+.
 
-The original 2024 countdown and 20% scarcity message were removed instead of being silently moved into the future. The replacement section communicates product principles without fabricated urgency, eliminating a stale timer module and a permanent interval from the runtime.
+```bash
+npm install
+npm run dev
+```
 
-## Loading performance
+Open `http://127.0.0.1:8080`.
 
-The first visible meal image is the only eager raster and receives high fetch priority. Inactive tabs, carousel imagery, menu cards, and below-fold decorative imagery use native lazy loading and asynchronous decoding. Below-fold sections use `content-visibility: auto` with an intrinsic-size fallback. A repository test enforces a 400 KB eager-raster budget.
+## Verify
 
-The original JPEG binaries remain source assets because the connected GitHub API does not expose repository binary blobs to this workflow for safe local re-encoding; the implementation does not pretend those files were converted.
-
-## Product positioning and SEO
-
-The live page is explicitly positioned as **NourishFlow**, a portfolio product concept rather than a functioning meal-delivery company. Fake social links, hard-coded public phone numbers, and delivery-business claims were removed. The document includes a focused title/description, canonical URL, Open Graph metadata, Twitter card metadata, and WebApplication structured data.
-
-## Quality checks
+Fast dependency-free checks:
 
 ```bash
 npm run check
 ```
 
-The refactor baseline now includes regression checks plus a semantic HTML foundation: native buttons, labeled form controls, fieldset/legend radio groups, landmark structure, a skip link, semantic menu cards, and keyboard-focusable primary interactions.
+GitHub Actions additionally installs browser-test tooling temporarily and runs HTML validation, responsive browser smoke, automated accessibility scans, and cross-browser critical journeys.
 
-## Known baseline limitations
+See [QUALITY.md](QUALITY.md) for the complete verification model.
 
-Expired promotion/countdown behavior has been removed rather than moved to an arbitrary future date. Final performance, product positioning, and repository presentation are handled in later roadmap PRs.
+## Key trade-offs
+
+- **No framework:** chosen deliberately to expose web-platform fundamentals and keep runtime complexity low.
+- **No bundler:** native modules are sufficient for this project size.
+- **Static forms:** honest demo behavior is preferred over a fake or unreliable backend.
+- **Original JPEG sources:** loading strategy is optimized now; next-gen binary re-encoding remains future work.
+- **Calculator formula preserved:** architecture and validation were improved without silently changing the original calculation model.
+
+## License
+
+ISC — see [LICENSE](LICENSE).

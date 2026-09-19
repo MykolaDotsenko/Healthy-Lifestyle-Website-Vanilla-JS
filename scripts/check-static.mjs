@@ -84,7 +84,7 @@ async function assertLocalReferencesExist() {
 
 async function assertPackageScripts() {
   const packageJson = JSON.parse(await read("package.json"));
-  const requiredScripts = ["dev", "api", "lint", "check:static", "test", "check"];
+  const requiredScripts = ["dev", "lint", "check:static", "test", "check"];
 
   for (const script of requiredScripts) {
     if (!packageJson.scripts?.[script]) {

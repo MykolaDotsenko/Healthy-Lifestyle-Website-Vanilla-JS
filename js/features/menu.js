@@ -52,7 +52,7 @@ function createMenuCard(item) {
 
   const priceLabel = document.createElement("span");
   priceLabel.className = "menu__item-cost";
-  priceLabel.textContent = "Price:";
+  priceLabel.textContent = "Demo price:";
 
   const priceTotal = document.createElement("span");
   priceTotal.className = "menu__item-total";

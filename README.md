@@ -92,6 +92,10 @@ The live page is explicitly positioned as **NourishFlow**, a portfolio product c
 
 The hero makes the engineering signal explicit without turning the page into a résumé: visible product positioning, zero-framework architecture, semantic/native interaction approach, 320px reflow, and the local-only privacy boundary are readable before the first interactive demo. Primary actions work as normal links without JavaScript.
 
+## Browser quality gates
+
+CI keeps production dependencies at zero and installs browser tooling only for verification. The final browser gate runs responsive interaction smoke tests, a full axe scan at 320px and desktop width (including tab and dialog states), and the critical user journey in Chromium, Firefox, and WebKit. Playwright is pinned to 1.63.0 and @axe-core/playwright to 4.13.0 for reproducible CI.
+
 ## Quality checks
 
 ```bash

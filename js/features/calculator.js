@@ -1,93 +1,158 @@
-const DEFAULT_SEX = "female";
-const DEFAULT_RATIO = 1.375;
+import {
+  CALCULATOR_LIMITS,
+  calculateDailyCalories,
+} from "../domain/calculator.js";
+import {
+  loadCalculatorPreferences,
+  saveCalculatorPreferences,
+} from "./calculator-storage.js";
+
+const NUMERIC_FIELDS = {
+  height: { stateKey: "heightCm", errorId: "height-error" },
+  weight: { stateKey: "weightKg", errorId: "weight-error" },
+  age: { stateKey: "ageYears", errorId: "age-error" },
+};
+
+function getLocalStorage() {
+  try {
+    return window.localStorage;
+  } catch {
+    return null;
+  }
+}
+
+function readNumericValue(input) {
+  return Number.isFinite(input.valueAsNumber) ? input.valueAsNumber : null;
+}
 
 export function initCalculator() {
   const result = document.querySelector(".calculating__result span");
+  const status = document.querySelector("#calculator-status");
+  const storage = getLocalStorage();
 
-  if (!result) {
+  if (!result || !status) {
     return;
   }
 
-  let sex = localStorage.getItem("sex") || DEFAULT_SEX;
-  let ratio = Number(localStorage.getItem("ratio") || DEFAULT_RATIO);
-  let height;
-  let weight;
-  let age;
+  const preferences = storage
+    ? loadCalculatorPreferences(storage)
+    : { version: 1, sex: "female", activityMultiplier: 1.375 };
 
-  localStorage.setItem("sex", sex);
-  localStorage.setItem("ratio", String(ratio));
+  const state = {
+    sex: preferences.sex,
+    activityMultiplier: preferences.activityMultiplier,
+    heightCm: null,
+    weightKg: null,
+    ageYears: null,
+  };
 
-  function calculate() {
-    if (!sex || !height || !weight || !age || !ratio) {
-      result.textContent = "____";
+  const touchedFields = new Set();
+
+  function savePreferences() {
+    if (!storage) {
       return;
     }
 
-    const calories =
-      sex === "female"
-        ? (447.6 + 9.2 * weight + 3.1 * height - 4.3 * age) * ratio
-        : (88.36 + 13.4 * weight + 4.8 * height - 5.7 * age) * ratio;
-
-    result.textContent = String(Math.round(calories));
-  }
-
-  function restoreRadioState(selector, storedValue) {
-    document.querySelectorAll(selector).forEach((input) => {
-      input.checked = input.value === String(storedValue);
+    saveCalculatorPreferences(storage, {
+      sex: state.sex,
+      activityMultiplier: state.activityMultiplier,
     });
   }
 
-  function bindRadioGroup(selector, onChange) {
+  function restoreRadioState(selector, value) {
+    document.querySelectorAll(selector).forEach((input) => {
+      input.checked = input.value === String(value);
+    });
+  }
+
+  function setFieldError(fieldId, message) {
+    const input = document.querySelector(`#${fieldId}`);
+    const error = document.querySelector(`#${NUMERIC_FIELDS[fieldId].errorId}`);
+
+    if (!input || !error) {
+      return;
+    }
+
+    const hasError = Boolean(message);
+    input.setAttribute("aria-invalid", String(hasError));
+    error.hidden = !hasError;
+    error.textContent = message ?? "";
+  }
+
+  function render() {
+    const calculation = calculateDailyCalories(state);
+
+    for (const [fieldId, config] of Object.entries(NUMERIC_FIELDS)) {
+      const message = touchedFields.has(config.stateKey)
+        ? calculation.errors[config.stateKey]
+        : null;
+      setFieldError(fieldId, message);
+    }
+
+    if (calculation.ok) {
+      result.textContent = String(calculation.calories);
+      status.textContent = "Estimated daily energy requirement.";
+      return;
+    }
+
+    result.textContent = "—";
+
+    const hasEnteredValues = Object.values(NUMERIC_FIELDS).some(
+      ({ stateKey }) => state[stateKey] !== null,
+    );
+
+    status.textContent = hasEnteredValues
+      ? "Check the highlighted fields to calculate your estimate."
+      : "Enter your details to calculate an estimate.";
+  }
+
+  function bindRadioGroup(selector, stateKey, transform = (value) => value) {
     document.querySelectorAll(selector).forEach((input) => {
       input.addEventListener("change", (event) => {
-        if (event.target.checked) {
-          onChange(event.target.value);
-          calculate();
+        if (!event.target.checked) {
+          return;
         }
+
+        state[stateKey] = transform(event.target.value);
+        savePreferences();
+        render();
       });
     });
   }
 
-  restoreRadioState('#gender input[name="sex"]', sex);
+  restoreRadioState('#gender input[name="sex"]', state.sex);
   restoreRadioState(
     '.calculating__choose_big input[name="activity"]',
-    ratio,
+    state.activityMultiplier,
   );
 
-  bindRadioGroup('#gender input[name="sex"]', (value) => {
-    sex = value;
-    localStorage.setItem("sex", value);
-  });
+  bindRadioGroup('#gender input[name="sex"]', "sex");
+  bindRadioGroup(
+    '.calculating__choose_big input[name="activity"]',
+    "activityMultiplier",
+    Number,
+  );
 
-  bindRadioGroup('.calculating__choose_big input[name="activity"]', (value) => {
-    ratio = Number(value);
-    localStorage.setItem("ratio", value);
-  });
-
-  const numericFields = {
-    height: (value) => {
-      height = value;
-    },
-    weight: (value) => {
-      weight = value;
-    },
-    age: (value) => {
-      age = value;
-    },
-  };
-
-  Object.entries(numericFields).forEach(([id, assign]) => {
-    const input = document.querySelector(`#${id}`);
+  for (const [fieldId, config] of Object.entries(NUMERIC_FIELDS)) {
+    const input = document.querySelector(`#${fieldId}`);
 
     if (!input) {
-      return;
+      continue;
     }
 
     input.addEventListener("input", () => {
-      assign(input.valueAsNumber);
-      calculate();
+      state[config.stateKey] = readNumericValue(input);
+      touchedFields.add(config.stateKey);
+      render();
     });
-  });
 
-  calculate();
+    input.addEventListener("blur", () => {
+      touchedFields.add(config.stateKey);
+      render();
+    });
+  }
+
+  render();
 }
+
+export { CALCULATOR_LIMITS };

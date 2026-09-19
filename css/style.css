@@ -10,6 +10,44 @@ a {
   text-decoration:none
 }
 
+button,
+input {
+  font:inherit
+}
+
+.visually-hidden {
+  position:absolute;
+  width:1px;
+  height:1px;
+  padding:0;
+  margin:-1px;
+  overflow:hidden;
+  clip:rect(0 0 0 0);
+  white-space:nowrap;
+  border:0
+}
+
+.skip-link {
+  position:fixed;
+  top:12px;
+  left:12px;
+  z-index:2000;
+  padding:10px 14px;
+  background:#fff;
+  color:#000;
+  transform:translateY(-200%);
+  transition:transform .2s ease
+}
+
+.skip-link:focus {
+  transform:translateY(0)
+}
+
+:focus-visible {
+  outline:3px solid #1f6feb;
+  outline-offset:3px
+}
+
 .btn {
   width:220px;
   height:65px;
@@ -22,8 +60,7 @@ a {
   border:1px solid rgba(0,0,0,.2);
   box-shadow:0 4px 15px rgba(0,0,0,.2);
   cursor:pointer;
-  transition:.3s all;
-  outline:0
+  transition:.3s all
 }
 
 .btn_white {
@@ -222,11 +259,16 @@ a {
 }
 
 .tabheader__item {
-  font-weight:700;
+  display:block;
+  width:100%;
+  margin-top:10px;
+  padding:0;
+  border:0;
+  background:transparent;
+  color:rgba(0,0,0,.6);
   font-size:18px;
   font-weight:300;
-  margin-top:10px;
-  color:rgba(0,0,0,.6);
+  text-align:left;
   cursor:pointer;
   transition:.3s all
 }
@@ -317,14 +359,22 @@ a {
   box-shadow:0 4px 30px rgba(0,0,0,.25)
 }
 
-.offer__slider-prev {
-  margin-right:10px;
+.offer__slider-prev,
+.offer__slider-next {
+  display:flex;
+  align-items:center;
+  padding:0;
+  border:0;
+  background:transparent;
   cursor:pointer
 }
 
+.offer__slider-prev {
+  margin-right:10px
+}
+
 .offer__slider-next {
-  margin-left:10px;
-  cursor:pointer
+  margin-left:10px
 }
 
 .offer__slider #current {
@@ -359,7 +409,15 @@ a {
   padding:30px 0 40px 0
 }
 
+.calculating__group {
+  min-width:0;
+  margin:0;
+  padding:0;
+  border:0
+}
+
 .calculating__subtitle {
+  width:100%;
   text-align:center;
   font-size:18px;
   font-weight:700;
@@ -401,13 +459,18 @@ a {
   text-align:center;
   font-size:14px;
   cursor:pointer;
-  outline:0;
   transition:.3s all
 }
 
-.calculating__choose-item_active {
+.calculating__choose-item_active,
+.calculating__choice-input:checked + .calculating__choose-item {
   color:#fff;
   background-color:#54ed39
+}
+
+.calculating__choice-input:focus-visible + .calculating__choose-item {
+  outline:3px solid #1f6feb;
+  outline-offset:3px
 }
 
 .calculating__choose_medium {
@@ -545,8 +608,7 @@ a {
   border:none;
   font-size:18px;
   text-align:center;
-  padding:0 20px;
-  outline:0
+  padding:0 20px
 }
 
 .promotion {
@@ -579,7 +641,7 @@ a {
   font-weight:300
 }
 
-.promotion__descr span {
+.promotion__descr strong {
   font-weight:700;
   font-size:26px
 }
@@ -704,8 +766,7 @@ a {
   border:none;
   font-size:18px;
   text-align:center;
-  padding:0 20px;
-  outline:0
+  padding:0 20px
 }
 
 .modal .btn {

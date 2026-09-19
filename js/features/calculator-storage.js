@@ -25,13 +25,16 @@ function readJsonPreferences(storage) {
 
 function readLegacyPreferences(storage) {
   const sex = storage.getItem(LEGACY_SEX_KEY);
-  const activityMultiplier = Number(storage.getItem(LEGACY_RATIO_KEY));
+  const ratio = storage.getItem(LEGACY_RATIO_KEY);
 
-  if (!sex && !Number.isFinite(activityMultiplier)) {
+  if (sex === null && ratio === null) {
     return null;
   }
 
-  return { sex, activityMultiplier };
+  return {
+    sex,
+    activityMultiplier: ratio === null ? undefined : Number(ratio),
+  };
 }
 
 export function saveCalculatorPreferences(storage, preferences) {

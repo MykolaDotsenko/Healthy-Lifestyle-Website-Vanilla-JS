@@ -25,12 +25,14 @@ for (const [name, browserType] of browsers) {
     await page.goto(baseUrl, { waitUntil: "domcontentloaded" });
 
     assert.equal(
-      await page.getByRole("heading", {
-        level: 1,
-        name: "Nutrition UX, built on the web platform.",
-      }).isVisible(),
+      await page.locator(".tabcontainer").isVisible(),
       true,
-      `${name}: visible product H1`,
+      `${name}: product-first meal selector is visible`,
+    );
+    assert.equal(
+      await page.locator(".preview__intro").count(),
+      0,
+      `${name}: removed portfolio-meta hero stays removed`,
     );
 
     const fitnessTab = page.getByRole("tab", { name: "Fitness", exact: true });

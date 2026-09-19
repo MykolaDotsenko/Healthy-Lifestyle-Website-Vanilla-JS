@@ -33,7 +33,7 @@ window.addEventListener("DOMContentLoaded", function () {
     const target = event.target;
     if (target && target.classList.contains("tabheader__item")) {
       tabs.forEach((item, i) => {
-        if (target == item) {
+        if (target === item) {
           hideTabContent();
           showTabContent(i);
         }
@@ -181,7 +181,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
   new MenuCard(
     "img/tabs/vegy.jpg",
-    "vegy",
+    "Fresh vegetables prepared for the Fitness menu",
     'Fitness Menu',
     'The "Fitness" Menu is a new approach to preparing dishes: more fresh vegetables and fruits. It\'s a product for active and healthy individuals. This is an entirely new product with an optimal price and high quality!',
     9,
@@ -190,7 +190,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
   new MenuCard(
     "img/tabs/post.jpg",
-    "post",
+    "Plant-based Vegetarian menu",
     'Vegetarian Menu',
     'The "Vegetarian" Menu involves a careful selection of ingredients: complete absence of animal products, almond, oat, coconut, or buckwheat milk, the right amount of protein through tofu and imported vegetarian steaks.',
     14,
@@ -199,7 +199,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
   new MenuCard(
     "img/tabs/elite.jpg",
-    "elite",
+    "Premium seafood and fruit meal",
     'Premium Menu',
     'In the "Premium" Menu, we use not only beautiful packaging design but also high-quality dish execution. Red fish, seafood, fruits - a restaurant menu without going to a restaurant!',
     21,
@@ -322,6 +322,7 @@ window.addEventListener("DOMContentLoaded", function () {
   const indicators = document.createElement("div"),
     dots = [];
   indicators.classList.add("carousel-indicators");
+  indicators.setAttribute("role", "group");
   indicators.setAttribute("aria-label", "Choose slide");
   indicators.style.cssText = `
         position: absolute;

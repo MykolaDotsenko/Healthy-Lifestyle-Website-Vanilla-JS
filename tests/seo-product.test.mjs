@@ -32,7 +32,7 @@ test("portfolio copy does not impersonate a live delivery business", () => {
     productCopy,
     /restaurant menu without going to a restaurant|optimal price and high quality/i,
   );
-  assert.match(html, /portfolio product concept/i);
+  assert.match(html, /nutrition demo/i);
   assert.match(html, /View source on GitHub/);
   assert.match(html, /No personal data is sent or stored/);
 });

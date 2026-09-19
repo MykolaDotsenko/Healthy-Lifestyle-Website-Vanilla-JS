@@ -121,3 +121,10 @@ test("tabs expose the WAI tablist/tab/tabpanel contract", () => {
   assert.match(html, /aria-orientation="vertical"/);
   assert.doesNotMatch(html, /aria-expanded="(?:true|false)"[^>]*>\s*(?:Fitness|Premium|Vegetarian|Balanced)/);
 });
+
+test("contact modal uses the native dialog element", () => {
+  assert.equal(count(html, /<dialog\b/g), 1);
+  assert.match(html, /id="contact-dialog"/);
+  assert.match(html, /aria-labelledby="contact-dialog-title"/);
+  assert.doesNotMatch(html, /<div class="modal">/);
+});

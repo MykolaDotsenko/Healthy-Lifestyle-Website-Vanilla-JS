@@ -48,3 +48,15 @@ test("legacy placeholder responsive rules are gone", () => {
   assert.doesNotMatch(css, /\.some-element/);
   assert.doesNotMatch(css, /@import\s+url\(https:\/\/fonts\.googleapis\.com/);
 });
+
+
+test("mobile-first product chrome stays compact at 320-390px", () => {
+  assert.match(css, /--section-space:\s*clamp\(2\.75rem, 8vw, 6\.5rem\)/);
+  assert.match(css, /\.header__links\s*\{[^}]*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/s);
+  assert.match(css, /\.tabheader\s*\{[^}]*padding:\s*var\(--space-4\)/s);
+  assert.match(css, /\.header__right-block \.btn,[\s\S]*\.offer__action \.btn\s*\{[^}]*inline-size:\s*100%/s);
+});
+
+test("removed recruiter hero leaves no dead responsive CSS", () => {
+  assert.doesNotMatch(css, /\.preview__(?:intro|copy|lede|actions|proof)/);
+});

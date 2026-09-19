@@ -46,13 +46,9 @@
 
   <header class="header">
     <div class="header__left-block">
-      <a class="brand" href="#main-content" aria-label="NourishFlow home">
-        <span class="brand__mark" aria-hidden="true"></span>
-        <span class="brand__copy">
-          <strong class="brand__name">NourishFlow</strong>
-          <span class="brand__tagline">Native nutrition UX</span>
-        </span>
-      </a>
+      <div class="header__logo">
+        <img src="icons/logo.svg" alt="NourishFlow" decoding="async">
+      </div>
       <nav class="header__links" aria-label="Primary navigation">
         <a href="#menu" class="header__link">Meal Styles</a>
         <a href="#calculator" class="header__link">Calorie Estimate</a>
@@ -68,32 +64,7 @@
     <section class="preview" aria-labelledby="main-title">
       <div class="bgc_blue" aria-hidden="true"></div>
       <div class="container">
-        <div class="preview__intro">
-          <div class="preview__copy">
-            <p class="eyebrow">Zero-framework frontend portfolio project</p>
-            <h1 id="main-title">Nutrition UX, built on the web platform.</h1>
-            <p class="preview__lede">
-              NourishFlow demonstrates accessible interaction patterns, resilient responsive layout, and testable Vanilla JavaScript architecture without a framework or bundler.
-            </p>
-            <div class="preview__actions">
-              <a class="btn btn_dark" href="#calculator">Try the calculator</a>
-              <a
-                class="btn btn_white"
-                href="https://github.com/MykolaDotsenko/Healthy-Lifestyle-Website-Vanilla-JS"
-              >
-                View source
-              </a>
-            </div>
-          </div>
-
-          <ul class="preview__proof">
-            <li><strong>Semantic HTML</strong><span>Native controls first</span></li>
-            <li><strong>Vanilla JS</strong><span>ES modules + pure domain logic</span></li>
-            <li><strong>320px reflow</strong><span>Responsive without overflow masking</span></li>
-            <li><strong>Local-only forms</strong><span>No personal data transmitted</span></li>
-          </ul>
-        </div>
-
+        <h1 id="main-title" class="visually-hidden">NourishFlow — accessible nutrition and meal-planning demo</h1>
         <div class="tabcontainer">
           <div class="tabcontent" id="plan-fitness" role="tabpanel" tabindex="0" aria-labelledby="plan-fitness-control">
             <picture>
@@ -246,6 +217,7 @@
             </div>
           </div>
         </div>
+        <p class="preview__life">Explore meal styles. Calculate your needs. Keep it simple.</p>
       </div>
     </section>
 
@@ -256,9 +228,9 @@
       <div class="container">
         <div class="offer__text">
           <p class="section-kicker">Interaction system</p>
-          <h2 class="title" id="offer-title">What This Demo Demonstrates</h2>
+          <h2 class="title" id="offer-title">What NourishFlow Brings Together</h2>
           <p class="offer__descr">
-            NourishFlow is a portfolio product concept for exploring accessible, responsive interaction patterns without a framework. The interface combines meal-style comparison, a transparent calorie estimate, an accessible carousel, and a local-only request flow.
+            NourishFlow is a portfolio product concept built around a simple nutrition flow: compare meal styles, estimate daily energy needs, explore meal inspiration, and preview a request without creating an account.
           </p>
         </div>
         <div class="offer__action">
@@ -268,13 +240,13 @@
 
       <div class="container">
         <div class="offer__advantages">
-          <h3>Accessible by Default</h3>
+          <h3>Simple to Explore</h3>
           <p class="offer__advantages-text">
-            Keyboard interaction, visible focus, native controls, semantic landmarks, reduced-motion support, and resilient responsive layouts are part of the product rather than afterthoughts.
+            The experience stays focused on the food, the calculator, and the next useful action, with clear controls that work across desktop, tablet, and mobile.
           </p>
-          <h3>Platform-First Engineering</h3>
+          <h3>Respectful by Design</h3>
           <p class="offer__advantages-text">
-            Native ES modules, CSS Grid, cascade layers, the Dialog API, browser validation, and local storage are used directly so the architecture stays easy to inspect and maintain.
+            No fake urgency, forced popups, tracking, or hidden form submission. The demo is intentionally lightweight and transparent.
           </p>
         </div>
 

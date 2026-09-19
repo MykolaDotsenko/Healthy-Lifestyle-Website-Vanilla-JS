@@ -7,19 +7,23 @@ window.addEventListener("DOMContentLoaded", function () {
 
   function hideTabContent() {
     tabsContent.forEach((item) => {
+      item.hidden = true;
       item.classList.add("hide");
       item.classList.remove("show", "fade");
     });
 
     tabs.forEach((item) => {
       item.classList.remove("tabheader__item_active");
+      item.setAttribute("aria-expanded", "false");
     });
   }
 
   function showTabContent(i = 0) {
+    tabsContent[i].hidden = false;
     tabsContent[i].classList.add("show", "fade");
     tabsContent[i].classList.remove("hide");
     tabs[i].classList.add("tabheader__item_active");
+    tabs[i].setAttribute("aria-expanded", "true");
   }
 
   hideTabContent();
@@ -114,7 +118,7 @@ window.addEventListener("DOMContentLoaded", function () {
   }
 
   modal.addEventListener("click", (e) => {
-    if (e.target === modal || e.target.getAttribute("data-close") == "") {
+    if (e.target === modal || e.target.hasAttribute("data-close")) {
       closeModal();
     }
   });
@@ -152,7 +156,7 @@ window.addEventListener("DOMContentLoaded", function () {
     }
   
     render() {
-      const element = document.createElement("div");
+      const element = document.createElement("article");
   
       if (this.classes.length === 0) {
         this.classes = "menu__item";
@@ -162,13 +166,13 @@ window.addEventListener("DOMContentLoaded", function () {
       }
   
       element.innerHTML = `
-        <img src=${this.src} alt=${this.alt}>
+        <img src="${this.src}" alt="${this.alt}">
         <h3 class="menu__item-subtitle">${this.title}</h3>
-        <div class="menu__item-descr">${this.descr}</div>
-        <div class="menu__item-divider"></div>
+        <p class="menu__item-descr">${this.descr}</p>
+        <div class="menu__item-divider" aria-hidden="true"></div>
         <div class="menu__item-price">
-            <div class="menu__item-cost">Price:</div>
-            <div class="menu__item-total"><span>${this.price}</span> EUR/day</div>
+            <span class="menu__item-cost">Price:</span>
+            <span class="menu__item-total"><strong>${this.price}</strong> EUR/day</span>
         </div>
       `;
       this.parent.append(element);
@@ -267,8 +271,8 @@ window.addEventListener("DOMContentLoaded", function () {
     thanksModal.classList.add("modal__dialog");
     thanksModal.innerHTML = `
             <div class="modal__content">
-                <div class="modal__close" data-close>×</div>
-                <div class="modal__title">${message}</div>
+                <button class="modal__close" type="button" data-close aria-label="Close message">×</button>
+                <p class="modal__title" role="status">${message}</p>
             </div>
         `;
     document.querySelector(".modal").append(thanksModal);
@@ -315,9 +319,10 @@ window.addEventListener("DOMContentLoaded", function () {
 
   slider.style.position = "relative";
 
-  const indicators = document.createElement("ol"),
+  const indicators = document.createElement("div"),
     dots = [];
   indicators.classList.add("carousel-indicators");
+  indicators.setAttribute("aria-label", "Choose slide");
   indicators.style.cssText = `
         position: absolute;
         right: 0;
@@ -328,14 +333,19 @@ window.addEventListener("DOMContentLoaded", function () {
         justify-content: center;
         margin-right: 15%;
         margin-left: 15%;
-        list-style: none;
     `; 
   slider.append(indicators);
 
   for (let i = 0; i < slides.length; i++) {
-    const dot = document.createElement("li");
+    const dot = document.createElement("button");
+    dot.type = "button";
     dot.setAttribute("data-slide-to", i + 1);
+    dot.setAttribute("aria-label", `Go to slide ${i + 1}`);
+    dot.setAttribute("aria-pressed", i === 0 ? "true" : "false");
     dot.style.cssText = `
+            padding: 0;
+            border-right: 0;
+            border-left: 0;
             box-sizing: content-box;
             flex: 0 1 auto;
             width: 30px;
@@ -378,8 +388,12 @@ window.addEventListener("DOMContentLoaded", function () {
       current.textContent = slideIndex;
     }
 
-    dots.forEach((dot) => (dot.style.opacity = ".5"));
+    dots.forEach((dot) => {
+      dot.style.opacity = ".5";
+      dot.setAttribute("aria-pressed", "false");
+    });
     dots[slideIndex - 1].style.opacity = 1;
+    dots[slideIndex - 1].setAttribute("aria-pressed", "true");
   });
 
   prev.addEventListener("click", () => {
@@ -403,8 +417,12 @@ window.addEventListener("DOMContentLoaded", function () {
       current.textContent = slideIndex;
     }
 
-    dots.forEach((dot) => (dot.style.opacity = ".5"));
+    dots.forEach((dot) => {
+      dot.style.opacity = ".5";
+      dot.setAttribute("aria-pressed", "false");
+    });
     dots[slideIndex - 1].style.opacity = 1;
+    dots[slideIndex - 1].setAttribute("aria-pressed", "true");
   });
 
   dots.forEach((dot) => {
@@ -422,8 +440,12 @@ window.addEventListener("DOMContentLoaded", function () {
         current.textContent = slideIndex;
       }
 
-      dots.forEach((dot) => (dot.style.opacity = ".5"));
+      dots.forEach((dot) => {
+        dot.style.opacity = ".5";
+        dot.setAttribute("aria-pressed", "false");
+      });
       dots[slideIndex - 1].style.opacity = 1;
+      dots[slideIndex - 1].setAttribute("aria-pressed", "true");
     });
   });
 
@@ -470,74 +492,56 @@ window.addEventListener("DOMContentLoaded", function () {
 
   calcTotal();
 
-  function initLocalSettings(selector, activeClass) {
+  function initRadioSettings(selector, storageKey) {
+    const storedValue = localStorage.getItem(storageKey);
     const elements = document.querySelectorAll(selector);
 
-    elements.forEach((elem) => {
-      elem.classList.remove(activeClass);
-      if (elem.getAttribute("id") === localStorage.getItem("sex")) {
-        elem.classList.add(activeClass);
-      }
-      if (elem.getAttribute("data-ratio") === localStorage.getItem("ratio")) {
-        elem.classList.add(activeClass);
-      }
+    elements.forEach((element) => {
+      element.checked = element.value === storedValue;
     });
   }
 
-  initLocalSettings("#gender div", "calculating__choose-item_active");
-  initLocalSettings(
-    ".calculating__choose_big div",
-    "calculating__choose-item_active"
-  );
+  initRadioSettings('#gender input[name="sex"]', "sex");
+  initRadioSettings('.calculating__choose_big input[name="activity"]', "ratio");
 
-  function getStaticInformation(selector, activeClass) {
+  function bindRadioSettings(selector, storageKey) {
     const elements = document.querySelectorAll(selector);
 
-    elements.forEach((elem) => {
-      elem.addEventListener("click", (e) => {
-        if (e.target.getAttribute("data-ratio")) {
-          ratio = +e.target.getAttribute("data-ratio");
-          localStorage.setItem("ratio", +e.target.getAttribute("data-ratio"));
-        } else {
-          sex = e.target.getAttribute("id");
-          localStorage.setItem("sex", e.target.getAttribute("id"));
+    elements.forEach((element) => {
+      element.addEventListener("change", (event) => {
+        if (!event.target.checked) {
+          return;
         }
 
-        elements.forEach((elem) => {
-          elem.classList.remove(activeClass);
-        });
-
-        e.target.classList.add(activeClass);
+        if (storageKey === "ratio") {
+          ratio = +event.target.value;
+          localStorage.setItem("ratio", event.target.value);
+        } else {
+          sex = event.target.value;
+          localStorage.setItem("sex", event.target.value);
+        }
 
         calcTotal();
       });
     });
   }
 
-  getStaticInformation("#gender div", "calculating__choose-item_active");
-  getStaticInformation(
-    ".calculating__choose_big div",
-    "calculating__choose-item_active"
-  );
+  bindRadioSettings('#gender input[name="sex"]', "sex");
+  bindRadioSettings('.calculating__choose_big input[name="activity"]', "ratio");
 
   function getDynamicInformation(selector) {
     const input = document.querySelector(selector);
 
     input.addEventListener("input", () => {
-      if (input.value.match(/\D/g)) {
-        input.style.border = "1px solid red";
-      } else {
-        input.style.border = "none";
-      }
       switch (input.getAttribute("id")) {
         case "height":
-          height = +input.value;
+          height = input.valueAsNumber;
           break;
         case "weight":
-          weight = +input.value;
+          weight = input.valueAsNumber;
           break;
         case "age":
-          age = +input.value;
+          age = input.valueAsNumber;
           break;
       }
 

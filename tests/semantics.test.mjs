@@ -66,12 +66,15 @@ test("form controls have explicit labels and meaningful input types", () => {
   assert.equal(count(html, /<output\b/g), 1);
 });
 
-test("fake navigation links are removed", () => {
+test("navigation points only to real product and project destinations", () => {
   assert.doesNotMatch(html, /href="#"/);
   assert.match(html, /href="#menu"/);
   assert.match(html, /href="#calculator"/);
-  assert.match(html, /href="tel:\+380938235311"/);
-  assert.match(html, /href="tel:\+358466224959"/);
+  assert.doesNotMatch(html, /href="tel:/);
+  assert.match(
+    html,
+    /href="https:\/\/github\.com\/MykolaDotsenko\/Healthy-Lifestyle-Website-Vanilla-JS"/,
+  );
 });
 
 test("all authored HTML buttons declare an explicit type", () => {

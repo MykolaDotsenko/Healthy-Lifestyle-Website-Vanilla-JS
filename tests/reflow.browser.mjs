@@ -31,6 +31,22 @@ try {
 
     await page.goto(baseUrl, { waitUntil: "domcontentloaded" });
 
+    await page.waitForFunction(() => document.querySelectorAll(".menu__item").length === 3);
+    assert.equal(
+      await page.locator(".menu__item").count(),
+      3,
+      `${viewport.width}px: ES modules should render all menu cards`,
+    );
+
+    await page.locator("#height").fill("180");
+    await page.locator("#weight").fill("80");
+    await page.locator("#age").fill("36");
+    assert.notEqual(
+      await page.locator(".calculating__result span").textContent(),
+      "____",
+      `${viewport.width}px: calculator should initialize and calculate`,
+    );
+
     const readDocumentMetrics = () =>
       page.evaluate(() => ({
         clientWidth: document.documentElement.clientWidth,

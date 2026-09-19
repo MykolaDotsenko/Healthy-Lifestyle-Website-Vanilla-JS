@@ -40,8 +40,8 @@ test("motion and forced-colors preferences are respected", () => {
 test("responsive breakpoints are mobile-first and content-driven", () => {
   assert.match(css, /@media \(min-width: 40rem\)/);
   assert.match(css, /@media \(min-width: 64rem\)/);
-  assert.match(css, /@media \(min-width: 80rem\)/);
   assert.doesNotMatch(css, /@media[^\{]*max-width/);
+  assert.doesNotMatch(css, /@media \(min-width: 80rem\)/);
 });
 
 test("legacy placeholder responsive rules are gone", () => {

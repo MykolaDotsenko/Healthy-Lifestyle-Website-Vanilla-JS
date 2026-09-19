@@ -6,6 +6,10 @@
 
 [Live demo](https://mykoladotsenko.github.io/Healthy-Lifestyle-Website-Vanilla-JS/) · [Architecture](ARCHITECTURE.md) · [Quality strategy](QUALITY.md)
 
+## Preview
+
+![NourishFlow full-page preview](docs/nourishflow-preview.png)
+
 ## Why this project exists
 
 NourishFlow is a portfolio product concept designed to demonstrate frontend fundamentals that frameworks can hide: semantic HTML, accessible interaction patterns, responsive CSS architecture, explicit state management, pure domain logic, browser APIs, and automated quality gates.

@@ -562,26 +562,44 @@
       <div class="bgc_y" aria-hidden="true"></div>
       <div class="container">
         <div class="promotion__text">
-          <p class="promotion__eyebrow">No artificial urgency</p>
-          <h2 class="title" id="promotion-title">Explore the Demo at Your Own Pace</h2>
+          <p class="promotion__eyebrow">Weekly menu rhythm</p>
+          <h2 class="title" id="promotion-title">Fresh Ideas, Every Week</h2>
           <p class="promotion__descr">
-            Compare meal styles, try the calorie estimator, inspect the accessible interactions, and preview the request flow. There are no fake countdowns or expired discounts pushing you to act.
+            This portfolio demo refreshes its menu cycle every Monday at 09:00 in your local time.
+            The countdown is informational, not a limited-time offer, and automatically rolls forward
+            to the next week instead of ever showing negative time.
           </p>
         </div>
 
-        <div class="promotion__principles">
-          <article class="promotion__principle">
-            <strong>Transparent</strong>
-            <span>Demo behavior is labeled honestly.</span>
-          </article>
-          <article class="promotion__principle">
-            <strong>Useful</strong>
-            <span>Every interaction demonstrates a real frontend concern.</span>
-          </article>
-          <article class="promotion__principle">
-            <strong>Respectful</strong>
-            <span>No autoplay, forced popup, or fabricated scarcity.</span>
-          </article>
+        <div class="promotion__timer">
+          <h2 class="title">Next Menu Refresh</h2>
+          <p class="promotion__deadline">
+            Scheduled for <time data-timer-deadline>the next Monday at 09:00</time>
+          </p>
+
+          <div
+            class="timer"
+            role="timer"
+            aria-label="Time until the next weekly menu refresh"
+            aria-live="off"
+          >
+            <div class="timer__block">
+              <span id="days" data-timer-part="days">00</span>
+              days
+            </div>
+            <div class="timer__block">
+              <span id="hours" data-timer-part="hours">00</span>
+              hours
+            </div>
+            <div class="timer__block">
+              <span id="minutes" data-timer-part="minutes">00</span>
+              minutes
+            </div>
+            <div class="timer__block">
+              <span id="seconds" data-timer-part="seconds">00</span>
+              seconds
+            </div>
+          </div>
         </div>
       </div>
     </section>

@@ -53,7 +53,7 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for boundaries and trade-offs.
 
 ## Visual direction
 
-NourishFlow keeps the character of the original healthy-lifestyle interface while polishing it for a modern portfolio: a light canvas, pale blue and yellow section fields, a restrained bright-green interaction accent, the original image-led meal selector, compact typography, and product content before implementation commentary. The redesign deliberately avoids a large recruiter-facing hero or engineering-scorecard UI; technical evidence lives in the repository documentation instead of competing with the product experience.
+NourishFlow keeps the character of the original healthy-lifestyle interface while polishing it for a modern portfolio: a light canvas, pale blue and yellow section fields, a restrained bright-green interaction accent, the original image-led meal selector, compact typography, and product content before implementation commentary. The redesign deliberately avoids a large recruiter-facing hero or engineering-scorecard UI; technical evidence lives in the repository documentation instead of competing with the product experience. Section labels use product language, headings rely on a tighter system-font hierarchy, and the weekly countdown is presented as one restrained editorial surface rather than four separate dashboard cards.
 
 ## Accessibility
 

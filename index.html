@@ -346,8 +346,8 @@
 
     <section class="order" aria-labelledby="order-title">
       <div class="container">
-        <h2 class="title" id="order-title">Order a Trial Day Right Now!</h2>
-        <form class="order__form">
+        <h2 class="title" id="order-title">Try the Request Flow</h2>
+        <form class="order__form" data-demo-form aria-describedby="order-demo-note">
           <label class="visually-hidden" for="order-name">Your Name</label>
           <input
             required
@@ -371,8 +371,9 @@
           >
 
           <img src="icons/right.svg" alt="" aria-hidden="true">
-          <button class="btn btn_dark btn_min" type="submit">Call Me Back</button>
+          <button class="btn btn_dark btn_min" type="submit">Preview Request</button>
         </form>
+        <p class="form-note" id="order-demo-note">Portfolio demo: validates locally. No personal data is sent or stored.</p>
       </div>
     </section>
 
@@ -445,9 +446,9 @@
 
       <div data-dialog-form>
         <h2 class="modal__title" id="contact-dialog-title">
-          Request a Call Back
+          Preview a Request
         </h2>
-        <form>
+        <form data-demo-form aria-describedby="modal-demo-note">
           <label class="visually-hidden" for="modal-name">Your Name</label>
           <input
             required
@@ -471,8 +472,9 @@
             class="modal__input"
           >
 
-          <button class="btn btn_dark btn_min" type="submit">Call Me Back</button>
+          <button class="btn btn_dark btn_min" type="submit">Preview Request</button>
         </form>
+        <p class="form-note" id="modal-demo-note">Portfolio demo: validates locally. No personal data is sent or stored.</p>
       </div>
 
       <div class="modal__status-view" data-dialog-status hidden>

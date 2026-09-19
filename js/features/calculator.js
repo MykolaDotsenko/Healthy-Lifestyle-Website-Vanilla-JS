@@ -1,5 +1,5 @@
 import {
-  CALCULATOR_LIMITS,
+  DEFAULT_CALCULATOR_PREFERENCES,
   calculateDailyCalories,
 } from "../domain/calculator.js";
 import {
@@ -36,7 +36,7 @@ export function initCalculator() {
 
   const preferences = storage
     ? loadCalculatorPreferences(storage)
-    : { version: 1, sex: "female", activityMultiplier: 1.375 };
+    : { ...DEFAULT_CALCULATOR_PREFERENCES };
 
   const state = {
     sex: preferences.sex,
@@ -97,13 +97,17 @@ export function initCalculator() {
 
     result.textContent = "—";
 
-    const hasEnteredValues = Object.values(NUMERIC_FIELDS).some(
-      ({ stateKey }) => state[stateKey] !== null,
+    const visibleErrors = Object.values(NUMERIC_FIELDS).some(
+      ({ stateKey }) =>
+        touchedFields.has(stateKey) && Boolean(calculation.errors[stateKey]),
     );
+    const hasTouchedFields = touchedFields.size > 0;
 
-    status.textContent = hasEnteredValues
+    status.textContent = visibleErrors
       ? "Check the highlighted fields to calculate your estimate."
-      : "Enter your details to calculate an estimate.";
+      : hasTouchedFields
+        ? "Complete all fields to calculate your estimate."
+        : "Enter your details to calculate an estimate.";
   }
 
   function bindRadioGroup(selector, stateKey, transform = (value) => value) {
@@ -155,4 +159,3 @@ export function initCalculator() {
   render();
 }
 
-export { CALCULATOR_LIMITS };

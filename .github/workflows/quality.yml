@@ -13,7 +13,7 @@ jobs:
   checks:
     name: Static checks and characterization tests
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
 
     steps:
       - name: Checkout
@@ -34,13 +34,13 @@ jobs:
       - name: Validate semantic HTML
         run: npx --yes html-validate@10.12.0 index.html
 
-      - name: Install responsive browser smoke dependency
-        run: npm install --no-save --package-lock=false playwright@1.63.0
+      - name: Install browser quality dependencies
+        run: npm install --no-save --package-lock=false playwright@1.63.0 @axe-core/playwright@4.13.0
 
-      - name: Install Chromium
-        run: npx playwright install chromium
+      - name: Install browser engines
+        run: npx playwright install --with-deps chromium firefox webkit
 
-      - name: Run responsive browser smoke
+      - name: Run browser quality gates
         run: |
           npm run dev > /tmp/healthy-lifestyle-server.log 2>&1 &
           SERVER_PID=$!
@@ -55,3 +55,5 @@ jobs:
 
           curl --fail --silent http://127.0.0.1:8080/ > /dev/null
           node tests/reflow.browser.mjs
+          node tests/accessibility.browser.mjs
+          node tests/cross-browser.browser.mjs

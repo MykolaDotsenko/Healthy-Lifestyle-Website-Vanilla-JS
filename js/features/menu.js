@@ -32,6 +32,8 @@ function createMenuCard(item) {
   const image = document.createElement("img");
   image.src = item.image;
   image.alt = item.alt;
+  image.loading = "lazy";
+  image.decoding = "async";
 
   const title = document.createElement("h3");
   title.className = "menu__item-subtitle";

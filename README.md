@@ -73,7 +73,7 @@ Contact UI uses the platform `<dialog>` element with `showModal()`/`close()`, ex
 
 ## Static form boundary
 
-The portfolio is intentionally static. Request forms validate with native HTML constraints and demonstrate the UX flow locally, but they do not transmit or persist personal data. The old localhost `json-server`, `db.json`, spinner asset, and network submission path were removed rather than simulating a successful backend request.
+The portfolio is intentionally static. Request forms validate with native HTML constraints and demonstrate the UX flow locally, but they do not transmit or persist personal data. No request payload leaves the browser. The old localhost `json-server`, `db.json`, spinner asset, and network submission path were removed rather than simulating a successful backend request.
 
 ## Quality checks
 

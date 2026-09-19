@@ -43,11 +43,14 @@ The browser code uses native ES modules with a deliberately shallow structure:
 ```text
 js/
 ├── app.js
+├── domain/
+│   └── calculator.js
 ├── ui/
 │   ├── modal.js
 │   └── tabs.js
 └── features/
     ├── calculator.js
+    ├── calculator-storage.js
     ├── carousel.js
     ├── forms.js
     ├── menu.js
@@ -55,6 +58,12 @@ js/
 ```
 
 `app.js` is the composition root. Feature modules do not import each other; the only explicit cross-feature dependency is the modal API passed into forms. This keeps the Vanilla JavaScript architecture easy to trace without introducing a framework, bundler, global event bus, repository layer, or unnecessary abstraction.
+
+## Calculator domain
+
+The calorie estimator keeps formula and validation logic independent from the DOM. `js/domain/calculator.js` is pure and unit-tested, while `calculator.js` owns browser interaction and `calculator-storage.js` owns the versioned local-storage boundary. Invalid or corrupted saved preferences fall back safely, legacy `sex`/`ratio` keys migrate automatically, and invalid numeric input never renders `NaN`.
+
+The current formula is preserved for continuity. The UI labels the result as an adult general-information estimate rather than medical advice.
 
 ## Quality checks
 

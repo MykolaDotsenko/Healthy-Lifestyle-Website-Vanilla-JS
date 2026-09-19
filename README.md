@@ -1,5 +1,45 @@
-https://mykoladotsenko.github.io/Healthy-Lifestyle-Website-Vanilla-JS/
+# Healthy Lifestyle Website
 
-Healthy Lifestyle Website
+A healthy-lifestyle landing page built with HTML, CSS, and Vanilla JavaScript.
 
-This project is a website dedicated to promoting a healthy lifestyle. It features various sections, including fitness menus, vegetarian options, premium dishes, and more. Users can explore the menu, view enticing food images, and get information about each dish. The website also includes a timer, a modal for special offers, and a form for user feedback.
+**Live demo:** https://mykoladotsenko.github.io/Healthy-Lifestyle-Website-Vanilla-JS/
+
+## Current feature baseline
+
+- eating-style tabs;
+- promotion countdown;
+- contact modal;
+- menu cards;
+- order/contact forms;
+- image carousel;
+- calorie calculator;
+- saved gender and activity preferences via `localStorage`.
+
+## Local development
+
+Requirements: Node.js 18+.
+
+```bash
+npm install
+npm run dev
+```
+
+The static site is then available at `http://127.0.0.1:8080`.
+
+The existing form flow still uses the legacy local JSON API. Run it in a second terminal when testing form submission:
+
+```bash
+npm run api
+```
+
+## Quality checks
+
+```bash
+npm run check
+```
+
+The first refactor stage intentionally preserves the current product behavior while adding a safety net for the larger semantic HTML, responsive CSS, accessibility, and modular JavaScript refactors that follow.
+
+## Known baseline limitations
+
+The production GitHub Pages deployment still contains legacy behavior that will be addressed in dedicated follow-up refactors: the contact form targets the local mock API, the promotion deadline is hard-coded, and the original layout/accessibility model is desktop-first.

@@ -14,7 +14,7 @@
   "author": "Mykola Dotsenko",
   "license": "ISC",
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=22.0.0"
   },
   "devDependencies": {
     "json-server": "^0.16.1"

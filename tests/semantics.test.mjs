@@ -111,3 +111,13 @@ test("calculator numeric fields expose native guardrails and error hooks", () =>
   assert.match(html, /id="calculator-status" role="status"/);
   assert.match(html, /Adult estimate only\./);
 });
+
+test("tabs expose the WAI tablist/tab/tabpanel contract", () => {
+  assert.equal(count(html, /role="tablist"/g), 1);
+  assert.equal(count(html, /role="tab"/g), 4);
+  assert.equal(count(html, /role="tabpanel"/g), 4);
+  assert.equal(count(html, /aria-selected="true"/g), 1);
+  assert.equal(count(html, /tabindex="-1"/g), 3);
+  assert.match(html, /aria-orientation="vertical"/);
+  assert.doesNotMatch(html, /aria-expanded="(?:true|false)"[^>]*>\s*(?:Fitness|Premium|Vegetarian|Balanced)/);
+});

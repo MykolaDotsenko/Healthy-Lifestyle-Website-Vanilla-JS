@@ -110,7 +110,21 @@ try {
       `${viewport.width}px initial layout`,
     );
 
-    await page.getByRole("button", { name: "Premium", exact: true }).click();
+    const fitnessTab = page.getByRole("tab", { name: "Fitness", exact: true });
+    const premiumTab = page.getByRole("tab", { name: "Premium", exact: true });
+    await fitnessTab.focus();
+    await page.keyboard.press("ArrowDown");
+    assert.equal(await premiumTab.getAttribute("aria-selected"), "true");
+    assert.equal(await premiumTab.getAttribute("tabindex"), "0");
+    assert.equal(await page.locator("#plan-premium").isVisible(), true);
+
+    await page.keyboard.press("End");
+    const balancedTab = page.getByRole("tab", { name: "Balanced", exact: true });
+    assert.equal(await balancedTab.getAttribute("aria-selected"), "true");
+    await page.keyboard.press("Home");
+    assert.equal(await fitnessTab.getAttribute("aria-selected"), "true");
+
+    await premiumTab.click();
     assertNoHorizontalDocumentOverflow(
       await readDocumentMetrics(),
       `${viewport.width}px after tab change`,

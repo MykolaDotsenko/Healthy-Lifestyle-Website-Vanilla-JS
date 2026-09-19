@@ -90,3 +90,24 @@ test("calculator uses radio state and numeric browser values", () => {
   assert.doesNotMatch(calculator, /#gender div/);
   assert.doesNotMatch(calculator, /\.calculating__choose_big div/);
 });
+
+test("calculator numeric fields expose native guardrails and error hooks", () => {
+  const expectations = [
+    ["height", "100", "250", "0.1", "height-error"],
+    ["weight", "30", "350", "0.1", "weight-error"],
+    ["age", "18", "120", "1", "age-error"],
+  ];
+
+  for (const [id, min, max, step, errorId] of expectations) {
+    const input = html.match(new RegExp(`<input[\\s\\S]*?id="${id}"[\\s\\S]*?>`))?.[0] ?? "";
+
+    assert.match(input, new RegExp(`min="${min}"`));
+    assert.match(input, new RegExp(`max="${max}"`));
+    assert.match(input, new RegExp(`step="${step.replace(".", "\\.")}"`));
+    assert.match(input, new RegExp(`aria-describedby="[^"]*${errorId}[^"]*"`));
+    assert.match(input, /aria-invalid="false"/);
+  }
+
+  assert.match(html, /id="calculator-status" role="status"/);
+  assert.match(html, /Adult estimate only\./);
+});

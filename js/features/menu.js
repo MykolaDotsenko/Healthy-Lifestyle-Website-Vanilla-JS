@@ -32,7 +32,7 @@ const MENU_ITEMS = [
     alt: "Premium seafood and fruit meal",
     title: "Premium Menu",
     description:
-      "A seafood-focused concept that demonstrates a more premium visual treatment and card hierarchy.",
+      "A seafood-focused menu concept with fruit, greens, and richer seasonal combinations.",
     price: 21,
   },
 ];

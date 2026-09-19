@@ -40,6 +40,16 @@ try {
         );
       });
       await page.reload({ waitUntil: "domcontentloaded" });
+      assert.equal(
+        await page.locator("#female").isChecked(),
+        true,
+        "corrupted preferences should recover to the default sex",
+      );
+      assert.equal(
+        await page.locator("#small").isChecked(),
+        true,
+        "corrupted preferences should recover to the default activity",
+      );
     }
 
     await page.waitForFunction(() => document.querySelectorAll(".menu__item").length === 3);

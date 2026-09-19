@@ -204,7 +204,61 @@
   }
 
   .preview {
-    padding-block-start: clamp(2rem, 5vw, 4rem);
+    padding-block-start: clamp(1.5rem, 4vw, 3rem);
+  }
+
+  .preview__intro {
+    display: grid;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: end;
+    margin-block-end: clamp(2rem, 5vw, 4rem);
+  }
+
+  .preview__copy {
+    display: grid;
+    gap: var(--space-5);
+    max-inline-size: 48rem;
+  }
+
+  .preview__lede {
+    color: var(--color-text-muted);
+    font-size: clamp(1.05rem, 2vw, 1.25rem);
+  }
+
+  .preview__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  .preview__proof {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-3);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .preview__proof li {
+    display: grid;
+    min-inline-size: 0;
+    gap: var(--space-1);
+    padding: var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.78);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .preview__proof strong {
+    font-size: 0.9375rem;
+  }
+
+  .preview__proof span {
+    color: var(--color-text-muted);
+    font-size: 0.8125rem;
+    line-height: 1.35;
   }
 
   .tabcontainer {
@@ -438,6 +492,19 @@
     z-index: -1;
     block-size: 0.45rem;
     background: var(--color-accent);
+  }
+
+  .eyebrow {
+    inline-size: fit-content;
+    padding: 0.4rem 0.7rem;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    background: var(--color-surface-soft);
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
   }
 
   .preview__life {
@@ -1002,6 +1069,14 @@
   }
 
   @media (min-width: 64rem) {
+    .preview__intro {
+      grid-template-columns: minmax(0, 1.2fr) minmax(20rem, 0.8fr);
+    }
+
+    .preview__proof {
+      align-self: stretch;
+    }
+
     .tabcontainer {
       grid-template-columns: minmax(0, 1fr) 17.5rem;
       align-items: stretch;

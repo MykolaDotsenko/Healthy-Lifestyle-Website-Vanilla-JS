@@ -1,0 +1,267 @@
+{
+  "generator": "sharp@0.35.4",
+  "formats": {
+    "avif": {
+      "quality": 50,
+      "effort": 6
+    },
+    "webp": {
+      "quality": 80,
+      "effort": 6
+    }
+  },
+  "images": {
+    "img/tabs/vegy.jpg": {
+      "source": "img/tabs/vegy.jpg",
+      "sourceWidth": 1920,
+      "sourceHeight": 1221,
+      "sourceBytes": 367553,
+      "variants": [
+        {
+          "format": "avif",
+          "width": 768,
+          "height": 488,
+          "path": "img/optimized/tabs/vegy-768.avif",
+          "bytes": 29692
+        },
+        {
+          "format": "webp",
+          "width": 768,
+          "height": 488,
+          "path": "img/optimized/tabs/vegy-768.webp",
+          "bytes": 55264
+        },
+        {
+          "format": "avif",
+          "width": 1440,
+          "height": 916,
+          "path": "img/optimized/tabs/vegy-1440.avif",
+          "bytes": 72399
+        },
+        {
+          "format": "webp",
+          "width": 1440,
+          "height": 916,
+          "path": "img/optimized/tabs/vegy-1440.webp",
+          "bytes": 129508
+        }
+      ]
+    },
+    "img/tabs/elite.jpg": {
+      "source": "img/tabs/elite.jpg",
+      "sourceWidth": 1920,
+      "sourceHeight": 1281,
+      "sourceBytes": 810939,
+      "variants": [
+        {
+          "format": "avif",
+          "width": 768,
+          "height": 512,
+          "path": "img/optimized/tabs/elite-768.avif",
+          "bytes": 47930
+        },
+        {
+          "format": "webp",
+          "width": 768,
+          "height": 512,
+          "path": "img/optimized/tabs/elite-768.webp",
+          "bytes": 103252
+        },
+        {
+          "format": "avif",
+          "width": 1440,
+          "height": 961,
+          "path": "img/optimized/tabs/elite-1440.avif",
+          "bytes": 161774
+        },
+        {
+          "format": "webp",
+          "width": 1440,
+          "height": 961,
+          "path": "img/optimized/tabs/elite-1440.webp",
+          "bytes": 354476
+        }
+      ]
+    },
+    "img/tabs/post.jpg": {
+      "source": "img/tabs/post.jpg",
+      "sourceWidth": 1920,
+      "sourceHeight": 1280,
+      "sourceBytes": 618062,
+      "variants": [
+        {
+          "format": "avif",
+          "width": 768,
+          "height": 512,
+          "path": "img/optimized/tabs/post-768.avif",
+          "bytes": 34020
+        },
+        {
+          "format": "webp",
+          "width": 768,
+          "height": 512,
+          "path": "img/optimized/tabs/post-768.webp",
+          "bytes": 69184
+        },
+        {
+          "format": "avif",
+          "width": 1440,
+          "height": 960,
+          "path": "img/optimized/tabs/post-1440.avif",
+          "bytes": 116631
+        },
+        {
+          "format": "webp",
+          "width": 1440,
+          "height": 960,
+          "path": "img/optimized/tabs/post-1440.webp",
+          "bytes": 251332
+        }
+      ]
+    },
+    "img/slider/pepper.jpg": {
+      "source": "img/slider/pepper.jpg",
+      "sourceWidth": 1920,
+      "sourceHeight": 1280,
+      "sourceBytes": 321717,
+      "variants": [
+        {
+          "format": "avif",
+          "width": 768,
+          "height": 512,
+          "path": "img/optimized/slider/pepper-768.avif",
+          "bytes": 14829
+        },
+        {
+          "format": "webp",
+          "width": 768,
+          "height": 512,
+          "path": "img/optimized/slider/pepper-768.webp",
+          "bytes": 25902
+        },
+        {
+          "format": "avif",
+          "width": 1440,
+          "height": 960,
+          "path": "img/optimized/slider/pepper-1440.avif",
+          "bytes": 37479
+        },
+        {
+          "format": "webp",
+          "width": 1440,
+          "height": 960,
+          "path": "img/optimized/slider/pepper-1440.webp",
+          "bytes": 72690
+        }
+      ]
+    },
+    "img/slider/food-12.jpg": {
+      "source": "img/slider/food-12.jpg",
+      "sourceWidth": 1920,
+      "sourceHeight": 1080,
+      "sourceBytes": 332066,
+      "variants": [
+        {
+          "format": "avif",
+          "width": 768,
+          "height": 432,
+          "path": "img/optimized/slider/food-12-768.avif",
+          "bytes": 19194
+        },
+        {
+          "format": "webp",
+          "width": 768,
+          "height": 432,
+          "path": "img/optimized/slider/food-12-768.webp",
+          "bytes": 36688
+        },
+        {
+          "format": "avif",
+          "width": 1440,
+          "height": 810,
+          "path": "img/optimized/slider/food-12-1440.avif",
+          "bytes": 45932
+        },
+        {
+          "format": "webp",
+          "width": 1440,
+          "height": 810,
+          "path": "img/optimized/slider/food-12-1440.webp",
+          "bytes": 91486
+        }
+      ]
+    },
+    "img/slider/olive-oil.jpg": {
+      "source": "img/slider/olive-oil.jpg",
+      "sourceWidth": 1920,
+      "sourceHeight": 1271,
+      "sourceBytes": 383220,
+      "variants": [
+        {
+          "format": "avif",
+          "width": 768,
+          "height": 508,
+          "path": "img/optimized/slider/olive-oil-768.avif",
+          "bytes": 22747
+        },
+        {
+          "format": "webp",
+          "width": 768,
+          "height": 508,
+          "path": "img/optimized/slider/olive-oil-768.webp",
+          "bytes": 41464
+        },
+        {
+          "format": "avif",
+          "width": 1440,
+          "height": 953,
+          "path": "img/optimized/slider/olive-oil-1440.avif",
+          "bytes": 54578
+        },
+        {
+          "format": "webp",
+          "width": 1440,
+          "height": 953,
+          "path": "img/optimized/slider/olive-oil-1440.webp",
+          "bytes": 103592
+        }
+      ]
+    },
+    "img/slider/paprika.jpg": {
+      "source": "img/slider/paprika.jpg",
+      "sourceWidth": 1920,
+      "sourceHeight": 1427,
+      "sourceBytes": 625805,
+      "variants": [
+        {
+          "format": "avif",
+          "width": 768,
+          "height": 571,
+          "path": "img/optimized/slider/paprika-768.avif",
+          "bytes": 30860
+        },
+        {
+          "format": "webp",
+          "width": 768,
+          "height": 571,
+          "path": "img/optimized/slider/paprika-768.webp",
+          "bytes": 53002
+        },
+        {
+          "format": "avif",
+          "width": 1440,
+          "height": 1070,
+          "path": "img/optimized/slider/paprika-1440.avif",
+          "bytes": 77852
+        },
+        {
+          "format": "webp",
+          "width": 1440,
+          "height": 1070,
+          "path": "img/optimized/slider/paprika-1440.webp",
+          "bytes": 127316
+        }
+      ]
+    }
+  }
+}

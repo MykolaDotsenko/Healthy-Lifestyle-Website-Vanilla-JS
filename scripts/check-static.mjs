@@ -38,9 +38,17 @@ function isExternalReference(value) {
 }
 
 function extractHtmlReferences(html) {
-  return [...html.matchAll(/(?:src|href)=["']([^"'#][^"']*)["']/g)].map(
-    (match) => ({ from: "index.html", value: match[1] }),
-  );
+  const directReferences = [
+    ...html.matchAll(/(?:src|href)=["']([^"'#][^"']*)["']/g),
+  ].map((match) => ({ from: "index.html", value: match[1] }));
+
+  const srcsetReferences = [...html.matchAll(/srcset=["']([^"']+)["']/g)]
+    .flatMap((match) => match[1].split(","))
+    .map((candidate) => candidate.trim().split(/\s+/)[0])
+    .filter(Boolean)
+    .map((value) => ({ from: "index.html", value }));
+
+  return [...directReferences, ...srcsetReferences];
 }
 
 function extractCssReferences(css) {

@@ -5,7 +5,10 @@ import { fileURLToPath } from "node:url";
 import test from "node:test";
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
-const html = await readFile(resolve(root, "index.html"), "utf8");
+const [html, menu] = await Promise.all([
+  readFile(resolve(root, "index.html"), "utf8"),
+  readFile(resolve(root, "js/features/menu.js"), "utf8"),
+]);
 
 test("document exposes complete product and social metadata", () => {
   assert.match(html, /<title>NourishFlow — Accessible Vanilla JS Nutrition Demo<\/title>/);
@@ -19,7 +22,16 @@ test("document exposes complete product and social metadata", () => {
 });
 
 test("portfolio copy does not impersonate a live delivery business", () => {
-  assert.doesNotMatch(html, /Food Delivery|Contact Us|tel:\+|Find Us on Social Media|Or Call Us/);
+  const productCopy = `${html}\n${menu}`;
+
+  assert.doesNotMatch(
+    productCopy,
+    /Food Delivery|Contact Us|tel:\+|Find Us on Social Media|Or Call Us/,
+  );
+  assert.doesNotMatch(
+    productCopy,
+    /restaurant menu without going to a restaurant|optimal price and high quality/i,
+  );
   assert.match(html, /portfolio product concept/i);
   assert.match(html, /View source on GitHub/);
   assert.match(html, /No personal data is sent or stored/);

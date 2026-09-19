@@ -24,7 +24,8 @@ test("README presents the product before implementation history", () => {
 test("architecture documentation matches the current module surface", () => {
   assert.match(architecture, /domain\/calculator\.js/);
   assert.match(architecture, /calculator-storage\.js/);
-  assert.doesNotMatch(architecture, /timer\.js/);
+  assert.match(architecture, /timer\.js/);
+  assert.match(architecture, /rolling|rolls forward|weekly boundary/i);
   assert.match(architecture, /Deliberate non-goals/);
 });
 

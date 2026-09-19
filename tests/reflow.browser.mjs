@@ -56,6 +56,15 @@ try {
       );
     }
 
+    assert.equal(
+      await page.getByRole("heading", {
+        level: 1,
+        name: "Nutrition UX, built on the web platform.",
+      }).isVisible(),
+      true,
+      `${viewport.width}px: recruiter-facing product heading should be visible`,
+    );
+
     await page.waitForFunction(() => document.querySelectorAll(".menu__item").length === 3);
     assert.equal(
       await page.locator(".menu__item").count(),

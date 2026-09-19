@@ -1,6 +1,6 @@
 # Healthy Lifestyle Website
 
-A healthy-lifestyle landing page built with HTML, CSS, and Vanilla JavaScript.
+A healthy-lifestyle landing page built with semantic HTML, Vanilla CSS, and Vanilla JavaScript.
 
 **Live demo:** https://mykoladotsenko.github.io/Healthy-Lifestyle-Website-Vanilla-JS/
 
@@ -38,8 +38,8 @@ npm run api
 npm run check
 ```
 
-The first refactor stage intentionally preserves the current product behavior while adding a safety net for the larger semantic HTML, responsive CSS, accessibility, and modular JavaScript refactors that follow.
+The refactor baseline now includes regression checks plus a semantic HTML foundation: native buttons, labeled form controls, fieldset/legend radio groups, landmark structure, a skip link, semantic menu cards, and keyboard-focusable primary interactions.
 
 ## Known baseline limitations
 
-The production GitHub Pages deployment still contains legacy behavior that will be addressed in dedicated follow-up refactors: the contact form targets the local mock API, the promotion deadline is hard-coded, and the original layout/accessibility model is desktop-first.
+The production GitHub Pages deployment still contains legacy behavior that will be addressed in dedicated follow-up refactors: the contact form targets the local mock API, the promotion deadline is hard-coded, the layout remains desktop-first, and advanced keyboard/focus behavior for the tabs, carousel, and modal is intentionally deferred to their dedicated refactors.

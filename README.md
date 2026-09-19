@@ -73,6 +73,10 @@ The eating-style selector implements the WAI-ARIA tabs pattern with one roving t
 
 The meal carousel uses index-based percentage transforms instead of pixel measurements, so resize cannot corrupt the active slide. It has no autoplay, exposes carousel/slide semantics, uses native buttons for previous/next and slide pickers, and keeps visual layout rules in CSS rather than inline JavaScript.
 
+## Native dialog
+
+Contact UI uses the platform `<dialog>` element with `showModal()`/`close()`, explicit initial focus, deterministic focus return, native Escape behavior, and a CSS `::backdrop`. Intrusive timed and scroll-triggered popups were removed.
+
 ## Quality checks
 
 ```bash

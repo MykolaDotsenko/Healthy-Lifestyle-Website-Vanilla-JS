@@ -5,8 +5,18 @@ import { fileURLToPath } from "node:url";
 import test from "node:test";
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
-const html = await readFile(resolve(root, "index.html"), "utf8");
-const script = await readFile(resolve(root, "js/script.js"), "utf8");
+
+async function read(relativePath) {
+  return readFile(resolve(root, relativePath), "utf8");
+}
+
+const html = await read("index.html");
+const app = await read("js/app.js");
+const timer = await read("js/features/timer.js");
+const modal = await read("js/ui/modal.js");
+const menu = await read("js/features/menu.js");
+const carousel = await read("js/features/carousel.js");
+const calculator = await read("js/features/calculator.js");
 
 function countMatches(value, pattern) {
   return [...value.matchAll(pattern)].length;
@@ -24,9 +34,9 @@ test("baseline interactive surface remains intact", () => {
     "expected four carousel slides",
   );
   assert.equal(
-    countMatches(script, /new MenuCard\(/g),
+    countMatches(menu, /price:\s*\d+/g),
     3,
-    "expected three rendered menu cards",
+    "expected three menu items",
   );
   assert.equal(
     countMatches(html, /<form\b/g),
@@ -36,16 +46,26 @@ test("baseline interactive surface remains intact", () => {
 });
 
 test("baseline timer, modal, slider, and calculator hooks remain present", () => {
-  assert.match(script, /setClock\("\.timer", deadline\)/);
-  assert.match(script, /document\.querySelector\("\.modal"\)/);
-  assert.match(script, /document\.querySelectorAll\("\.offer__slide"\)/);
-  assert.match(script, /localStorage\.setItem\("sex"/);
-  assert.match(script, /localStorage\.setItem\("ratio"/);
-  assert.match(script, /447\.6 \+ 9\.2 \* weight \+ 3\.1 \* height - 4\.3 \* age/);
-  assert.match(script, /88\.36 \+ 13\.4 \* weight \+ 4\.8 \* height - 5\.7 \* age/);
+  assert.match(app, /initTimer\(\)/);
+  assert.match(timer, /DEFAULT_DEADLINE = "2024-03-18"/);
+  assert.match(modal, /document\.querySelector\("\.modal"\)/);
+  assert.match(carousel, /document\.querySelectorAll\("\.offer__slide"\)/);
+  assert.match(calculator, /localStorage\.setItem\("sex"/);
+  assert.match(calculator, /localStorage\.setItem\("ratio"/);
+  assert.match(
+    calculator,
+    /447\.6 \+ 9\.2 \* weight \+ 3\.1 \* height - 4\.3 \* age/,
+  );
+  assert.match(
+    calculator,
+    /88\.36 \+ 13\.4 \* weight \+ 4\.8 \* height - 5\.7 \* age/,
+  );
 });
 
-test("PR #1 cleanup removes known dead/debug JavaScript", () => {
-  assert.doesNotMatch(script, /async function getResource\(/);
-  assert.doesNotMatch(script, /console\.log\(/);
+test("legacy monolith patterns do not return", () => {
+  const combined = [app, timer, modal, menu, carousel, calculator].join("\n");
+
+  assert.doesNotMatch(combined, /async function getResource\(/);
+  assert.doesNotMatch(combined, /console\.log\(/);
+  assert.doesNotMatch(combined, /DOMContentLoaded/);
 });

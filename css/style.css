@@ -20,6 +20,7 @@
     --color-dark: #303030;
     --color-border: rgba(48, 48, 48, 0.18);
     --color-focus: #155eef;
+    --color-danger: #b42318;
     --color-overlay: rgba(0, 0, 0, 0.56);
 
     --shadow-sm: 0 0.25rem 0.9375rem rgba(0, 0, 0, 0.12);
@@ -568,11 +569,51 @@
     text-align: center;
   }
 
+  .calculating__guidance {
+    max-inline-size: 52rem;
+    margin: var(--space-4) auto 0;
+    color: var(--color-text-muted);
+    font-size: 0.9375rem;
+    text-align: center;
+  }
+
   .calculating__subtitle {
     inline-size: 100%;
     color: var(--color-text);
     font-size: 1rem;
     font-weight: 700;
+    text-align: center;
+  }
+
+  .calculating__input-group {
+    display: grid;
+    min-inline-size: 0;
+    gap: var(--space-2);
+    align-content: start;
+  }
+
+  .calculating__input-label {
+    font-size: 0.875rem;
+    font-weight: 700;
+  }
+
+  .calculating__error {
+    color: var(--color-danger);
+    font-size: 0.8125rem;
+    line-height: 1.35;
+  }
+
+  .calculating__error[hidden] {
+    display: none;
+  }
+
+  .calculating__choose-item[aria-invalid="true"] {
+    border-color: var(--color-danger);
+  }
+
+  .calculating__status {
+    color: var(--color-text-muted);
+    font-size: 0.875rem;
     text-align: center;
   }
 

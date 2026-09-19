@@ -47,7 +47,13 @@ test("baseline interactive surface remains intact", () => {
   );
 });
 
-test("modal, slider, and calculator hooks remain present", () => {
+test("timer, modal, slider, and calculator hooks remain present", () => {
+  assert.match(app, /initTimer\(\)/);
+  assert.match(timer, /getNextWeeklyDeadline/);
+  assert.match(timer, /Math\.max\(0,/);
+  assert.match(timer, /window\.setInterval\(updateClock, 1_000\)/);
+  assert.doesNotMatch(timer, /2024-03-18/);
+
   assert.match(modal, /document\.querySelector\("#contact-dialog"\)/);
   assert.match(carousel, /document\.querySelectorAll\("\.offer__slide"\)/);
   assert.match(calculator, /loadCalculatorPreferences/);
@@ -81,5 +87,5 @@ test("legacy monolith patterns do not return", () => {
   assert.doesNotMatch(combined, /async function getResource\(/);
   assert.doesNotMatch(combined, /console\.log\(/);
   assert.doesNotMatch(combined, /DOMContentLoaded/);
-  assert.doesNotMatch(combined, /setInterval\(/);
+  assert.doesNotMatch(app, /setInterval\(/);
 });

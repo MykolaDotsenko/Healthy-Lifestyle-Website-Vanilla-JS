@@ -415,12 +415,16 @@
   }
 
   .offer__text,
-  .offer__advantages,
-  .offer__slider,
-  .promotion__text,
+  .promotion__text {
+    display: grid;
+    gap: var(--space-3);
+    align-content: start;
+    min-inline-size: 0;
+  }
 
   .offer__action {
     display: flex;
+    min-inline-size: 0;
     align-items: start;
   }
 
@@ -428,6 +432,7 @@
     display: grid;
     gap: var(--space-4);
     align-content: start;
+    min-inline-size: 0;
   }
 
   .offer__slider {

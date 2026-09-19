@@ -99,7 +99,7 @@ test("calculator numeric fields expose native guardrails and error hooks", () =>
   ];
 
   for (const [id, min, max, step, errorId] of expectations) {
-    const input = html.match(new RegExp(`<input[\\s\\S]*?id="${id}"[\\s\\S]*?>`))?.[0] ?? "";
+    const input = html.match(new RegExp(`<input(?=[^>]*\\bid="${id}")[^>]*>`))?.[0] ?? "";
 
     assert.match(input, new RegExp(`min="${min}"`));
     assert.match(input, new RegExp(`max="${max}"`));

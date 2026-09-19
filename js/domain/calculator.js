@@ -42,7 +42,7 @@ export function normalizeCalculatorPreferences(value) {
   };
 }
 
-export function validateCalculatorInput(input) {
+export function validateCalculatorInput(input = {}) {
   const errors = {};
 
   if (!SEX_VALUES.includes(input.sex)) {
@@ -77,7 +77,7 @@ export function validateCalculatorInput(input) {
   };
 }
 
-export function calculateDailyCalories(input) {
+export function calculateDailyCalories(input = {}) {
   const validation = validateCalculatorInput(input);
 
   if (!validation.valid) {

@@ -507,6 +507,11 @@
     text-transform: uppercase;
   }
 
+  .section-kicker_center {
+    margin-inline: auto;
+    text-align: center;
+  }
+
   .bgc_blue {
     position: absolute;
     inset-block: 0;
@@ -1220,6 +1225,13 @@
 }
 
 @layer components {
+  .promotion__timer-title {
+    font-size: clamp(1.2rem, 2vw, 1.45rem);
+    font-weight: 650;
+    letter-spacing: -0.015em;
+    line-height: 1.15;
+  }
+
   .promotion__deadline {
     color: var(--color-text-muted);
     font-size: 0.875rem;

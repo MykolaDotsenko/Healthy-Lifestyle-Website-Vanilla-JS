@@ -29,3 +29,17 @@ test("hero layout remains fluid rather than viewport-sized", () => {
   assert.match(css, /grid-template-columns: minmax\(0, 1\.2fr\) minmax\(20rem, 0\.8fr\)/);
   assert.doesNotMatch(css, /\.preview__intro[^}]*100vh/s);
 });
+
+
+test("art direction exposes a coherent brand system without external font requests", () => {
+  assert.match(html, /class="brand"/);
+  assert.match(html, /class="brand__mark"/);
+  assert.match(html, />NourishFlow<\/strong>/);
+  assert.match(css, /--font-display:/);
+  assert.match(css, /--color-brand:\s*#1f6847/);
+  assert.match(css, /--color-coral:\s*#e78368/);
+  assert.match(css, /\.preview::before/);
+  assert.match(css, /counter-reset:\s*proof/);
+  assert.match(css, /font-family:\s*var\(--font-display\)/);
+  assert.doesNotMatch(css, /fonts\.googleapis\.com/);
+});

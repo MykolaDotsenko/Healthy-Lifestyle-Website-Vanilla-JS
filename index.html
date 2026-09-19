@@ -62,34 +62,59 @@
 
   <main id="main-content">
     <section class="preview" aria-labelledby="main-title">
-      <h1 id="main-title" class="visually-hidden">NourishFlow accessible nutrition UX demo</h1>
       <div class="bgc_blue" aria-hidden="true"></div>
       <div class="container">
+        <div class="preview__intro">
+          <div class="preview__copy">
+            <p class="eyebrow">Zero-framework frontend portfolio project</p>
+            <h1 id="main-title">Nutrition UX, built on the web platform.</h1>
+            <p class="preview__lede">
+              NourishFlow demonstrates accessible interaction patterns, resilient responsive layout, and testable Vanilla JavaScript architecture without a framework or bundler.
+            </p>
+            <div class="preview__actions">
+              <a class="btn btn_dark" href="#calculator">Try the calculator</a>
+              <a
+                class="btn btn_white"
+                href="https://github.com/MykolaDotsenko/Healthy-Lifestyle-Website-Vanilla-JS"
+              >
+                View source
+              </a>
+            </div>
+          </div>
+
+          <ul class="preview__proof">
+            <li><strong>Semantic HTML</strong><span>Native controls first</span></li>
+            <li><strong>Vanilla JS</strong><span>ES modules + pure domain logic</span></li>
+            <li><strong>320px reflow</strong><span>Responsive without overflow masking</span></li>
+            <li><strong>Local-only forms</strong><span>No personal data transmitted</span></li>
+          </ul>
+        </div>
+
         <div class="tabcontainer">
-          <article class="tabcontent" id="plan-fitness" role="tabpanel" tabindex="0" aria-labelledby="plan-fitness-control">
+          <div class="tabcontent" id="plan-fitness" role="tabpanel" tabindex="0" aria-labelledby="plan-fitness-control">
             <img src="img/tabs/vegy.jpg" alt="Fresh vegetables prepared for the Fitness menu" decoding="async" fetchpriority="high">
             <p class="tabcontent__descr">
-              "Fitness" Menu - a new approach to preparing dishes: more fresh vegetables and fruits. For people interested in sports; active and healthy. It's a completely new product with optimal price and high quality!
+              A produce-forward concept used to demonstrate tab semantics, responsive image presentation, and accessible keyboard navigation.
             </p>
-          </article>
-          <article class="tabcontent" id="plan-premium" role="tabpanel" tabindex="0" aria-labelledby="plan-premium-control" hidden>
+          </div>
+          <div class="tabcontent" id="plan-premium" role="tabpanel" tabindex="0" aria-labelledby="plan-premium-control" hidden>
             <img src="img/tabs/elite.jpg" alt="Premium seafood and fruit meal" loading="lazy" decoding="async">
             <p class="tabcontent__descr">
-              "Premium" Menu - we use not only beautiful packaging design but also high-quality dish execution. Red fish, seafood, fruits - restaurant menu without going to a restaurant!
+              A seafood-focused concept with richer visual content, kept intentionally simple so interaction quality remains the focus.
             </p>
-          </article>
-          <article class="tabcontent" id="plan-vegetarian" role="tabpanel" tabindex="0" aria-labelledby="plan-vegetarian-control" hidden>
+          </div>
+          <div class="tabcontent" id="plan-vegetarian" role="tabpanel" tabindex="0" aria-labelledby="plan-vegetarian-control" hidden>
             <img src="img/tabs/post.jpg" alt="Plant-based Vegetarian menu" loading="lazy" decoding="async">
             <p class="tabcontent__descr">
-              Our special "Vegetarian Menu" is a careful selection of ingredients: complete absence of animal products. Complete harmony with yourself and nature in every element! Everything will be Om!
+              A plant-based concept that demonstrates the same interaction contract with different content and imagery.
             </p>
-          </article>
-          <article class="tabcontent" id="plan-balanced" role="tabpanel" tabindex="0" aria-labelledby="plan-balanced-control" hidden>
+          </div>
+          <div class="tabcontent" id="plan-balanced" role="tabpanel" tabindex="0" aria-labelledby="plan-balanced-control" hidden>
             <img src="img/tabs/vegy.jpg" alt="Balanced meal with vegetables" loading="lazy" decoding="async">
             <p class="tabcontent__descr">
-              "Balanced" Menu - matching your diet to all scientific recommendations. We carefully calculate your need for protein/fat/carbs and create the best dishes for you.
+              A balanced-meal concept that keeps product language conservative while demonstrating reusable UI behavior.
             </p>
-          </article>
+          </div>
 
           <div class="tabheader">
             <h2>Choose Your Eating Style</h2>
@@ -141,7 +166,6 @@
             </div>
           </div>
         </div>
-        <p class="preview__life">Explore. Calculate. Inspect the interaction details.</p>
       </div>
     </section>
 

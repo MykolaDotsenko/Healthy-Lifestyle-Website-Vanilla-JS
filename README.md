@@ -26,12 +26,6 @@ npm run dev
 
 The static site is then available at `http://127.0.0.1:8080`.
 
-The existing form flow still uses the legacy local JSON API. Run it in a second terminal when testing form submission:
-
-```bash
-npm run api
-```
-
 ## Responsive CSS foundation
 
 The interface now uses a mobile-first Vanilla CSS architecture with cascade layers, design tokens, fluid containers, CSS Grid/Flexbox, `clamp()` typography/spacing, accessible focus states, reduced-motion support, and content-driven breakpoints. The layout is designed to reflow down to a 320 CSS-pixel viewport without relying on the old fixed desktop widths.
@@ -77,6 +71,10 @@ The meal carousel uses index-based percentage transforms instead of pixel measur
 
 Contact UI uses the platform `<dialog>` element with `showModal()`/`close()`, explicit initial focus, deterministic focus return, native Escape behavior, and a CSS `::backdrop`. Intrusive timed and scroll-triggered popups were removed.
 
+## Static form boundary
+
+The portfolio is intentionally static. Request forms validate with native HTML constraints and demonstrate the UX flow locally, but they do not transmit or persist personal data. No request payload leaves the browser. The old localhost `json-server`, `db.json`, spinner asset, and network submission path were removed rather than simulating a successful backend request.
+
 ## Quality checks
 
 ```bash
@@ -87,4 +85,4 @@ The refactor baseline now includes regression checks plus a semantic HTML founda
 
 ## Known baseline limitations
 
-The production GitHub Pages deployment still contains legacy behavior that will be addressed in dedicated follow-up refactors: the contact form targets the local mock API, the promotion deadline is hard-coded, advanced keyboard/focus behavior for the tabs, carousel, and modal is intentionally deferred to their dedicated refactors.
+The remaining major legacy behavior is the hard-coded expired promotion. Final performance, product positioning, and repository presentation are handled in later roadmap PRs.

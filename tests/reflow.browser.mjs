@@ -66,6 +66,18 @@ try {
     );
 
     await page.waitForFunction(() => document.querySelectorAll(".menu__item").length === 3);
+
+    if (viewport.width === 320) {
+      const selectedImage = await page
+        .locator("#plan-fitness img")
+        .evaluate((image) => image.currentSrc);
+
+      assert.match(
+        selectedImage,
+        /\/img\/optimized\/tabs\/vegy-768\.avif$/,
+        "320px: Chromium should select the responsive AVIF candidate",
+      );
+    }
     assert.equal(
       await page.locator(".menu__item").count(),
       3,

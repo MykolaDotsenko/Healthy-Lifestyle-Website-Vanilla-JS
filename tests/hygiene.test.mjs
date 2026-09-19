@@ -8,7 +8,12 @@ const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const css = await readFile(resolve(root, "css/style.css"), "utf8");
 
 test("removed product chrome does not leave dead CSS behind", () => {
-  for (const selector of [".pepper", ".preview__life", ".promotion__timer"]) {
+  for (const selector of [
+    ".pepper",
+    ".preview__life",
+    ".promotion__timer",
+    ".order__form > img",
+  ]) {
     assert.doesNotMatch(css, new RegExp(selector.replace(".", "\\.")));
   }
 });

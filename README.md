@@ -24,7 +24,7 @@ It is intentionally **not** presented as a functioning meal-delivery company. Re
 | Dialog | Native `<dialog>`, initial focus, Escape, focus restoration |
 | Calculator | Pure domain calculation, validation, safe versioned preferences |
 | Forms | Native validation, explicit local-only privacy boundary |
-| Performance | One eager raster, lazy below-fold media, rendering containment |
+| Performance | Responsive AVIF/WebP sources, JPEG fallback, intrinsic sizing, lazy below-fold media |
 | Quality | Unit/static checks, HTML validation, axe, responsive and cross-browser journeys |
 
 ## Architecture at a glance
@@ -65,9 +65,18 @@ CI runs axe against mobile and desktop states and exercises the critical journey
 
 ## Performance
 
-The initial page keeps only one authored raster eager. Inactive tabs, carousel media, and generated menu images use browser-native lazy loading and asynchronous decoding. The CSS deliberately avoids section-level rendering skips so accessibility and visual state remain deterministic.
+NourishFlow serves responsive AVIF first, WebP second, and the original JPEG as a compatibility fallback. The seven source JPEGs total **3,459,362 bytes**; their 768px AVIF variants total **199,272 bytes (94.2% smaller)** and their 1440px AVIF variants total **566,645 bytes (83.6% smaller)**. The first visible meal image drops from 367,553 bytes as JPEG to 29,692 bytes at 768px AVIF or 72,399 bytes at 1440px AVIF.
 
-A repository test enforces the current eager-raster budget. The original JPEG source assets remain an explicit optimization opportunity for future AVIF/WebP conversion.
+Only the first visible raster is eager and high-priority. Inactive tabs, carousel media, and generated menu images remain lazy and asynchronously decoded. Every authored raster fallback carries intrinsic `width`/`height` metadata to protect layout stability.
+
+The next-gen assets are reproducible with the pinned generator:
+
+```bash
+npm install --no-save --package-lock=false sharp@0.35.4
+node scripts/optimize-images.mjs
+```
+
+`img/optimized/manifest.json` records source dimensions and byte sizes for every generated variant, and automated tests enforce the modern-source and size budgets.
 
 ## Privacy and product integrity
 
@@ -105,7 +114,7 @@ See [QUALITY.md](QUALITY.md) for the complete verification model.
 - **No framework:** chosen deliberately to expose web-platform fundamentals and keep runtime complexity low.
 - **No bundler:** native modules are sufficient for this project size.
 - **Static forms:** honest demo behavior is preferred over a fake or unreliable backend.
-- **Original JPEG sources:** loading strategy is optimized now; next-gen binary re-encoding remains future work.
+- **JPEG fallbacks retained:** originals remain for compatibility and social-preview safety, while supporting browsers receive responsive AVIF/WebP sources.
 - **Calculator formula preserved:** architecture and validation were improved without silently changing the original calculation model.
 
 ## License

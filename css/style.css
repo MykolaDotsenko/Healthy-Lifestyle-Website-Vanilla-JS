@@ -503,6 +503,13 @@
     background: var(--color-surface-blue);
   }
 
+  .tabcontent picture,
+  .offer__slide picture,
+  .menu__item picture {
+    display: block;
+    inline-size: 100%;
+  }
+
   .tabcontent img {
     inline-size: 100%;
     aspect-ratio: 16 / 10;
@@ -606,6 +613,10 @@
     block-size: auto;
     margin: 0;
     aspect-ratio: 5 / 3;
+  }
+
+  .offer__slide picture {
+    block-size: 100%;
   }
 
   .offer__slide img {
@@ -786,10 +797,6 @@
     box-shadow: var(--shadow-sm);
     color: var(--color-text);
     text-align: start;
-  }
-
-  .order__form > img {
-    display: none;
   }
 
   .form-note {
@@ -1110,11 +1117,6 @@
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto auto;
     }
 
-    .order__form > img {
-      display: block;
-      inline-size: 2rem;
-    }
-
     .order__form .btn {
       grid-column: auto;
       justify-self: end;
@@ -1126,7 +1128,7 @@
     }
 
     .footer .container {
-      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      grid-template-columns: minmax(0, 1fr) auto;
     }
   }
 

@@ -4,6 +4,7 @@ import { chromium } from "playwright";
 const baseUrl = process.env.BASE_URL ?? "http://127.0.0.1:8080";
 const viewports = [
   { width: 320, height: 800 },
+  { width: 360, height: 800 },
   { width: 390, height: 844 },
   { width: 768, height: 900 },
   { width: 1024, height: 900 },
@@ -65,13 +66,30 @@ try {
     }
 
     assert.equal(
-      await page.getByRole("heading", {
-        level: 1,
-        name: "Nutrition UX, built on the web platform.",
-      }).isVisible(),
+      await page.locator(".tabcontainer").isVisible(),
       true,
-      `${viewport.width}px: recruiter-facing product heading should be visible`,
+      `${viewport.width}px: product experience should be visible immediately`,
     );
+    assert.equal(
+      await page.locator(".preview__intro").count(),
+      0,
+      `${viewport.width}px: removed portfolio-meta hero must not return`,
+    );
+
+    if (viewport.width <= 390) {
+      const firstProductBox = await page.locator(".tabcontainer").boundingBox();
+      assert.ok(firstProductBox, `${viewport.width}px: tab experience should render`);
+      assert.ok(
+        firstProductBox.y < 360,
+        `${viewport.width}px: primary product UI starts too low at ${firstProductBox.y}px`,
+      );
+
+      assert.equal(
+        await page.locator(".order__form > img").count(),
+        0,
+        `${viewport.width}px: request form should not contain a decorative layout step`,
+      );
+    }
 
     await page.waitForFunction(() => document.querySelectorAll(".menu__item").length === 3);
 

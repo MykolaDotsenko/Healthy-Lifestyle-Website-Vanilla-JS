@@ -46,7 +46,10 @@ test("visual polish stays responsive and accessible", () => {
 
 test("product copy avoids implementation-language labels in the page UI", () => {
   assert.match(html, /class="section-kicker">Everyday nutrition<\/p>/);
-  assert.doesNotMatch(html, /Interaction system/);
+  assert.match(html, /section-kicker section-kicker_center">Your daily estimate<\/p>/);
+  assert.match(html, />Explore the Daily Menu<\/h2>/);
+  assert.match(html, />Preview Your Request<\/h2>/);
+  assert.doesNotMatch(html, /Interaction system|Pure domain logic|Meal Concept Cards|Try the Request Flow/);
 });
 
 test("typography uses a stronger compact hierarchy without external fonts", () => {

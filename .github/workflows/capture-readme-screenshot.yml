@@ -70,11 +70,14 @@ jobs:
           await browser.close();
           EOF
 
+      - name: Export preview for verification
+        run: base64 -w0 docs/nourishflow-preview.png > docs/nourishflow-preview.base64.txt
+
       - name: Commit screenshot
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/nourishflow-preview.png
+          git add docs/nourishflow-preview.png docs/nourishflow-preview.base64.txt
 
           if git diff --cached --quiet; then
             echo "Screenshot already current."

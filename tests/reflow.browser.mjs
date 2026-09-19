@@ -10,6 +10,7 @@ const viewports = [
   { width: 1440, height: 1000 },
 ];
 
+// Diagnostic payload intentionally includes the first overflow offenders.
 function assertNoHorizontalDocumentOverflow(metrics, label) {
   const offenderSummary = metrics.offenders?.length
     ? `; offenders: ${metrics.offenders

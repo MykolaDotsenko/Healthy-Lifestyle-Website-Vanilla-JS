@@ -1,6 +1,6 @@
 # Healthy Lifestyle Website
 
-A responsive healthy-lifestyle landing page built with HTML, CSS, and Vanilla JavaScript.
+A healthy-lifestyle landing page built with HTML, CSS, and Vanilla JavaScript.
 
 **Live demo:** https://mykoladotsenko.github.io/Healthy-Lifestyle-Website-Vanilla-JS/
 

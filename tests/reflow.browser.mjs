@@ -23,15 +23,6 @@ try {
   for (const viewport of viewports) {
     const context = await browser.newContext({ viewport });
 
-    if (viewport.width === 320) {
-      await context.addInitScript(() => {
-        localStorage.setItem(
-          "healthy-lifestyle.calculator.preferences",
-          "{malformed-json",
-        );
-      });
-    }
-
     const page = await context.newPage();
     const pageErrors = [];
 
@@ -40,6 +31,16 @@ try {
     });
 
     await page.goto(baseUrl, { waitUntil: "domcontentloaded" });
+
+    if (viewport.width === 320) {
+      await page.evaluate(() => {
+        localStorage.setItem(
+          "healthy-lifestyle.calculator.preferences",
+          "{malformed-json",
+        );
+      });
+      await page.reload({ waitUntil: "domcontentloaded" });
+    }
 
     await page.waitForFunction(() => document.querySelectorAll(".menu__item").length === 3);
     assert.equal(

@@ -46,9 +46,13 @@
 
   <header class="header">
     <div class="header__left-block">
-      <div class="header__logo">
-        <img src="icons/logo.svg" alt="NourishFlow" decoding="async">
-      </div>
+      <a class="brand" href="#main-content" aria-label="NourishFlow home">
+        <span class="brand__mark" aria-hidden="true"></span>
+        <span class="brand__copy">
+          <strong class="brand__name">NourishFlow</strong>
+          <span class="brand__tagline">Native nutrition UX</span>
+        </span>
+      </a>
       <nav class="header__links" aria-label="Primary navigation">
         <a href="#menu" class="header__link">Meal Styles</a>
         <a href="#calculator" class="header__link">Calorie Estimate</a>
@@ -251,6 +255,7 @@
       <div class="bgc_y" aria-hidden="true"></div>
       <div class="container">
         <div class="offer__text">
+          <p class="section-kicker">Interaction system</p>
           <h2 class="title" id="offer-title">What This Demo Demonstrates</h2>
           <p class="offer__descr">
             NourishFlow is a portfolio product concept for exploring accessible, responsive interaction patterns without a framework. The interface combines meal-style comparison, a transparent calorie estimate, an accessible carousel, and a local-only request flow.
@@ -386,6 +391,7 @@
 
     <section class="calculating" id="calculator" aria-labelledby="calculator-title">
       <div class="container">
+        <p class="section-kicker section-kicker_center">Pure domain logic</p>
         <h2 class="title" id="calculator-title">Let's Calculate Your Daily Caloric Needs</h2>
         <p class="calculating__guidance" id="calculator-guidance">
           Adult estimate only. This calculator is for general information and is not medical advice.

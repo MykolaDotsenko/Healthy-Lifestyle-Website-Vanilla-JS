@@ -49,6 +49,10 @@ js/
 
 See [ARCHITECTURE.md](ARCHITECTURE.md) for boundaries and trade-offs.
 
+## Visual direction
+
+NourishFlow uses an editorial product-engineering visual language: warm off-white canvas, deep forest primary, lime interaction accent, restrained coral detail, a serif display face for the hero, a custom CSS brand mark, numbered proof cards, and a consistent rounded-card/photo treatment. The design avoids external font requests and decorative JavaScript.
+
 ## Accessibility
 
 The interface is designed around native semantics first:

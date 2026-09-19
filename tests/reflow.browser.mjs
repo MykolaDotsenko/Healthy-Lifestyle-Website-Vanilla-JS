@@ -11,9 +11,17 @@ const viewports = [
 ];
 
 function assertNoHorizontalDocumentOverflow(metrics, label) {
+  const offenderSummary = metrics.offenders?.length
+    ? `; offenders: ${metrics.offenders
+        .map(({ selector, left, right, width }) =>
+          `${selector} [left=${left}, right=${right}, width=${width}]`,
+        )
+        .join(" | ")}`
+    : "";
+
   assert.ok(
     metrics.scrollWidth <= metrics.clientWidth + 1,
-    `${label}: document overflows horizontally (${metrics.scrollWidth}px > ${metrics.clientWidth}px)`,
+    `${label}: document overflows horizontally (${metrics.scrollWidth}px > ${metrics.clientWidth}px)${offenderSummary}`,
   );
 }
 
@@ -125,10 +133,33 @@ try {
     );
 
     const readDocumentMetrics = () =>
-      page.evaluate(() => ({
-        clientWidth: document.documentElement.clientWidth,
-        scrollWidth: document.documentElement.scrollWidth,
-      }));
+      page.evaluate(() => {
+        const clientWidth = document.documentElement.clientWidth;
+        const offenders = [...document.querySelectorAll("body *")]
+          .map((element) => {
+            const rect = element.getBoundingClientRect();
+            const id = element.id ? `#${element.id}` : "";
+            const classes =
+              typeof element.className === "string" && element.className.trim()
+                ? `.${element.className.trim().split(/\s+/).join(".")}`
+                : "";
+
+            return {
+              selector: `${element.tagName.toLowerCase()}${id}${classes}`,
+              left: Math.round(rect.left),
+              right: Math.round(rect.right),
+              width: Math.round(rect.width),
+            };
+          })
+          .filter(({ left, right }) => left < -1 || right > clientWidth + 1)
+          .slice(0, 8);
+
+        return {
+          clientWidth,
+          scrollWidth: document.documentElement.scrollWidth,
+          offenders,
+        };
+      });
 
     assertNoHorizontalDocumentOverflow(
       await readDocumentMetrics(),

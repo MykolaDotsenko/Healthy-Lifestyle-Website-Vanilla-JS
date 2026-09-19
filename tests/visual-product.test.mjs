@@ -42,3 +42,22 @@ test("visual polish stays responsive and accessible", () => {
   assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
   assert.match(css, /@media \(forced-colors: active\)/);
 });
+
+
+test("product copy avoids implementation-language labels in the page UI", () => {
+  assert.match(html, /class="section-kicker">Everyday nutrition<\/p>/);
+  assert.doesNotMatch(html, /Interaction system/);
+});
+
+test("typography uses a stronger compact hierarchy without external fonts", () => {
+  assert.match(css, /font-size:\s*clamp\(1\.8rem, 3vw, 2\.35rem\)/);
+  assert.match(css, /font-weight:\s*650/);
+  assert.match(css, /letter-spacing:\s*-0\.025em/);
+  assert.doesNotMatch(css, /fonts\.googleapis\.com/);
+});
+
+test("countdown reads as one editorial surface instead of four dashboard cards", () => {
+  assert.match(css, /border-block-start:\s*0\.1875rem solid var\(--color-accent\)/);
+  assert.match(css, /\.timer__block\s*\{[\s\S]*background:\s*transparent/s);
+  assert.match(css, /\.timer__block span\s*\{[\s\S]*letter-spacing:\s*-0\.055em/s);
+});

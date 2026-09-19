@@ -1,6 +1,6 @@
-# Healthy Lifestyle Website
+# NourishFlow
 
-A healthy-lifestyle landing page built with semantic HTML, Vanilla CSS, and Vanilla JavaScript.
+An accessible nutrition UX portfolio demo built with semantic HTML, Vanilla CSS, and native JavaScript. The project deliberately demonstrates modern web-platform architecture without a framework or bundler.
 
 **Live demo:** https://mykoladotsenko.github.io/Healthy-Lifestyle-Website-Vanilla-JS/
 
@@ -83,6 +83,10 @@ The original 2024 countdown and 20% scarcity message were removed instead of bei
 The first visible meal image is the only eager raster and receives high fetch priority. Inactive tabs, carousel imagery, menu cards, and below-fold decorative imagery use native lazy loading and asynchronous decoding. Below-fold sections use `content-visibility: auto` with an intrinsic-size fallback. A repository test enforces a 400 KB eager-raster budget.
 
 The original JPEG binaries remain source assets because the connected GitHub API does not expose repository binary blobs to this workflow for safe local re-encoding; the implementation does not pretend those files were converted.
+
+## Product positioning and SEO
+
+The live page is explicitly positioned as **NourishFlow**, a portfolio product concept rather than a functioning meal-delivery company. Fake social links, hard-coded public phone numbers, and delivery-business claims were removed. The document includes a focused title/description, canonical URL, Open Graph metadata, Twitter card metadata, and WebApplication structured data.
 
 ## Quality checks
 

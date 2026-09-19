@@ -69,6 +69,10 @@ The current formula is preserved for continuity. The UI labels the result as an 
 
 The eating-style selector implements the WAI-ARIA tabs pattern with one roving tab stop, explicit `tablist/tab/tabpanel` semantics, automatic activation, vertical `ArrowUp/ArrowDown` navigation, and `Home/End` shortcuts.
 
+## Accessible carousel
+
+The meal carousel uses index-based percentage transforms instead of pixel measurements, so resize cannot corrupt the active slide. It has no autoplay, exposes carousel/slide semantics, uses native buttons for previous/next and slide pickers, and keeps visual layout rules in CSS rather than inline JavaScript.
+
 ## Quality checks
 
 ```bash

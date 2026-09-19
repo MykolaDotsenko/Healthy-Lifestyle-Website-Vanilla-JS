@@ -24,6 +24,7 @@ It is intentionally **not** presented as a functioning meal-delivery company. Re
 | Dialog | Native `<dialog>`, initial focus, Escape, focus restoration |
 | Calculator | Pure domain calculation, validation, safe versioned preferences |
 | Forms | Native validation, explicit local-only privacy boundary |
+| Timer | Rolling weekly menu-refresh countdown that never goes negative |
 | Performance | Responsive AVIF/WebP sources, JPEG fallback, intrinsic sizing, lazy below-fold media |
 | Quality | Unit/static checks, HTML validation, axe, responsive and cross-browser journeys |
 
@@ -42,7 +43,8 @@ js/
     ├── calculator-storage.js
     ├── carousel.js
     ├── forms.js
-    └── menu.js
+    ├── menu.js
+    └── timer.js
 ```
 
 `app.js` is the composition root. The calculator keeps formula/validation logic independent from the DOM. Persistence is isolated behind a small storage adapter. Features stay shallow and explicit rather than introducing framework-like abstractions.
@@ -86,7 +88,7 @@ node scripts/optimize-images.mjs
 
 - request forms do not call a backend;
 - no request payload is persisted;
-- expired countdown/scarcity mechanics were removed instead of moved to a fake future date;
+- the countdown tracks a transparent weekly menu-refresh cycle rather than a fake promotion deadline;
 - intrusive timed/scroll-triggered modal opening was removed;
 - calorie output is labeled as a general-information adult estimate, not medical advice.
 

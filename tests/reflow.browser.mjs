@@ -22,6 +22,16 @@ const browser = await chromium.launch({ headless: true });
 try {
   for (const viewport of viewports) {
     const context = await browser.newContext({ viewport });
+
+    if (viewport.width === 320) {
+      await context.addInitScript(() => {
+        localStorage.setItem(
+          "healthy-lifestyle.calculator.preferences",
+          "{malformed-json",
+        );
+      });
+    }
+
     const page = await context.newPage();
     const pageErrors = [];
 
@@ -39,12 +49,43 @@ try {
     );
 
     await page.locator("#height").fill("180");
-    await page.locator("#weight").fill("80");
+    await page.locator("#weight").fill("80.5");
     await page.locator("#age").fill("36");
-    assert.notEqual(
+
+    const validResult = await page.locator(".calculating__result span").textContent();
+    assert.match(
+      validResult ?? "",
+      /^\d+$/,
+      `${viewport.width}px: calculator should produce a numeric estimate`,
+    );
+
+    await page.locator("#age").fill("17");
+    assert.equal(
       await page.locator(".calculating__result span").textContent(),
-      "____",
-      `${viewport.width}px: calculator should initialize and calculate`,
+      "—",
+      `${viewport.width}px: invalid calculator input should suppress the estimate`,
+    );
+    assert.equal(
+      await page.locator("#age").getAttribute("aria-invalid"),
+      "true",
+      `${viewport.width}px: invalid age should expose aria-invalid`,
+    );
+    assert.equal(
+      await page.locator("#age-error").isVisible(),
+      true,
+      `${viewport.width}px: invalid age should show an inline error`,
+    );
+
+    await page.locator("#age").fill("36");
+    assert.equal(
+      await page.locator("#age").getAttribute("aria-invalid"),
+      "false",
+      `${viewport.width}px: corrected age should clear aria-invalid`,
+    );
+    assert.match(
+      (await page.locator(".calculating__result span").textContent()) ?? "",
+      /^\d+$/,
+      `${viewport.width}px: corrected input should restore the estimate`,
     );
 
     const readDocumentMetrics = () =>

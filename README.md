@@ -36,6 +36,26 @@ npm run api
 
 The interface now uses a mobile-first Vanilla CSS architecture with cascade layers, design tokens, fluid containers, CSS Grid/Flexbox, `clamp()` typography/spacing, accessible focus states, reduced-motion support, and content-driven breakpoints. The layout is designed to reflow down to a 320 CSS-pixel viewport without relying on the old fixed desktop widths.
 
+## JavaScript architecture
+
+The browser code uses native ES modules with a deliberately shallow structure:
+
+```text
+js/
+├── app.js
+├── ui/
+│   ├── modal.js
+│   └── tabs.js
+└── features/
+    ├── calculator.js
+    ├── carousel.js
+    ├── forms.js
+    ├── menu.js
+    └── timer.js
+```
+
+`app.js` is the composition root. Feature modules do not import each other; the only explicit cross-feature dependency is the modal API passed into forms. This keeps the Vanilla JavaScript architecture easy to trace without introducing a framework, bundler, global event bus, repository layer, or unnecessary abstraction.
+
 ## Quality checks
 
 ```bash
@@ -46,4 +66,4 @@ The refactor baseline now includes regression checks plus a semantic HTML founda
 
 ## Known baseline limitations
 
-The production GitHub Pages deployment still contains legacy behavior that will be addressed in dedicated follow-up refactors: the contact form targets the local mock API, the promotion deadline is hard-coded, the layout remains desktop-first, and advanced keyboard/focus behavior for the tabs, carousel, and modal is intentionally deferred to their dedicated refactors.
+The production GitHub Pages deployment still contains legacy behavior that will be addressed in dedicated follow-up refactors: the contact form targets the local mock API, the promotion deadline is hard-coded, advanced keyboard/focus behavior for the tabs, carousel, and modal is intentionally deferred to their dedicated refactors.

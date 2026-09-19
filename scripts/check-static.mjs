@@ -6,7 +6,14 @@ const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const sourceFiles = [
   "index.html",
   "css/style.css",
-  "js/script.js",
+  "js/app.js",
+  "js/ui/tabs.js",
+  "js/ui/modal.js",
+  "js/features/timer.js",
+  "js/features/menu.js",
+  "js/features/forms.js",
+  "js/features/carousel.js",
+  "js/features/calculator.js",
   "package.json",
   "README.md",
 ];

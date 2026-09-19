@@ -5,8 +5,15 @@ import { fileURLToPath } from "node:url";
 import test from "node:test";
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
-const html = await readFile(resolve(root, "index.html"), "utf8");
-const script = await readFile(resolve(root, "js/script.js"), "utf8");
+
+async function read(relativePath) {
+  return readFile(resolve(root, relativePath), "utf8");
+}
+
+const html = await read("index.html");
+const menu = await read("js/features/menu.js");
+const carousel = await read("js/features/carousel.js");
+const calculator = await read("js/features/calculator.js");
 
 function count(value, pattern) {
   return [...value.matchAll(pattern)].length;
@@ -29,8 +36,8 @@ test("interactive controls use native elements", () => {
   assert.match(html, /<button class="offer__slider-prev" type="button"/);
   assert.match(html, /<button class="offer__slider-next" type="button"/);
   assert.doesNotMatch(html, /<div class="modal__close"/);
-  assert.match(script, /document\.createElement\("button"\)/);
-  assert.match(script, /document\.createElement\("article"\)/);
+  assert.match(carousel, /document\.createElement\("button"\)/);
+  assert.match(menu, /document\.createElement\("article"\)/);
 });
 
 test("form controls have explicit labels and meaningful input types", () => {
@@ -77,9 +84,9 @@ test("all authored HTML buttons declare an explicit type", () => {
 });
 
 test("calculator uses radio state and numeric browser values", () => {
-  assert.match(script, /initRadioSettings/);
-  assert.match(script, /bindRadioSettings/);
-  assert.match(script, /input\.valueAsNumber/);
-  assert.doesNotMatch(script, /#gender div/);
-  assert.doesNotMatch(script, /\.calculating__choose_big div/);
+  assert.match(calculator, /restoreRadioState/);
+  assert.match(calculator, /bindRadioGroup/);
+  assert.match(calculator, /input\.valueAsNumber/);
+  assert.doesNotMatch(calculator, /#gender div/);
+  assert.doesNotMatch(calculator, /\.calculating__choose_big div/);
 });

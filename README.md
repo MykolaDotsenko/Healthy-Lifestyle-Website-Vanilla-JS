@@ -17,7 +17,7 @@ A healthy-lifestyle landing page built with semantic HTML, Vanilla CSS, and Vani
 
 ## Local development
 
-Requirements: Node.js 18+.
+Requirements: Node.js 22+.
 
 ```bash
 npm install

@@ -749,6 +749,13 @@
     display: none;
   }
 
+  .form-note {
+    margin-block-start: var(--space-3);
+    color: var(--color-text-muted);
+    font-size: 0.875rem;
+    line-height: 1.45;
+  }
+
   .promotion .bgc_y {
     inset-block: 1rem auto;
     inset-inline-start: 0;

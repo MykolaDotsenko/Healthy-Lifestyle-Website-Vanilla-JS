@@ -16,7 +16,8 @@ NourishFlow helps a user move through one small, coherent planning loop:
 4. switch to another set without changing the selected approach;
 5. keep a small shopping starter;
 6. save one plan locally or copy it elsewhere;
-7. return later and reopen the saved plan.
+7. return later and reopen the saved plan;
+8. remove the saved plan or clear all NourishFlow-owned local data.
 
 The current approaches are **Whole-Food, Mediterranean, Plant-Based, and Balanced**. Each has a four-week content rotation, so the Monday refresh corresponds to real content rather than a decorative countdown.
 
@@ -35,13 +36,13 @@ The result demonstrates that a small application can still have explicit product
 | HTML | Semantic landmarks, native controls, labels, fieldsets, skip link, native dialog |
 | CSS | Mobile-first cascade layers, design tokens, Grid/Flexbox, fluid sizing, reduced-motion and forced-colors support |
 | JavaScript | Native ES modules with a small explicit composition root |
-| Meal approaches | One canonical domain model shared by weekly cards and plans |
+| Meal approaches | Authored data separated from pure weekly-plan selection logic |
 | Tabs | WAI-style keyboard model with roving focus and automatic activation |
 | Carousel | Manual, resize-safe planning shortcuts with visible captions and meaningful announcements |
 | Calculator | Pure domain calculation, validation, safe versioned preferences |
-| Plan | Three meal slots, another-set action, shopping starter, copy and local save/reopen |
+| Plan | Three meal slots, another-set action, shopping starter, copy, local save/reopen, and explicit removal |
 | Weekly cycle | Shared deterministic Monday boundary for menu rotation and countdown |
-| Persistence | Small adapters for versioned calculator preferences and one saved plan |
+| Persistence | Versioned calculator preferences, v1→v2 saved-plan migration, remove-plan, and clear-local-data controls |
 | Performance | Responsive AVIF/WebP sources, JPEG fallback, intrinsic sizing, lazy below-fold media |
 | Quality | Node contracts, semantic HTML validation, axe, responsive/touch journeys, Chromium/Firefox/WebKit, visual audit artifacts |
 
@@ -50,17 +51,21 @@ The result demonstrates that a small application can still have explicit product
 ```text
 js/
 ├── app.js
+├── data/
+│   └── meal-approaches.js
 ├── domain/
 │   ├── calculator.js
-│   ├── meal-styles.js
+│   ├── meal-plans.js
 │   └── weekly-cycle.js
 ├── ui/
 │   ├── modal.js
+│   ├── plan-view.js
 │   └── tabs.js
 └── features/
     ├── calculator.js
     ├── calculator-storage.js
     ├── carousel.js
+    ├── local-data.js
     ├── menu.js
     ├── plan.js
     ├── plan-storage.js
@@ -123,7 +128,8 @@ node scripts/optimize-images.mjs
 - no name, phone number, account, or profile is requested;
 - no plan is submitted to a remote API;
 - calculator preferences use a versioned local-storage object;
-- one saved plan can be retained locally on the current device;
+- one saved plan can be retained locally on the current device and explicitly removed;
+- users can clear saved plan data and calculator preferences from the footer;
 - unknown future calculator-storage schemas are preserved rather than destructively downgraded;
 - the four-week content rotation uses the same Monday boundary shown by the countdown;
 - the energy calculator is presented as an approximate adult maintenance estimate for general information.
@@ -153,7 +159,9 @@ GitHub Actions additionally runs:
 - Chromium, Firefox, and WebKit critical journeys;
 - screenshot capture at mobile, tablet, and desktop sizes.
 
-The screenshots are uploaded as the `nourishflow-visual-audit` workflow artifact for manual visual review.
+The screenshots are uploaded as the `nourishflow-visual-audit` workflow artifact for manual visual review. The capture step fails if an expected image finishes with `naturalWidth === 0`, so a green visual artifact cannot silently contain broken rendered media.
+
+GitHub Pages deployment is triggered only after a successful **Quality** run for a trusted push to `main`, and deploys the exact verified commit SHA.
 
 See [QUALITY.md](QUALITY.md) for the full verification model.
 

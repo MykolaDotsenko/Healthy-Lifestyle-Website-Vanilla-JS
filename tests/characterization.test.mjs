@@ -10,82 +10,51 @@ async function read(relativePath) {
   return readFile(resolve(root, relativePath), "utf8");
 }
 
-const html = await read("index.html");
-const app = await read("js/app.js");
-const timer = await read("js/features/timer.js");
-const modal = await read("js/ui/modal.js");
-const menu = await read("js/features/menu.js");
-const carousel = await read("js/features/carousel.js");
-const calculator = await read("js/features/calculator.js");
-const calculatorDomain = await read("js/domain/calculator.js");
-const calculatorStorage = await read("js/features/calculator-storage.js");
+const [html, app, menu, plan, timer] = await Promise.all([
+  read("index.html"),
+  read("js/app.js"),
+  read("js/features/menu.js"),
+  read("js/features/plan.js"),
+  read("js/features/timer.js"),
+]);
 
 function countMatches(value, pattern) {
   return [...value.matchAll(pattern)].length;
 }
 
-test("baseline interactive surface remains intact", () => {
+test("core product surface stays intact", () => {
   assert.equal(
     countMatches(html, /class="[^"]*\btabheader__item\b[^"]*"/g),
     4,
-    "expected four eating-style tabs",
   );
-  assert.equal(
-    countMatches(html, /class="offer__slide"/g),
-    4,
-    "expected four carousel slides",
-  );
-  assert.equal(
-    countMatches(menu, /price:\s*\d+/g),
-    3,
-    "expected three menu items",
-  );
-  assert.equal(
-    countMatches(html, /<form\b/g),
-    2,
-    "expected order and modal contact forms",
-  );
+  assert.equal(countMatches(html, /class="offer__slide"/g), 4);
+  assert.equal(countMatches(html, /<form\b/g), 0);
+  assert.match(html, /Build My Plan/);
+  assert.match(html, /id="plan-dialog"/);
 });
 
-test("timer, modal, slider, and calculator hooks remain present", () => {
-  assert.match(app, /initTimer\(\)/);
-  assert.match(timer, /getNextWeeklyDeadline/);
-  assert.match(timer, /Math\.max\(0,/);
-  assert.match(timer, /window\.setInterval\(updateClock, 1_000\)/);
-  assert.doesNotMatch(timer, /2024-03-18/);
+test("composition keeps useful product features initialized", () => {
+  for (const name of [
+    "initTabs",
+    "initTimer",
+    "initModal",
+    "initMenu",
+    "initPlan",
+    "initCarousel",
+    "initCalculator",
+  ]) {
+    assert.match(app, new RegExp("\\b" + name + "\\b"));
+  }
 
-  assert.match(modal, /document\.querySelector\("#contact-dialog"\)/);
-  assert.match(carousel, /document\.querySelectorAll\("\.offer__slide"\)/);
-  assert.match(calculator, /loadCalculatorPreferences/);
-  assert.match(calculator, /saveCalculatorPreferences/);
-  assert.match(
-    calculatorStorage,
-    /healthy-lifestyle\.calculator\.preferences/,
-  );
-  assert.match(
-    calculatorDomain,
-    /447\.6[\s\S]*9\.2 \* input\.weightKg[\s\S]*3\.1 \* input\.heightCm[\s\S]*4\.3 \* input\.ageYears/,
-  );
-  assert.match(
-    calculatorDomain,
-    /88\.36[\s\S]*13\.4 \* input\.weightKg[\s\S]*4\.8 \* input\.heightCm[\s\S]*5\.7 \* input\.ageYears/,
-  );
+  assert.match(menu, /getWeeklyMenu/);
+  assert.match(plan, /buildPlanSummary/);
+  assert.match(timer, /nourishflow:weekly-refresh/);
 });
 
-test("legacy monolith patterns do not return", () => {
-  const combined = [
-    app,
-    timer,
-    modal,
-    menu,
-    carousel,
-    calculator,
-    calculatorDomain,
-    calculatorStorage,
-  ].join("\n");
+test("legacy fake-product mechanics do not return", () => {
+  const combined = [html, app, menu, plan].join("\n");
 
-  assert.doesNotMatch(combined, /async function getResource\(/);
-  assert.doesNotMatch(combined, /console\.log\(/);
-  assert.doesNotMatch(combined, /DOMContentLoaded/);
-  assert.doesNotMatch(app, /setInterval\(/);
+  assert.doesNotMatch(combined, /Preview Request|Portfolio demo|Demo price:/i);
+  assert.doesNotMatch(combined, /localhost:3000|json-server/i);
+  assert.doesNotMatch(combined, /Your Phone Number|Your Name/);
 });

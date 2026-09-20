@@ -1,4 +1,4 @@
-import { getWeeklyMenu } from "../domain/meal-styles.js";
+import { getWeeklyPlans } from "../domain/meal-plans.js";
 
 const MENU_IMAGE_SIZES =
   "(min-width: 64rem) 25vw, (min-width: 40rem) 50vw, 100vw";
@@ -30,12 +30,12 @@ function createMenuPicture(item) {
   return picture;
 }
 
-function createMenuCard(item, selectedStyleId) {
-  const isSelected = item.styleId === selectedStyleId;
+function createMenuCard(item, selectedApproachId) {
+  const isSelected = item.approachId === selectedApproachId;
   const card = document.createElement("article");
   card.className = "menu__item";
   card.classList.toggle("menu__item_selected", isSelected);
-  card.dataset.styleId = item.styleId;
+  card.dataset.approachId = item.approachId;
 
   if (isSelected) {
     card.setAttribute("aria-current", "true");
@@ -45,7 +45,7 @@ function createMenuCard(item, selectedStyleId) {
 
   const style = document.createElement("p");
   style.className = "menu__item-style";
-  style.textContent = item.styleLabel;
+  style.textContent = item.approachLabel;
 
   const title = document.createElement("h3");
   title.className = "menu__item-subtitle";
@@ -69,7 +69,7 @@ function createMenuCard(item, selectedStyleId) {
 export function renderMenu({
   selector = "#menu-list",
   now = new Date(),
-  selectedStyleId = "whole-food",
+  selectedApproachId = "whole-food",
 } = {}) {
   const container = document.querySelector(selector);
 
@@ -77,29 +77,29 @@ export function renderMenu({
     return;
   }
 
-  const items = getWeeklyMenu(now);
+  const items = getWeeklyPlans(now);
   container.replaceChildren(
-    ...items.map((item) => createMenuCard(item, selectedStyleId)),
+    ...items.map((item) => createMenuCard(item, selectedApproachId)),
   );
 }
 
 export function initMenu(options = {}) {
-  let selectedStyleId = options.selectedStyleId ?? "whole-food";
+  let selectedApproachId = options.selectedApproachId ?? "whole-food";
 
   function render(now = new Date()) {
-    renderMenu({ ...options, now, selectedStyleId });
+    renderMenu({ ...options, now, selectedApproachId });
   }
 
-  function setSelectedStyle(nextStyleId) {
-    if (typeof nextStyleId !== "string" || !nextStyleId) {
+  function setSelectedApproach(nextApproachId) {
+    if (typeof nextApproachId !== "string" || !nextApproachId) {
       return;
     }
 
-    selectedStyleId = nextStyleId;
+    selectedApproachId = nextApproachId;
     render();
   }
 
   render();
 
-  return { render, setSelectedStyle };
+  return { render, setSelectedApproach };
 }

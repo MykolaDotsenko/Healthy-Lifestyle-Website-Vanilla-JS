@@ -200,7 +200,7 @@ try {
     await mediterraneanTab.click();
 
     const selectedMenuCard = page.locator(
-      '.menu__item[data-style-id="mediterranean"]',
+      '.menu__item[data-approach-id="mediterranean"]',
     );
     assert.equal(
       await selectedMenuCard.getAttribute("aria-current"),

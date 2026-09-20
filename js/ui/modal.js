@@ -1,29 +1,15 @@
 export function initModal() {
-  const dialog = document.querySelector("#contact-dialog");
-  const triggers = [...document.querySelectorAll("[data-modal]")];
+  const dialog = document.querySelector("#plan-dialog");
 
   if (!(dialog instanceof HTMLDialogElement)) {
     return {
       open() {},
       close() {},
-      showStatus() {},
     };
   }
 
-  const formView = dialog.querySelector("[data-dialog-form]");
-  const statusView = dialog.querySelector("[data-dialog-status]");
-  const statusMessage = dialog.querySelector("[data-dialog-status-message]");
   const initialFocus = dialog.querySelector("[data-dialog-initial-focus]");
   let returnFocusTarget = null;
-
-  function showForm() {
-    if (formView) {
-      formView.hidden = false;
-    }
-    if (statusView) {
-      statusView.hidden = true;
-    }
-  }
 
   function open() {
     if (dialog.open) {
@@ -35,7 +21,6 @@ export function initModal() {
         ? document.activeElement
         : null;
 
-    showForm();
     dialog.showModal();
     initialFocus?.focus();
   }
@@ -46,32 +31,6 @@ export function initModal() {
     }
   }
 
-  function showStatus(message) {
-    if (formView) {
-      formView.hidden = true;
-    }
-    if (statusView) {
-      statusView.hidden = false;
-    }
-    if (statusMessage) {
-      statusMessage.textContent = message;
-    }
-
-    if (!dialog.open) {
-      returnFocusTarget =
-        document.activeElement instanceof HTMLElement
-          ? document.activeElement
-          : null;
-      dialog.showModal();
-    }
-
-    dialog.querySelector("[data-dialog-status] [data-close]")?.focus();
-  }
-
-  triggers.forEach((trigger) => {
-    trigger.addEventListener("click", open);
-  });
-
   dialog.addEventListener("click", (event) => {
     const target = event.target;
 
@@ -81,13 +40,11 @@ export function initModal() {
   });
 
   dialog.addEventListener("close", () => {
-    showForm();
-
     if (returnFocusTarget?.isConnected) {
       returnFocusTarget.focus();
     }
     returnFocusTarget = null;
   });
 
-  return { open, close, showStatus };
+  return { open, close };
 }

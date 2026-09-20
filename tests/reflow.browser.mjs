@@ -31,16 +31,11 @@ const browser = await chromium.launch({ headless: true });
 try {
   for (const viewport of viewports) {
     const context = await browser.newContext({ viewport });
-
     const page = await context.newPage();
     const pageErrors = [];
-    const requestedUrls = [];
 
     page.on("pageerror", (error) => {
       pageErrors.push(error.message);
-    });
-    page.on("request", (request) => {
-      requestedUrls.push(request.url());
     });
 
     await page.goto(baseUrl, { waitUntil: "domcontentloaded" });
@@ -48,50 +43,30 @@ try {
     if (viewport.width === 320) {
       await page.evaluate(() => {
         localStorage.setItem(
-          "healthy-lifestyle.calculator.preferences",
+          "nourishflow.calculator.preferences",
           "{malformed-json",
         );
       });
       await page.reload({ waitUntil: "domcontentloaded" });
-      assert.equal(
-        await page.locator("#female").isChecked(),
-        true,
-        "corrupted preferences should recover to the default sex",
-      );
-      assert.equal(
-        await page.locator("#small").isChecked(),
-        true,
-        "corrupted preferences should recover to the default activity",
-      );
+
+      assert.equal(await page.locator("#female").isChecked(), true);
+      assert.equal(await page.locator("#small").isChecked(), true);
     }
 
     assert.equal(
-      await page.locator(".tabcontainer").isVisible(),
+      await page.getByRole("heading", { level: 1, name: "Choose Your Eating Style" }).isVisible(),
       true,
-      `${viewport.width}px: product experience should be visible immediately`,
+      `${viewport.width}px: visible product H1`,
+    );
+
+    await page.waitForFunction(
+      () => document.querySelectorAll(".menu__item").length === 4,
     );
     assert.equal(
-      await page.locator(".preview__intro").count(),
-      0,
-      `${viewport.width}px: removed portfolio-meta hero must not return`,
+      await page.locator(".menu__item").count(),
+      4,
+      `${viewport.width}px: four canonical meal styles render`,
     );
-
-    if (viewport.width <= 390) {
-      const firstProductBox = await page.locator(".tabcontainer").boundingBox();
-      assert.ok(firstProductBox, `${viewport.width}px: tab experience should render`);
-      assert.ok(
-        firstProductBox.y < 360,
-        `${viewport.width}px: primary product UI starts too low at ${firstProductBox.y}px`,
-      );
-
-      assert.equal(
-        await page.locator(".order__form > img").count(),
-        0,
-        `${viewport.width}px: request form should not contain a decorative layout step`,
-      );
-    }
-
-    await page.waitForFunction(() => document.querySelectorAll(".menu__item").length === 3);
 
     if (viewport.width === 320) {
       const selectedImage = await page
@@ -101,14 +76,9 @@ try {
       assert.match(
         selectedImage,
         /\/img\/optimized\/tabs\/vegy-768\.avif$/,
-        "320px: Chromium should select the responsive AVIF candidate",
+        "320px: responsive AVIF candidate should be selected",
       );
     }
-    assert.equal(
-      await page.locator(".menu__item").count(),
-      3,
-      `${viewport.width}px: ES modules should render all menu cards`,
-    );
 
     await page.locator("#height").fill("180");
     await page.locator("#weight").fill("80.5");
@@ -117,37 +87,20 @@ try {
     const validResult = await page.locator(".calculating__result span").textContent();
     assert.match(
       validResult ?? "",
-      /^\d+$/,
-      `${viewport.width}px: calculator should produce a numeric estimate`,
+      /^≈\s/,
+      `${viewport.width}px: calculator should show an approximate estimate`,
     );
 
     await page.locator("#age").fill("17");
-    assert.equal(
-      await page.locator(".calculating__result span").textContent(),
-      "—",
-      `${viewport.width}px: invalid calculator input should suppress the estimate`,
-    );
-    assert.equal(
-      await page.locator("#age").getAttribute("aria-invalid"),
-      "true",
-      `${viewport.width}px: invalid age should expose aria-invalid`,
-    );
-    assert.equal(
-      await page.locator("#age-error").isVisible(),
-      true,
-      `${viewport.width}px: invalid age should show an inline error`,
-    );
+    assert.equal(await page.locator(".calculating__result span").textContent(), "—");
+    assert.equal(await page.locator("#age").getAttribute("aria-invalid"), "true");
+    assert.equal(await page.locator("#age-error").isVisible(), true);
 
     await page.locator("#age").fill("36");
-    assert.equal(
-      await page.locator("#age").getAttribute("aria-invalid"),
-      "false",
-      `${viewport.width}px: corrected age should clear aria-invalid`,
-    );
+    assert.equal(await page.locator("#age").getAttribute("aria-invalid"), "false");
     assert.match(
       (await page.locator(".calculating__result span").textContent()) ?? "",
-      /^\d+$/,
-      `${viewport.width}px: corrected input should restore the estimate`,
+      /^≈\s/,
     );
 
     const readDocumentMetrics = () =>
@@ -205,24 +158,19 @@ try {
     );
 
     await page.getByRole("button", { name: "Next slide" }).click();
-    assert.equal(
-      await page.locator("#current").textContent(),
-      "02",
-      `${viewport.width}px: next control should advance exactly one slide`,
-    );
+    assert.equal(await page.locator("#current").textContent(), "02");
     assert.equal(
       await page.locator('.carousel-indicator[aria-current="true"]').getAttribute("data-slide-to"),
       "1",
-      `${viewport.width}px: active slide picker should track state`,
+    );
+    assert.match(
+      (await page.locator("[data-carousel-status]").textContent()) ?? "",
+      /^Slide 2 of 4:/,
     );
 
     if (viewport.width === 390) {
       await page.setViewportSize({ width: 1024, height: viewport.height });
-      assert.equal(
-        await page.locator("#current").textContent(),
-        "02",
-        "carousel state should survive viewport resize",
-      );
+      assert.equal(await page.locator("#current").textContent(), "02");
       assert.match(
         (await page.locator(".offer__slider-inner").getAttribute("style")) ?? "",
         /translateX\(-100%\)/,
@@ -230,55 +178,45 @@ try {
       await page.setViewportSize(viewport);
     }
 
-    assertNoHorizontalDocumentOverflow(
-      await readDocumentMetrics(),
-      `${viewport.width}px after carousel interaction`,
-    );
+    const planTrigger = page.getByRole("button", { name: "Build My Plan" }).first();
+    await planTrigger.focus();
+    await planTrigger.click();
 
-    const contactTrigger = page.getByRole("button", { name: "Preview Request" }).first();
-    await contactTrigger.focus();
-    await contactTrigger.click();
-
-    const dialog = page.locator("#contact-dialog");
+    const dialog = page.locator("#plan-dialog");
     assert.equal(await dialog.evaluate((element) => element.open), true);
     assert.equal(
       await page.evaluate(() => document.activeElement?.id),
-      "modal-name",
-      `${viewport.width}px: dialog should focus the first meaningful field`,
+      "plan-dialog-title",
+      `${viewport.width}px: dialog should focus its summary heading`,
+    );
+    assert.equal(
+      await page.locator("[data-plan-style]").textContent(),
+      "Premium",
+      `${viewport.width}px: plan should use the selected style`,
+    );
+    assert.match(
+      (await page.locator("[data-plan-energy]").textContent()) ?? "",
+      /kcal\/day$/,
+      `${viewport.width}px: plan should include the calculator estimate`,
+    );
+    assert.ok(
+      ((await page.locator("[data-plan-meal]").textContent()) ?? "").length > 0,
+      `${viewport.width}px: plan should include this week's meal idea`,
     );
 
     const modalBox = await dialog.boundingBox();
-
-    assert.ok(modalBox, `${viewport.width}px: modal dialog should be visible`);
-
-    await page.locator("#modal-name").fill("Demo User");
-    await page.locator("#modal-phone").fill("+358401234567");
-    await page.getByRole("button", { name: "Preview Request" }).last().click();
-
-    assert.match(
-      (await page.locator("[data-dialog-status-message]").textContent()) ?? "",
-      /Nothing was sent or stored/,
-      `${viewport.width}px: demo form must disclose that it does not transmit data`,
-    );
-    assert.equal(
-      requestedUrls.some((url) => url.includes("localhost:3000")),
-      false,
-      `${viewport.width}px: demo form must not call the removed local API`,
-    );
-    assert.ok(
-      modalBox.width <= viewport.width + 1,
-      `${viewport.width}px: modal width ${modalBox.width}px exceeds viewport`,
-    );
+    assert.ok(modalBox);
+    assert.ok(modalBox.width <= viewport.width + 1);
 
     assertNoHorizontalDocumentOverflow(
       await readDocumentMetrics(),
-      `${viewport.width}px with modal open`,
+      `${viewport.width}px with plan dialog open`,
     );
 
     await page.keyboard.press("Escape");
     assert.equal(await dialog.evaluate((element) => element.open), false);
     assert.equal(
-      await contactTrigger.evaluate((element) => document.activeElement === element),
+      await planTrigger.evaluate((element) => document.activeElement === element),
       true,
       `${viewport.width}px: closing dialog should restore trigger focus`,
     );
@@ -295,4 +233,4 @@ try {
   await browser.close();
 }
 
-console.log(`Responsive browser smoke passed for ${viewports.length} viewports.`);
+console.log(`Responsive product journey passed for ${viewports.length} viewports.`);

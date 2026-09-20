@@ -44,10 +44,10 @@ try {
       `${viewport.width}px after tab activation`,
     );
 
-    await page.getByRole("button", { name: "Preview Request" }).first().click();
+    await page.getByRole("button", { name: "Build My Plan" }).first().click();
     await assertNoAccessibilityViolations(
       page,
-      `${viewport.width}px native dialog open`,
+      `${viewport.width}px plan dialog open`,
     );
 
     await page.keyboard.press("Escape");

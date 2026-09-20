@@ -1,29 +1,30 @@
-import { access, readFile } from "node:fs/promises";
+import { access, readFile, readdir } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
-const sourceFiles = [
-  "index.html",
-  "css/style.css",
-  "js/app.js",
-  "js/ui/tabs.js",
-  "js/ui/modal.js",
-  "js/features/menu.js",
-  "js/features/forms.js",
-  "js/features/carousel.js",
-  "js/features/calculator.js",
-  "js/features/calculator-storage.js",
-  "js/features/timer.js",
-  "js/domain/calculator.js",
-  "package.json",
-  "README.md",
-];
-
-const forbiddenMergeMarkers = ["<<<<<<<", "=======", ">>>>>>>"];
+const mergeMarkerPattern = /^(?:<<<<<<< .+|=======|>>>>>>> .+)$/m;
 
 async function read(relativePath) {
   return readFile(resolve(root, relativePath), "utf8");
+}
+
+async function collectSourceFiles(directory, extensions) {
+  const absolute = resolve(root, directory);
+  const entries = await readdir(absolute, { withFileTypes: true });
+  const files = [];
+
+  for (const entry of entries) {
+    const relative = `${directory}/${entry.name}`;
+
+    if (entry.isDirectory()) {
+      files.push(...(await collectSourceFiles(relative, extensions)));
+    } else if (extensions.some((extension) => entry.name.endsWith(extension))) {
+      files.push(relative);
+    }
+  }
+
+  return files;
 }
 
 function isExternalReference(value) {
@@ -60,12 +61,22 @@ function extractCssReferences(css) {
 }
 
 async function assertNoMergeMarkers() {
+  const sourceFiles = [
+    "index.html",
+    "css/style.css",
+    "package.json",
+    "README.md",
+    "ARCHITECTURE.md",
+    "QUALITY.md",
+    ...(await collectSourceFiles("js", [".js"])),
+    ...(await collectSourceFiles("scripts", [".mjs"])),
+    ...(await collectSourceFiles("tests", [".mjs"])),
+  ];
+
   for (const relativePath of sourceFiles) {
     const content = await read(relativePath);
-    for (const marker of forbiddenMergeMarkers) {
-      if (content.includes(marker)) {
-        throw new Error(`${relativePath} contains unresolved merge marker: ${marker}`);
-      }
+    if (mergeMarkerPattern.test(content)) {
+      throw new Error(`${relativePath} contains an unresolved merge marker`);
     }
   }
 }
@@ -92,7 +103,7 @@ async function assertLocalReferencesExist() {
 
 async function assertPackageScripts() {
   const packageJson = JSON.parse(await read("package.json"));
-  const requiredScripts = ["dev", "lint", "check:static", "test", "check"];
+  const requiredScripts = ["dev", "check:syntax", "check:static", "test", "check"];
 
   for (const script of requiredScripts) {
     if (!packageJson.scripts?.[script]) {

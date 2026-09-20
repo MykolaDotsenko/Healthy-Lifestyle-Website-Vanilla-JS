@@ -27,7 +27,13 @@ class FakeStorage {
   }
 }
 
-test("stores one normalized versioned preferences object", () => {
+const defaults = {
+  version: 1,
+  sex: "female",
+  activityMultiplier: 1.375,
+};
+
+test("stores one normalized branded preferences object", () => {
   const storage = new FakeStorage();
 
   assert.equal(
@@ -43,9 +49,10 @@ test("stores one normalized versioned preferences object", () => {
     sex: "male",
     activityMultiplier: 1.55,
   });
+  assert.equal(CALCULATOR_STORAGE_KEY, "nourishflow.calculator.preferences");
 });
 
-test("loads valid versioned preferences", () => {
+test("loads valid current preferences", () => {
   const storage = new FakeStorage({
     [CALCULATOR_STORAGE_KEY]: JSON.stringify({
       version: 1,
@@ -61,31 +68,41 @@ test("loads valid versioned preferences", () => {
   });
 });
 
-test("recovers from malformed JSON without throwing", () => {
+test("future schema falls back without destructive downgrade", () => {
+  const futurePayload = JSON.stringify({
+    version: 2,
+    sex: "male",
+    activityMultiplier: 1.725,
+    futureSetting: true,
+  });
   const storage = new FakeStorage({
-    [CALCULATOR_STORAGE_KEY]: "{broken-json",
+    [CALCULATOR_STORAGE_KEY]: futurePayload,
   });
 
-  assert.deepEqual(loadCalculatorPreferences(storage), {
-    version: 1,
-    sex: "female",
-    activityMultiplier: 1.375,
-  });
+  assert.deepEqual(loadCalculatorPreferences(storage), defaults);
+  assert.equal(storage.getItem(CALCULATOR_STORAGE_KEY), futurePayload);
 });
 
-test("rejects unsupported stored schema versions", () => {
+test("migrates the previous NourishFlow storage key once", () => {
+  const previousKey = "healthy-lifestyle.calculator.preferences";
   const storage = new FakeStorage({
-    [CALCULATOR_STORAGE_KEY]: JSON.stringify({
-      version: 99,
+    [previousKey]: JSON.stringify({
+      version: 1,
       sex: "male",
-      activityMultiplier: 1.725,
+      activityMultiplier: 1.55,
     }),
   });
 
   assert.deepEqual(loadCalculatorPreferences(storage), {
     version: 1,
-    sex: "female",
-    activityMultiplier: 1.375,
+    sex: "male",
+    activityMultiplier: 1.55,
+  });
+  assert.equal(storage.getItem(previousKey), null);
+  assert.deepEqual(JSON.parse(storage.getItem(CALCULATOR_STORAGE_KEY)), {
+    version: 1,
+    sex: "male",
+    activityMultiplier: 1.55,
   });
 });
 
@@ -102,15 +119,15 @@ test("migrates legacy sex and ratio keys once", () => {
   });
   assert.equal(storage.getItem("sex"), null);
   assert.equal(storage.getItem("ratio"), null);
-  assert.deepEqual(JSON.parse(storage.getItem(CALCULATOR_STORAGE_KEY)), {
-    version: 1,
-    sex: "male",
-    activityMultiplier: 1.55,
-  });
 });
 
-test("storage failures degrade to defaults instead of breaking calculator boot", () => {
-  const storage = {
+test("malformed data and storage failures degrade safely", () => {
+  const malformed = new FakeStorage({
+    [CALCULATOR_STORAGE_KEY]: "{broken-json",
+  });
+  assert.deepEqual(loadCalculatorPreferences(malformed), defaults);
+
+  const unavailable = {
     getItem() {
       throw new Error("storage unavailable");
     },
@@ -121,17 +138,6 @@ test("storage failures degrade to defaults instead of breaking calculator boot",
       throw new Error("storage unavailable");
     },
   };
-
-  assert.deepEqual(loadCalculatorPreferences(storage), {
-    version: 1,
-    sex: "female",
-    activityMultiplier: 1.375,
-  });
-  assert.equal(
-    saveCalculatorPreferences(storage, {
-      sex: "male",
-      activityMultiplier: 1.55,
-    }),
-    false,
-  );
+  assert.deepEqual(loadCalculatorPreferences(unavailable), defaults);
+  assert.equal(saveCalculatorPreferences(unavailable, defaults), false);
 });

@@ -90,12 +90,23 @@ export function initCalculator() {
     }
 
     if (calculation.ok) {
-      result.textContent = String(calculation.calories);
-      status.textContent = "Estimated daily energy requirement.";
+      const rounded = Math.round(calculation.calories / 10) * 10;
+      result.textContent = `≈ ${new Intl.NumberFormat().format(rounded)}`;
+      status.textContent = "Estimated daily maintenance energy.";
+      document.dispatchEvent(
+        new CustomEvent("nourishflow:estimate", {
+          detail: { calories: calculation.calories },
+        }),
+      );
       return;
     }
 
     result.textContent = "—";
+    document.dispatchEvent(
+      new CustomEvent("nourishflow:estimate", {
+        detail: { calories: null },
+      }),
+    );
 
     const visibleErrors = Object.values(NUMERIC_FIELDS).some(
       ({ stateKey }) =>

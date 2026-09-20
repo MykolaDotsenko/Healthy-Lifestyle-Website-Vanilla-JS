@@ -5,13 +5,10 @@ import { fileURLToPath } from "node:url";
 import test from "node:test";
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
-const [html, menu] = await Promise.all([
-  readFile(resolve(root, "index.html"), "utf8"),
-  readFile(resolve(root, "js/features/menu.js"), "utf8"),
-]);
+const html = await readFile(resolve(root, "index.html"), "utf8");
 
-test("document exposes complete product and social metadata", () => {
-  assert.match(html, /<title>NourishFlow — Accessible Vanilla JS Nutrition Demo<\/title>/);
+test("document exposes product-first metadata", () => {
+  assert.match(html, /<title>NourishFlow — Meal Ideas &amp; Daily Energy<\/title>/);
   assert.match(html, /name="description"/);
   assert.match(html, /rel="canonical"/);
   assert.match(html, /property="og:title"/);
@@ -21,23 +18,19 @@ test("document exposes complete product and social metadata", () => {
   assert.match(html, /"@type": "WebApplication"/);
 });
 
-test("portfolio copy does not impersonate a live delivery business", () => {
-  const productCopy = `${html}\n${menu}`;
-
+test("live product metadata and copy avoid portfolio-demo framing", () => {
   assert.doesNotMatch(
-    productCopy,
-    /Food Delivery|Contact Us|tel:\+|Find Us on Social Media|Or Call Us/,
+    html,
+    /portfolio demo|portfolio project|nutrition demo|web-platform demo|Vanilla JS Nutrition Demo/i,
   );
-  assert.doesNotMatch(
-    productCopy,
-    /restaurant menu without going to a restaurant|optimal price and high quality/i,
-  );
-  assert.match(html, /nutrition demo/i);
-  assert.match(html, /View source on GitHub/);
-  assert.match(html, /No personal data is sent or stored/);
+  assert.doesNotMatch(html, /Preview Request|Demo price:|Nothing was sent or stored/i);
+  assert.match(html, /Build My Plan/);
+  assert.match(html, /Meal Ideas &amp; Daily Energy/);
 });
 
 test("primary navigation labels describe real destinations", () => {
   assert.match(html, />Meal Styles<\/a>/);
   assert.match(html, />Calorie Estimate<\/a>/);
+  assert.match(html, /href="#meal-styles"/);
+  assert.match(html, /href="#calculator"/);
 });

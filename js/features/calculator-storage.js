@@ -3,27 +3,31 @@ import {
   normalizeCalculatorPreferences,
 } from "../domain/calculator.js";
 
-export const CALCULATOR_STORAGE_KEY =
-  "healthy-lifestyle.calculator.preferences";
+export const CALCULATOR_STORAGE_KEY = "nourishflow.calculator.preferences";
 
+const PREVIOUS_STORAGE_KEY = "healthy-lifestyle.calculator.preferences";
 const LEGACY_SEX_KEY = "sex";
 const LEGACY_RATIO_KEY = "ratio";
 
-function readJsonPreferences(storage) {
-  const raw = storage.getItem(CALCULATOR_STORAGE_KEY);
-
+function parseStoredPreferences(raw) {
   if (!raw) {
-    return null;
+    return { status: "missing", value: null };
   }
 
   try {
     const parsed = JSON.parse(raw);
 
-    return parsed?.version === DEFAULT_CALCULATOR_PREFERENCES.version
-      ? parsed
-      : null;
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      return { status: "malformed", value: null };
+    }
+
+    if (parsed.version === DEFAULT_CALCULATOR_PREFERENCES.version) {
+      return { status: "current", value: parsed };
+    }
+
+    return { status: "unsupported-version", value: null };
   } catch {
-    return null;
+    return { status: "malformed", value: null };
   }
 }
 
@@ -54,10 +58,34 @@ export function saveCalculatorPreferences(storage, preferences) {
 
 export function loadCalculatorPreferences(storage) {
   try {
-    const stored = readJsonPreferences(storage);
+    const currentRaw = storage.getItem(CALCULATOR_STORAGE_KEY);
+    const current = parseStoredPreferences(currentRaw);
 
-    if (stored) {
-      return normalizeCalculatorPreferences(stored);
+    if (current.status === "current") {
+      return normalizeCalculatorPreferences(current.value);
+    }
+
+    // A newer client may have written a schema we do not understand.
+    // Fall back in memory without destroying that future-version payload.
+    if (current.status === "unsupported-version") {
+      return { ...DEFAULT_CALCULATOR_PREFERENCES };
+    }
+
+    const previousRaw = storage.getItem(PREVIOUS_STORAGE_KEY);
+    const previous = parseStoredPreferences(previousRaw);
+
+    if (previous.status === "current") {
+      const preferences = normalizeCalculatorPreferences(previous.value);
+
+      if (saveCalculatorPreferences(storage, preferences)) {
+        storage.removeItem(PREVIOUS_STORAGE_KEY);
+      }
+
+      return preferences;
+    }
+
+    if (previous.status === "unsupported-version") {
+      return { ...DEFAULT_CALCULATOR_PREFERENCES };
     }
 
     const legacy = readLegacyPreferences(storage);
@@ -65,7 +93,7 @@ export function loadCalculatorPreferences(storage) {
       legacy ?? DEFAULT_CALCULATOR_PREFERENCES,
     );
 
-    if (saveCalculatorPreferences(storage, preferences) && legacy) {
+    if (legacy && saveCalculatorPreferences(storage, preferences)) {
       storage.removeItem(LEGACY_SEX_KEY);
       storage.removeItem(LEGACY_RATIO_KEY);
     }

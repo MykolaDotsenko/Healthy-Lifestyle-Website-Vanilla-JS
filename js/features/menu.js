@@ -1,41 +1,7 @@
-const MENU_IMAGE_SIZES =
-  "(min-width: 64rem) 33vw, (min-width: 40rem) 50vw, 100vw";
+import { getWeeklyMenu } from "../domain/meal-styles.js";
 
-const MENU_ITEMS = [
-  {
-    image: "img/tabs/vegy.jpg",
-    imageBase: "img/optimized/tabs/vegy",
-    imageWidth: 1920,
-    imageHeight: 1221,
-    alt: "Fresh vegetables prepared for the Fitness menu",
-    title: "Fitness Menu",
-    description:
-      "A produce-forward meal concept built around fresh vegetables, fruit, and straightforward portions.",
-    price: 9,
-  },
-  {
-    image: "img/tabs/post.jpg",
-    imageBase: "img/optimized/tabs/post",
-    imageWidth: 1920,
-    imageHeight: 1280,
-    alt: "Plant-based Vegetarian menu",
-    title: "Vegetarian Menu",
-    description:
-      "A plant-based meal concept combining grains, vegetables, tofu, and dairy-free alternatives.",
-    price: 14,
-  },
-  {
-    image: "img/tabs/elite.jpg",
-    imageBase: "img/optimized/tabs/elite",
-    imageWidth: 1920,
-    imageHeight: 1281,
-    alt: "Premium seafood and fruit meal",
-    title: "Premium Menu",
-    description:
-      "A seafood-focused menu concept with fruit, greens, and richer seasonal combinations.",
-    price: 21,
-  },
-];
+const MENU_IMAGE_SIZES =
+  "(min-width: 64rem) 25vw, (min-width: 40rem) 50vw, 100vw";
 
 function createMenuPicture(item) {
   const picture = document.createElement("picture");
@@ -67,8 +33,13 @@ function createMenuPicture(item) {
 function createMenuCard(item) {
   const card = document.createElement("article");
   card.className = "menu__item";
+  card.dataset.styleId = item.styleId;
 
   const picture = createMenuPicture(item);
+
+  const style = document.createElement("p");
+  style.className = "menu__item-style";
+  style.textContent = item.styleLabel;
 
   const title = document.createElement("h3");
   title.className = "menu__item-subtitle";
@@ -78,33 +49,18 @@ function createMenuCard(item) {
   description.className = "menu__item-descr";
   description.textContent = item.description;
 
-  const divider = document.createElement("div");
-  divider.className = "menu__item-divider";
-  divider.setAttribute("aria-hidden", "true");
+  const footer = document.createElement("p");
+  footer.className = "menu__item-week";
+  footer.textContent = "This week's meal idea";
 
-  const price = document.createElement("div");
-  price.className = "menu__item-price";
-
-  const priceLabel = document.createElement("span");
-  priceLabel.className = "menu__item-cost";
-  priceLabel.textContent = "Demo price:";
-
-  const priceTotal = document.createElement("span");
-  priceTotal.className = "menu__item-total";
-
-  const amount = document.createElement("strong");
-  amount.textContent = String(item.price);
-
-  priceTotal.append(amount, " EUR/day");
-  price.append(priceLabel, priceTotal);
-  card.append(picture, title, description, divider, price);
+  card.append(picture, style, title, description, footer);
 
   return card;
 }
 
 export function renderMenu({
   selector = "#menu-list",
-  items = MENU_ITEMS,
+  now = new Date(),
 } = {}) {
   const container = document.querySelector(selector);
 
@@ -112,5 +68,14 @@ export function renderMenu({
     return;
   }
 
+  const items = getWeeklyMenu(now);
   container.replaceChildren(...items.map(createMenuCard));
+}
+
+export function initMenu(options = {}) {
+  renderMenu(options);
+
+  document.addEventListener("nourishflow:weekly-refresh", () => {
+    renderMenu({ ...options, now: new Date() });
+  });
 }

@@ -9,9 +9,13 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   checks:
-    name: Static checks and characterization tests
+    name: Static, domain, and browser quality
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -42,7 +46,7 @@ jobs:
 
       - name: Run browser quality gates
         run: |
-          npm run dev > /tmp/healthy-lifestyle-server.log 2>&1 &
+          npm run dev > /tmp/nourishflow-server.log 2>&1 &
           SERVER_PID=$!
           trap 'kill "$SERVER_PID"' EXIT
 

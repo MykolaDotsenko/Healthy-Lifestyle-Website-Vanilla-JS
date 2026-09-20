@@ -1,32 +1,9 @@
-const REFRESH_WEEKDAY = 1; // Monday
-const REFRESH_HOUR = 9;
+import {
+  getNextWeeklyDeadline,
+  getTimeRemaining,
+} from "../domain/weekly-cycle.js";
 
-export function getNextWeeklyDeadline(now = new Date()) {
-  const target = new Date(now);
-  target.setHours(REFRESH_HOUR, 0, 0, 0);
-
-  const daysUntilMonday = (REFRESH_WEEKDAY - now.getDay() + 7) % 7;
-  target.setDate(now.getDate() + daysUntilMonday);
-
-  if (target.getTime() <= now.getTime()) {
-    target.setDate(target.getDate() + 7);
-  }
-
-  return target;
-}
-
-export function getTimeRemaining(deadline, now = new Date()) {
-  const targetTime = deadline instanceof Date ? deadline.getTime() : Date.parse(deadline);
-  const total = Math.max(0, targetTime - now.getTime());
-
-  return {
-    total,
-    days: Math.floor(total / 86_400_000),
-    hours: Math.floor((total / 3_600_000) % 24),
-    minutes: Math.floor((total / 60_000) % 60),
-    seconds: Math.floor((total / 1_000) % 60),
-  };
-}
+export { getNextWeeklyDeadline, getTimeRemaining } from "../domain/weekly-cycle.js";
 
 function padTime(value) {
   return String(value).padStart(2, "0");
@@ -82,6 +59,7 @@ export function initTimer({
       deadline = getDeadline(new Date());
       remaining = getTimeRemaining(deadline);
       renderDeadline();
+      document.dispatchEvent(new CustomEvent("nourishflow:weekly-refresh"));
     }
 
     fields.days.textContent = padTime(remaining.days);

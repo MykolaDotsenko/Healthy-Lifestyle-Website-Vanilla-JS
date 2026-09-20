@@ -4,10 +4,10 @@
 
 NourishFlow optimizes for four things:
 
-1. **Traceability** — a developer should be able to find where behavior lives quickly.
-2. **Native platform leverage** — prefer HTML/CSS/browser APIs over custom infrastructure.
-3. **Testability** — business rules should be testable without a browser where practical.
-4. **Proportionality** — architecture should match a small static product, not imitate an enterprise backend.
+1. **Traceability** — behavior should be easy to locate.
+2. **Native platform leverage** — prefer HTML, CSS, and browser APIs over custom infrastructure.
+3. **Testability** — product rules should stay browser-independent where practical.
+4. **Proportionality** — architecture should match a small privacy-first nutrition product.
 
 ## Module map
 
@@ -18,81 +18,83 @@ flowchart TD
     APP --> TABS[ui/tabs.js]
     APP --> MODAL[ui/modal.js]
     APP --> MENU[features/menu.js]
-    APP --> FORMS[features/forms.js]
+    APP --> PLAN[features/plan.js]
     APP --> CAROUSEL[features/carousel.js]
     APP --> TIMER[features/timer.js]
     APP --> CALC[features/calculator.js]
 
-    FORMS -->|modal API| MODAL
+    TABS -->|meal-style event| PLAN
+    CALC -->|energy event| PLAN
+    PLAN --> MODAL
 
-    CALC --> DOMAIN[domain/calculator.js]
+    MENU --> STYLES[domain/meal-styles.js]
+    PLAN --> STYLES
+    STYLES --> WEEKLY[domain/weekly-cycle.js]
+    TIMER --> WEEKLY
+
+    CALC --> CALCDOMAIN[domain/calculator.js]
     CALC --> STORAGE[features/calculator-storage.js]
-    STORAGE --> DOMAIN
-
+    STORAGE --> CALCDOMAIN
     STORAGE -->|versioned preferences| LS[(localStorage)]
 ```
 
 ## Composition root
 
-`js/app.js` owns initialization order and is intentionally small. It wires features together rather than implementing feature behavior.
+`js/app.js` owns initialization order and wiring only. It contains no DOM querying, persistence, or product rules.
 
-This avoids:
+This avoids hidden initialization, global event buses, dependency-injection containers, and framework lifecycle coupling.
 
-- hidden initialization through global side effects;
-- a global event bus;
-- dependency-injection containers;
-- framework lifecycle coupling.
+## Domain modules
+
+### Calculator
+
+`domain/calculator.js` contains pure validation and calorie-estimate logic. It cannot access `window`, `document`, or storage.
+
+### Meal styles
+
+`domain/meal-styles.js` is the canonical meal-style model for Fitness, Premium, Vegetarian, and Balanced. It also selects each style's weekly idea.
+
+### Weekly cycle
+
+`domain/weekly-cycle.js` defines the shared Monday 09:00 local-time boundary used by both the countdown and weekly meal rotation. Keeping this boundary in one domain module prevents the UI promise and the rendered menu from drifting apart.
 
 ## UI modules
 
 ### Tabs
 
-`ui/tabs.js` owns the eating-style tab state and keyboard model.
-
-The DOM carries the semantics through `tablist`, `tab`, and `tabpanel`. JavaScript synchronizes selected state, panel visibility, and roving focus.
+`ui/tabs.js` owns the WAI-style tab state and keyboard model. The tablist precedes tabpanels in DOM order, while CSS controls the visual desktop placement. Activation publishes the selected meal-style id as a small product event.
 
 ### Dialog
 
-`ui/modal.js` delegates modality to the native `<dialog>` API.
-
-JavaScript only adds application-specific concerns:
-
-- which actions open it;
-- initial focus;
-- status view;
-- deterministic focus restoration.
-
-It does not recreate browser modality, Escape handling, or background inertness.
+`ui/modal.js` delegates modality to native `<dialog>`. JavaScript adds only open/close behavior, initial focus, and deterministic focus restoration.
 
 ## Feature modules
 
-### Carousel
-
-The carousel stores a single active slide index. Movement uses percentage transforms, so state does not depend on measured pixel widths and survives viewport changes.
-
 ### Menu
 
-Menu data is local, static product-demo data. Cards are created with DOM APIs rather than HTML string injection.
+`features/menu.js` renders four weekly meal ideas from the canonical meal-style domain. It rerenders when the weekly boundary event fires.
 
-### Forms
+### Plan
 
-Forms are explicitly local-only demonstrations. Native constraint validation is used and no network/persistence layer exists.
+`features/plan.js` combines selected meal style, current energy estimate, and this week's idea into a useful local summary. It requests no personal information and can copy the summary to the clipboard.
+
+### Carousel
+
+The carousel stores a single active slide index and uses percentage transforms, so state does not depend on measured pixel widths.
 
 ### Weekly countdown
 
-`features/timer.js` owns the informational menu-refresh countdown. It derives the next Monday 09:00 deadline from the viewer's local calendar instead of storing a fixed historical date. Remaining time is clamped at zero and the deadline rolls forward automatically after each weekly boundary.
-
-The timer has no persistence and no product-critical side effects; it is a presentation feature driven by the current clock.
+`features/timer.js` presents the next shared weekly boundary and publishes a refresh event after rollover.
 
 ### Calculator
 
-The calculator is split into three responsibilities:
+The calculator is split into:
 
 - `domain/calculator.js` — pure validation and calculation;
-- `features/calculator-storage.js` — versioned preference persistence/migration;
+- `features/calculator-storage.js` — versioned preference persistence and migration;
 - `features/calculator.js` — DOM/controller boundary.
 
-The domain layer cannot access `window`, `document`, or `localStorage`.
+The storage adapter migrates the previous NourishFlow key and preserves unknown future schema versions instead of destructively downgrading them.
 
 ## CSS architecture
 
@@ -102,22 +104,23 @@ The stylesheet uses ordered cascade layers:
 reset → tokens → base → layout → components → utilities → responsive
 ```
 
-The responsive model is mobile-first. Layout uses fluid containers, Grid/Flexbox, logical properties, `minmax()`, and `clamp()` instead of the original fixed desktop dimensions.
+The responsive model is mobile-first. Layout uses fluid containers, Grid/Flexbox, logical properties, `minmax()`, and `clamp()`.
 
-## Data boundaries
+## Data and privacy boundaries
 
 NourishFlow has no production API and no remote persistence.
 
-The only persisted state is calculator preference data in a versioned local-storage object. Personal details entered into demo request forms are neither transmitted nor stored.
+The only persisted state is calculator preference data in a versioned local-storage object. The plan is derived locally and contains no name, phone number, account, or other personal profile data.
 
 ## Deliberate non-goals
 
 - framework migration;
 - backend simulation;
+- authentication;
 - global state library;
 - custom design-system package;
 - repository/service/factory layers for static local data;
 - autoplay interactions;
 - fabricated scarcity or discount deadlines.
 
-These would add more code and conceptual load than product value at this scale.
+These would add conceptual load without improving the current product problem.

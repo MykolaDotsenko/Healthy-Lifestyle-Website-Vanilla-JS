@@ -23,6 +23,9 @@ test("carousel exposes grouped slides and button pickers", () => {
   assert.match(source, /aria-roledescription", "slide"/);
   assert.match(source, /carousel-indicator/);
   assert.match(source, /aria-current/);
+  assert.match(source, /aria-disabled/);
+  assert.match(source, /data-carousel-status/);
+  assert.match(source, /Slide \$\{activeIndex \+ 1\} of \$\{slides\.length\}/);
   assert.match(source, /aria-hidden/);
 });
 

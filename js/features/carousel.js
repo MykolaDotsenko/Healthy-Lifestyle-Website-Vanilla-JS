@@ -10,6 +10,7 @@ export function initCarousel() {
   const nextButton = document.querySelector(".offer__slider-next");
   const current = document.querySelector("#current");
   const total = document.querySelector("#total");
+  const status = slider?.querySelector("[data-carousel-status]");
 
   if (
     !slider ||
@@ -60,7 +61,14 @@ export function initCarousel() {
     dots.forEach((dot, index) => {
       const isActive = index === activeIndex;
       dot.setAttribute("aria-current", isActive ? "true" : "false");
+      dot.setAttribute("aria-disabled", isActive ? "true" : "false");
     });
+
+    if (status) {
+      const image = slides[activeIndex].querySelector("img");
+      const description = image?.alt ? `: ${image.alt}` : "";
+      status.textContent = `Slide ${activeIndex + 1} of ${slides.length}${description}`;
+    }
   }
 
   function setActiveIndex(index) {

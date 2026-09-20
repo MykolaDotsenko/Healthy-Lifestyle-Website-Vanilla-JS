@@ -5,22 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta
     name="description"
-    content="NourishFlow is an accessible nutrition UX portfolio demo built with semantic HTML, Vanilla CSS, and native JavaScript."
+    content="Explore meal styles, estimate your daily energy needs, and build a simple weekly nutrition plan with NourishFlow."
   >
   <meta name="theme-color" content="#ffffff">
   <meta name="robots" content="index,follow">
 
-  <title>NourishFlow — Accessible Vanilla JS Nutrition Demo</title>
+  <title>NourishFlow — Meal Ideas &amp; Daily Energy</title>
 
   <link rel="canonical" href="https://mykoladotsenko.github.io/Healthy-Lifestyle-Website-Vanilla-JS/">
   <link rel="icon" href="icons/logo.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css">
 
   <meta property="og:type" content="website">
-  <meta property="og:title" content="NourishFlow — Accessible Vanilla JS Nutrition Demo">
+  <meta property="og:title" content="NourishFlow — Meal Ideas &amp; Daily Energy">
   <meta
     property="og:description"
-    content="A responsive, accessible web-platform demo with meal tabs, a calorie estimator, an accessible carousel, and local-only form UX."
+    content="Explore weekly meal ideas, estimate your daily energy needs, and bring your choices together in a simple NourishFlow plan."
   >
   <meta property="og:url" content="https://mykoladotsenko.github.io/Healthy-Lifestyle-Website-Vanilla-JS/">
   <meta
@@ -35,7 +35,7 @@
       "@type": "WebApplication",
       "name": "NourishFlow",
       "url": "https://mykoladotsenko.github.io/Healthy-Lifestyle-Website-Vanilla-JS/",
-      "description": "An accessible nutrition UX portfolio demo built with the native web platform.",
+      "description": "A lightweight nutrition companion for meal ideas, daily energy estimates, and simple weekly planning.",
       "applicationCategory": "Lifestyle",
       "operatingSystem": "Any"
     }
@@ -50,22 +50,74 @@
         <img src="icons/logo.svg" alt="NourishFlow" decoding="async">
       </div>
       <nav class="header__links" aria-label="Primary navigation">
-        <a href="#menu" class="header__link">Meal Styles</a>
+        <a href="#meal-styles" class="header__link">Meal Styles</a>
         <a href="#calculator" class="header__link">Calorie Estimate</a>
       </nav>
     </div>
     <div class="header__right-block">
-      <button class="btn btn_white" type="button" data-modal>Preview Request</button>
+      <button class="btn" type="button" data-plan>Build My Plan</button>
     </div>
   </header>
 
 
   <main id="main-content">
-    <section class="preview" aria-labelledby="main-title">
+    <section class="preview" id="meal-styles" aria-labelledby="main-title">
       <div class="bgc_blue" aria-hidden="true"></div>
       <div class="container">
-        <h1 id="main-title" class="visually-hidden">NourishFlow — accessible nutrition and meal-planning demo</h1>
         <div class="tabcontainer">
+          <div class="tabheader">
+            <h1 id="main-title">Choose Your Eating Style</h1>
+            <div class="tabheader__items" role="tablist" aria-label="Eating styles" aria-orientation="vertical">
+              <button
+                id="plan-fitness-control"
+                data-style-id="fitness"
+                class="tabheader__item tabheader__item_active"
+                type="button"
+                role="tab"
+                aria-controls="plan-fitness"
+                aria-selected="true"
+                tabindex="0"
+              >
+                Fitness
+              </button>
+              <button
+                id="plan-premium-control"
+                data-style-id="premium"
+                class="tabheader__item"
+                type="button"
+                role="tab"
+                aria-controls="plan-premium"
+                aria-selected="false"
+                tabindex="-1"
+              >
+                Premium
+              </button>
+              <button
+                id="plan-vegetarian-control"
+                data-style-id="vegetarian"
+                class="tabheader__item"
+                type="button"
+                role="tab"
+                aria-controls="plan-vegetarian"
+                aria-selected="false"
+                tabindex="-1"
+              >
+                Vegetarian
+              </button>
+              <button
+                id="plan-balanced-control"
+                data-style-id="balanced"
+                class="tabheader__item"
+                type="button"
+                role="tab"
+                aria-controls="plan-balanced"
+                aria-selected="false"
+                tabindex="-1"
+              >
+                Balanced
+              </button>
+            </div>
+          </div>
           <div class="tabcontent" id="plan-fitness" role="tabpanel" tabindex="0" aria-labelledby="plan-fitness-control">
             <picture>
                 <source
@@ -167,55 +219,6 @@
             </p>
           </div>
 
-          <div class="tabheader">
-            <h2>Choose Your Eating Style</h2>
-            <div class="tabheader__items" role="tablist" aria-label="Eating styles" aria-orientation="vertical">
-              <button
-                id="plan-fitness-control"
-                class="tabheader__item tabheader__item_active"
-                type="button"
-                role="tab"
-                aria-controls="plan-fitness"
-                aria-selected="true"
-                tabindex="0"
-              >
-                Fitness
-              </button>
-              <button
-                id="plan-premium-control"
-                class="tabheader__item"
-                type="button"
-                role="tab"
-                aria-controls="plan-premium"
-                aria-selected="false"
-                tabindex="-1"
-              >
-                Premium
-              </button>
-              <button
-                id="plan-vegetarian-control"
-                class="tabheader__item"
-                type="button"
-                role="tab"
-                aria-controls="plan-vegetarian"
-                aria-selected="false"
-                tabindex="-1"
-              >
-                Vegetarian
-              </button>
-              <button
-                id="plan-balanced-control"
-                class="tabheader__item"
-                type="button"
-                role="tab"
-                aria-controls="plan-balanced"
-                aria-selected="false"
-                tabindex="-1"
-              >
-                Balanced
-              </button>
-            </div>
-          </div>
         </div>
         <p class="preview__life">Explore meal styles. Calculate your needs. Keep it simple.</p>
       </div>
@@ -230,11 +233,11 @@
           <p class="section-kicker">Everyday nutrition</p>
           <h2 class="title" id="offer-title">What NourishFlow Brings Together</h2>
           <p class="offer__descr">
-            NourishFlow brings meal ideas, a daily energy estimate, and a simple request preview into one lightweight nutrition demo.
+            NourishFlow brings meal ideas, a daily energy estimate, and a simple weekly plan into one lightweight experience.
           </p>
         </div>
         <div class="offer__action">
-          <button class="btn btn_dark" type="button" data-modal>Preview Request</button>
+          <button class="btn btn_dark" type="button" data-plan>Build My Plan</button>
         </div>
       </div>
 
@@ -246,7 +249,7 @@
           </p>
           <h3>Respectful by Design</h3>
           <p class="offer__advantages-text">
-            No fake urgency, forced popups, tracking, or hidden form submission. The demo is intentionally lightweight and transparent.
+            Your meal style and calculator preferences stay on your device, so you can explore without creating an account or sending personal details.
           </p>
         </div>
 
@@ -255,9 +258,10 @@
             <button class="offer__slider-prev" type="button" aria-label="Previous slide">
               <img src="icons/left.svg" alt="" aria-hidden="true" decoding="async">
             </button>
-            <span id="current" aria-live="polite">01</span>
+            <span id="current">01</span>
             <span aria-hidden="true">/</span>
             <span id="total">04</span>
+            <span class="visually-hidden" data-carousel-status aria-live="polite"></span>
             <button class="offer__slider-next" type="button" aria-label="Next slide">
               <img src="icons/right.svg" alt="" aria-hidden="true" decoding="async">
             </button>
@@ -366,7 +370,7 @@
         <p class="section-kicker section-kicker_center">Your daily estimate</p>
         <h2 class="title" id="calculator-title">Let's Calculate Your Daily Caloric Needs</h2>
         <p class="calculating__guidance" id="calculator-guidance">
-          Adult estimate only. This calculator is for general information and is not medical advice.
+          Adult maintenance estimate using the revised Harris–Benedict equation and an activity factor. For general information only; not medical advice.
         </p>
 
         <div class="calculating__field">
@@ -463,7 +467,7 @@
                 name="activity"
                 value="1.2"
               >
-              <label class="calculating__choose-item" for="low">Low Activity</label>
+              <label class="calculating__choose-item" for="low">Sedentary</label>
 
               <input
                 class="calculating__choice-input visually-hidden"
@@ -473,7 +477,7 @@
                 value="1.375"
                 checked
               >
-              <label class="calculating__choose-item" for="small">Moderate Activity</label>
+              <label class="calculating__choose-item" for="small">Lightly Active</label>
 
               <input
                 class="calculating__choice-input visually-hidden"
@@ -482,7 +486,7 @@
                 name="activity"
                 value="1.55"
               >
-              <label class="calculating__choose-item" for="medium">High Activity</label>
+              <label class="calculating__choose-item" for="medium">Moderately Active</label>
 
               <input
                 class="calculating__choice-input visually-hidden"
@@ -491,7 +495,7 @@
                 name="activity"
                 value="1.725"
               >
-              <label class="calculating__choose-item" for="high">Very High Activity</label>
+              <label class="calculating__choose-item" for="high">Very Active</label>
             </div>
           </fieldset>
 
@@ -517,40 +521,20 @@
     <div class="divider" aria-hidden="true"></div>
 
     <section class="menu" id="menu" aria-labelledby="menu-title">
-      <h2 class="title" id="menu-title">Explore the Daily Menu</h2>
+      <h2 class="title" id="menu-title">Explore This Week’s Meal Ideas</h2>
       <div class="menu__field">
         <div class="container" id="menu-list"></div>
       </div>
     </section>
 
-    <section class="order" aria-labelledby="order-title">
+    <section class="plan" aria-labelledby="plan-title">
       <div class="container">
-        <h2 class="title" id="order-title">Preview Your Request</h2>
-        <form class="order__form" data-demo-form aria-describedby="order-demo-note">
-          <label class="visually-hidden" for="order-name">Your Name</label>
-          <input
-            required
-            id="order-name"
-            placeholder="Your Name"
-            name="name"
-            type="text"
-            autocomplete="name"
-            class="order__input"
-          >
-
-          <label class="visually-hidden" for="order-phone">Your Phone Number</label>
-          <input
-            required
-            id="order-phone"
-            placeholder="Your Phone Number"
-            name="phone"
-            type="tel"
-            autocomplete="tel"
-            class="order__input"
-          >
-          <button class="btn btn_dark btn_min" type="submit">Preview Request</button>
-        </form>
-        <p class="form-note" id="order-demo-note">Portfolio demo: validates locally. No personal data is sent or stored.</p>
+        <p class="section-kicker section-kicker_center">Bring it together</p>
+        <h2 class="title" id="plan-title">Build Your NourishFlow Plan</h2>
+        <p class="plan__descr">
+          Combine your selected meal style, daily energy estimate, and this week’s meal idea into one simple summary you can copy and keep.
+        </p>
+        <button class="btn btn_dark" type="button" data-plan>Build My Plan</button>
       </div>
     </section>
 
@@ -563,9 +547,8 @@
           <p class="promotion__eyebrow">Weekly menu rhythm</p>
           <h2 class="title" id="promotion-title">Fresh Ideas, Every Week</h2>
           <p class="promotion__descr">
-            The demo menu refreshes every Monday at 09:00 in your local time.
-            The countdown is informational, not a limited-time offer, and automatically rolls forward
-            to the next week instead of ever showing negative time.
+            Meal ideas rotate every Monday at 09:00 in your local time.
+            The countdown shows when the next set arrives and automatically rolls forward each week.
           </p>
         </div>
 
@@ -608,17 +591,11 @@
       <div class="footer__about">
         <p class="subtitle">NourishFlow</p>
         <p class="footer__meta">
-          A semantic HTML, Vanilla CSS, and native JavaScript portfolio project focused on accessibility, maintainability, and honest product behavior.
+          Simple meal inspiration and daily energy guidance, brought together in one lightweight nutrition companion.
         </p>
       </div>
 
       <nav class="footer__links" aria-label="Project links">
-        <a
-          class="link"
-          href="https://github.com/MykolaDotsenko/Healthy-Lifestyle-Website-Vanilla-JS"
-        >
-          View source on GitHub
-        </a>
         <a class="link" href="#main-content">Back to top</a>
       </nav>
     </div>
@@ -626,49 +603,41 @@
 
   <dialog
     class="modal"
-    id="contact-dialog"
-    aria-labelledby="contact-dialog-title"
+    id="plan-dialog"
+    aria-labelledby="plan-dialog-title"
   >
     <div class="modal__content">
-      <button class="modal__close" type="button" data-close aria-label="Close contact dialog">&times;</button>
+      <button class="modal__close" type="button" data-close aria-label="Close plan summary">&times;</button>
 
-      <div data-dialog-form>
-        <h2 class="modal__title" id="contact-dialog-title">
-          Preview a Request
-        </h2>
-        <form data-demo-form aria-describedby="modal-demo-note">
-          <label class="visually-hidden" for="modal-name">Your Name</label>
-          <input
-            required
-            id="modal-name"
-            placeholder="Your Name"
-            name="name"
-            type="text"
-            autocomplete="name"
-            class="modal__input"
-            data-dialog-initial-focus
-          >
+      <h2 class="modal__title" id="plan-dialog-title" tabindex="-1" data-dialog-initial-focus>
+        Your NourishFlow Plan
+      </h2>
 
-          <label class="visually-hidden" for="modal-phone">Your Phone Number</label>
-          <input
-            required
-            id="modal-phone"
-            placeholder="Your Phone Number"
-            name="phone"
-            type="tel"
-            autocomplete="tel"
-            class="modal__input"
-          >
-
-          <button class="btn btn_dark btn_min" type="submit">Preview Request</button>
-        </form>
-        <p class="form-note" id="modal-demo-note">Portfolio demo: validates locally. No personal data is sent or stored.</p>
+      <div class="plan-summary">
+        <div class="plan-summary__item">
+          <span class="plan-summary__label">Meal style</span>
+          <strong data-plan-style>Fitness</strong>
+        </div>
+        <div class="plan-summary__item">
+          <span class="plan-summary__label">Daily energy</span>
+          <strong data-plan-energy>Add your details in the energy calculator</strong>
+        </div>
+        <div class="plan-summary__item">
+          <span class="plan-summary__label">This week’s idea</span>
+          <strong data-plan-meal></strong>
+          <p data-plan-meal-description></p>
+        </div>
       </div>
 
-      <div class="modal__status-view" data-dialog-status hidden>
-        <p class="modal__title" data-dialog-status-message role="status"></p>
-        <button class="btn btn_dark btn_min" type="button" data-close>Close</button>
+      <p class="form-note">
+        Your calculator preferences stay on this device. This plan is not medical advice.
+      </p>
+
+      <div class="plan-summary__actions">
+        <button class="btn btn_dark btn_min" type="button" data-copy-plan>Copy Plan</button>
+        <button class="btn btn_min" type="button" data-close>Close</button>
       </div>
+      <p class="calculating__status" data-plan-copy-status role="status"></p>
     </div>
   </dialog>
 

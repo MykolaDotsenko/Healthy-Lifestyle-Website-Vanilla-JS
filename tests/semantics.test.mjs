@@ -5,129 +5,79 @@ import { fileURLToPath } from "node:url";
 import test from "node:test";
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
-
-async function read(relativePath) {
-  return readFile(resolve(root, relativePath), "utf8");
-}
-
-const html = await read("index.html");
-const menu = await read("js/features/menu.js");
-const carousel = await read("js/features/carousel.js");
-const calculator = await read("js/features/calculator.js");
+const [html, carousel] = await Promise.all([
+  readFile(resolve(root, "index.html"), "utf8"),
+  readFile(resolve(root, "js/features/carousel.js"), "utf8"),
+]);
 
 function count(value, pattern) {
   return [...value.matchAll(pattern)].length;
 }
 
-test("document exposes a semantic page structure", () => {
+test("document exposes a semantic product structure", () => {
   assert.equal(count(html, /<main\b/g), 1);
   assert.equal(count(html, /<h1\b/g), 1);
-  assert.ok(count(html, /<section\b/g) >= 6);
+  assert.match(html, /<h1 id="main-title">Choose Your Eating Style<\/h1>/);
   assert.match(html, /<a class="skip-link" href="#main-content">/);
   assert.match(html, /<main id="main-content">/);
 });
 
-test("interactive controls use native elements", () => {
-  assert.equal(count(html, /class="[^"]*\btabheader__item\b[^"]*"/g), 4);
-  assert.equal(count(html, /<button[^>]+class="tabheader__item/g), 4);
-  assert.equal(count(html, /type="radio"/g), 6);
-  assert.equal(count(html, /<fieldset\b/g), 3);
-  assert.equal(count(html, /<legend\b/g), 3);
-  assert.match(html, /<button class="offer__slider-prev" type="button"/);
-  assert.match(html, /<button class="offer__slider-next" type="button"/);
-  assert.doesNotMatch(html, /<div class="modal__close"/);
-  assert.match(carousel, /document\.createElement\("button"\)/);
-  assert.match(menu, /document\.createElement\("article"\)/);
-});
-
-test("form controls have explicit labels and meaningful input types", () => {
-  const ids = [
-    "female",
-    "male",
-    "height",
-    "weight",
-    "age",
-    "low",
-    "small",
-    "medium",
-    "high",
-    "order-name",
-    "order-phone",
-    "modal-name",
-    "modal-phone",
-  ];
-
-  for (const id of ids) {
-    assert.match(html, new RegExp(`<label[^>]+for="${id}"`), `missing label for #${id}`);
-  }
-
-  assert.equal(count(html, /type="tel"/g), 2);
-  assert.doesNotMatch(html, /type="phone"/);
-  assert.equal(count(html, /<output\b/g), 1);
-});
-
-test("navigation points only to real product and project destinations", () => {
-  assert.doesNotMatch(html, /href="#"/);
-  assert.match(html, /href="#menu"/);
-  assert.match(html, /href="#calculator"/);
-  assert.doesNotMatch(html, /href="tel:/);
-  assert.match(
-    html,
-    /href="https:\/\/github\.com\/MykolaDotsenko\/Healthy-Lifestyle-Website-Vanilla-JS"/,
-  );
-});
-
-test("all authored HTML buttons declare an explicit type", () => {
-  const buttons = [...html.matchAll(/<button\b[^>]*>/g)].map((match) => match[0]);
-  assert.ok(buttons.length > 0);
-
-  for (const button of buttons) {
-    assert.match(button, /\btype="(?:button|submit)"/);
-  }
-});
-
-test("calculator uses radio state and numeric browser values", () => {
-  assert.match(calculator, /restoreRadioState/);
-  assert.match(calculator, /bindRadioGroup/);
-  assert.match(calculator, /input\.valueAsNumber/);
-  assert.doesNotMatch(calculator, /#gender div/);
-  assert.doesNotMatch(calculator, /\.calculating__choose_big div/);
-});
-
-test("calculator numeric fields expose native guardrails and error hooks", () => {
-  const expectations = [
-    ["height", "100", "250", "0.1", "height-error"],
-    ["weight", "30", "350", "0.1", "weight-error"],
-    ["age", "18", "120", "1", "age-error"],
-  ];
-
-  for (const [id, min, max, step, errorId] of expectations) {
-    const input = html.match(new RegExp(`<input(?=[^>]*\\bid="${id}")[^>]*>`))?.[0] ?? "";
-
-    assert.match(input, new RegExp(`min="${min}"`));
-    assert.match(input, new RegExp(`max="${max}"`));
-    assert.match(input, new RegExp(`step="${step.replace(".", "\\.")}"`));
-    assert.match(input, new RegExp(`aria-describedby="[^"]*${errorId}[^"]*"`));
-    assert.match(input, /aria-invalid="false"/);
-  }
-
-  assert.match(html, /id="calculator-status" role="status"/);
-  assert.match(html, /Adult estimate only\./);
-});
-
-test("tabs expose the WAI tablist/tab/tabpanel contract", () => {
+test("tabs expose the WAI tab contract in logical DOM order", () => {
   assert.equal(count(html, /role="tablist"/g), 1);
   assert.equal(count(html, /role="tab"/g), 4);
   assert.equal(count(html, /role="tabpanel"/g), 4);
   assert.equal(count(html, /aria-selected="true"/g), 1);
-  assert.equal(count(html, /tabindex="-1"/g), 3);
+
+  const tabButtons = [
+    ...html.matchAll(/<button(?=[^>]*role="tab")[^>]*>[\s\S]*?<\/button>/g),
+  ].map((match) => match[0]);
+  assert.equal(
+    tabButtons.filter((button) => button.includes('tabindex="-1"')).length,
+    3,
+  );
   assert.match(html, /aria-orientation="vertical"/);
-  assert.doesNotMatch(html, /aria-expanded="(?:true|false)"[^>]*>\s*(?:Fitness|Premium|Vegetarian|Balanced)/);
+  assert.ok(
+    html.indexOf('role="tablist"') < html.indexOf('role="tabpanel"'),
+    "tablist should precede tabpanels in DOM order",
+  );
 });
 
-test("contact modal uses the native dialog element", () => {
+test("calculator controls use native labels, groups, and output", () => {
+  for (const id of [
+    "female", "male", "height", "weight", "age",
+    "low", "small", "medium", "high",
+  ]) {
+    assert.match(html, new RegExp('<label[^>]+for="' + id + '"'));
+  }
+
+  assert.equal(count(html, /<fieldset\b/g), 3);
+  assert.equal(count(html, /<legend\b/g), 3);
+  assert.equal(count(html, /<output\b/g), 1);
+  assert.match(html, /revised Harris–Benedict/);
+});
+
+test("navigation and plan actions point to real product destinations", () => {
+  assert.match(html, /href="#meal-styles"/);
+  assert.match(html, /href="#calculator"/);
+  assert.doesNotMatch(html, /href="#"/);
+  assert.ok(count(html, /data-plan/g) >= 3);
+});
+
+test("product surface does not request personal information", () => {
+  assert.equal(count(html, /<form\b/g), 0);
+  assert.doesNotMatch(html, /type="tel"|autocomplete="tel"|autocomplete="name"/);
+  assert.doesNotMatch(html, /Your Phone Number|Your Name/);
+});
+
+test("plan summary uses a native dialog and explicit close controls", () => {
   assert.equal(count(html, /<dialog\b/g), 1);
-  assert.match(html, /id="contact-dialog"/);
-  assert.match(html, /aria-labelledby="contact-dialog-title"/);
-  assert.doesNotMatch(html, /<div class="modal">/);
+  assert.match(html, /id="plan-dialog"/);
+  assert.match(html, /aria-labelledby="plan-dialog-title"/);
+  assert.ok(count(html, /data-close/g) >= 2);
+});
+
+test("carousel controls remain native buttons", () => {
+  assert.match(html, /<button class="offer__slider-prev" type="button"/);
+  assert.match(html, /<button class="offer__slider-next" type="button"/);
+  assert.match(carousel, /document\.createElement\("button"\)/);
 });

@@ -38,7 +38,7 @@ function createShoppingItem(value) {
 }
 
 export function createPlanView() {
-  const approachOutput = document.querySelector("[data-plan-style]");
+  const approachOutput = document.querySelector("[data-plan-approach]");
   const energyOutput = document.querySelector("[data-plan-energy]");
   const planTitle = document.querySelector("[data-plan-title]");
   const planSummary = document.querySelector("[data-plan-summary]");

@@ -38,13 +38,6 @@ export function initCarousel() {
       slide.querySelector(".offer__slide-caption strong")?.textContent?.trim() ||
       `Slide ${index + 1}`;
 
-    slide.setAttribute("role", "group");
-    slide.setAttribute("aria-roledescription", "slide");
-    slide.setAttribute(
-      "aria-label",
-      `${index + 1} of ${slides.length} — ${title}`,
-    );
-
     const dot = document.createElement("button");
     dot.type = "button";
     dot.className = "carousel-indicator";

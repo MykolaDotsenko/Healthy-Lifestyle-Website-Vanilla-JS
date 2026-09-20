@@ -14,7 +14,11 @@ test("document exposes product-first metadata", () => {
   assert.match(html, /property="og:title"/);
   assert.match(html, /property="og:description"/);
   assert.match(html, /property="og:image"/);
+  assert.match(html, /img\/brand\/nourishflow-og\.png/);
+  assert.match(html, /property="og:image:width" content="1200"/);
+  assert.match(html, /property="og:image:height" content="630"/);
   assert.match(html, /name="twitter:card" content="summary_large_image"/);
+  assert.match(html, /name="twitter:image"/);
   assert.match(html, /"@type": "WebApplication"/);
 });
 

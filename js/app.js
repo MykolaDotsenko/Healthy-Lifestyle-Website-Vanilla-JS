@@ -27,7 +27,5 @@ initCarousel();
 initCalculator({ onEstimate: plan.setCalories });
 
 initLocalDataControls({
-  onCleared() {
-    window.location.reload();
-  },
+  onCleared: plan.clearSaved,
 });

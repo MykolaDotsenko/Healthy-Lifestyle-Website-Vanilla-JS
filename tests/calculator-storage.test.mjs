@@ -3,6 +3,7 @@ import test from "node:test";
 
 import {
   CALCULATOR_STORAGE_KEY,
+  clearCalculatorPreferences,
   loadCalculatorPreferences,
   saveCalculatorPreferences,
 } from "../js/features/calculator-storage.js";
@@ -140,4 +141,21 @@ test("malformed data and storage failures degrade safely", () => {
   };
   assert.deepEqual(loadCalculatorPreferences(unavailable), defaults);
   assert.equal(saveCalculatorPreferences(unavailable, defaults), false);
+});
+
+test("clear removes current and legacy calculator preference keys", () => {
+  const storage = new FakeStorage({
+    [CALCULATOR_STORAGE_KEY]: "{}",
+    "healthy-lifestyle.calculator.preferences": "{}",
+    sex: "male",
+    ratio: "1.55",
+    unrelated: "keep",
+  });
+
+  assert.equal(clearCalculatorPreferences(storage), true);
+  assert.equal(storage.getItem(CALCULATOR_STORAGE_KEY), null);
+  assert.equal(storage.getItem("healthy-lifestyle.calculator.preferences"), null);
+  assert.equal(storage.getItem("sex"), null);
+  assert.equal(storage.getItem("ratio"), null);
+  assert.equal(storage.getItem("unrelated"), "keep");
 });

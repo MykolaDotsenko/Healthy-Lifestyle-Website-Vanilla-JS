@@ -44,7 +44,7 @@ function createMenuCard(item, selectedApproachId) {
   const picture = createMenuPicture(item);
 
   const style = document.createElement("p");
-  style.className = "menu__item-style";
+  style.className = "menu__item-approach";
   style.textContent = item.approachLabel;
 
   const title = document.createElement("h3");

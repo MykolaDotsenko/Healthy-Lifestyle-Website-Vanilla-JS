@@ -29,10 +29,12 @@ flowchart TD
     TIMER -->|onRefresh| MENU
     TIMER -->|onRefresh| PLAN
     PLAN --> MODAL
+    PLAN --> PLANVIEW[ui/plan-view.js]
 
-    MENU --> STYLES[domain/meal-styles.js]
-    PLAN --> STYLES
-    STYLES --> WEEKLY[domain/weekly-cycle.js]
+    MENU --> MEALPLANS[domain/meal-plans.js]
+    PLAN --> MEALPLANS
+    MEALPLANS --> MEALDATA[data/meal-approaches.js]
+    MEALPLANS --> WEEKLY[domain/weekly-cycle.js]
     TIMER --> WEEKLY
 
     CALC --> CALCDOMAIN[domain/calculator.js]
@@ -53,7 +55,7 @@ Feature modules expose small callback-oriented APIs instead of coordinating thro
 - `initCalculator({ onEstimate })`;
 - `initTimer({ onRefresh })`;
 - `initMenu()` returns a renderer;
-- `initPlan()` returns `setStyle`, `setCalories`, and `refreshWeekly`.
+- `initPlan()` returns `setApproach`, `setCalories`, `refreshWeekly`, and a small saved-plan UI reset hook.
 
 The composition root contains no DOM queries, storage access, or product calculations.
 
@@ -63,9 +65,9 @@ The composition root contains no DOM queries, storage access, or product calcula
 
 `domain/calculator.js` contains pure validation and the preserved revised Harris–Benedict calculation. It cannot access `window`, `document`, or storage.
 
-### Meal approaches
+### Meal approaches and weekly plans
 
-`domain/meal-styles.js` is the canonical content model for:
+`data/meal-approaches.js` owns the authored content for:
 
 - Whole-Food;
 - Mediterranean;
@@ -78,7 +80,7 @@ Each approach has four authored weekly variants. Every variant contains:
 - Morning, Midday, and Evening meal ideas;
 - a small shopping starter.
 
-The same domain drives generated weekly cards and the plan dialog. Static first-screen tabs are guarded by tests that verify their labels, images, and descriptions against the canonical model so HTML/domain drift is caught.
+The authored data is immutable. `domain/meal-plans.js` owns selection rules: approach lookup, four-week variant selection, and the current plan set. The same data drives generated weekly cards and the plan dialog. Static first-screen tabs are guarded by tests that verify their labels, images, and descriptions against the canonical model so HTML/data drift is caught.
 
 ### Weekly cycle
 
@@ -96,6 +98,10 @@ The timer displays days, hours, and minutes rather than promotion-style seconds.
 
 `ui/modal.js` delegates modality to native `<dialog>` and adds only explicit open/close behavior, initial focus, and focus restoration.
 
+### Plan view
+
+`ui/plan-view.js` owns plan DOM rendering and status output. `features/plan.js` keeps application state and actions, so rendering concerns do not grow inside the controller.
+
 ## Feature modules
 
 ### Menu
@@ -112,13 +118,13 @@ The timer displays days, hours, and minutes rather than promotion-style seconds.
 - rendered three-meal set;
 - shopping starter.
 
-It can produce another authored set, copy the plan, save one plan locally, and reopen the saved snapshot.
+It can produce another authored set, copy the plan, save one plan locally, reopen the saved snapshot, preserve the saved approach when requesting another set, and remove the saved snapshot.
 
 ### Plan persistence
 
 `features/plan-storage.js` validates and stores one versioned plan snapshot under `nourishflow.saved-plan`.
 
-Unsupported or malformed data is ignored rather than silently coerced into a different shape.
+The current schema is v2. Valid v1 records using the previous `styleId/styleLabel` field names are migrated once to `approachId/approachLabel`. Unsupported future versions are ignored without destructive overwrite, and malformed data is rejected.
 
 ### Carousel
 
@@ -157,7 +163,7 @@ Local storage contains only:
 - calculator preferences;
 - one user-saved plan snapshot.
 
-The product does not collect personal identity information.
+Users can remove the saved plan independently or clear all NourishFlow-owned local data. The product does not collect personal identity information.
 
 ## Deliberate non-goals
 

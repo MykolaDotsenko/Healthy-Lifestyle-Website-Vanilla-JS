@@ -34,15 +34,25 @@ export function initCarousel() {
   indicators.setAttribute("aria-label", "Choose slide");
 
   const dots = slides.map((slide, index) => {
+    const title =
+      slide.querySelector(".offer__slide-caption strong")?.textContent?.trim() ||
+      `Slide ${index + 1}`;
+
     slide.setAttribute("role", "group");
     slide.setAttribute("aria-roledescription", "slide");
-    slide.setAttribute("aria-label", `${index + 1} of ${slides.length}`);
+    slide.setAttribute(
+      "aria-label",
+      `${index + 1} of ${slides.length} — ${title}`,
+    );
 
     const dot = document.createElement("button");
     dot.type = "button";
     dot.className = "carousel-indicator";
     dot.dataset.slideTo = String(index);
-    dot.setAttribute("aria-label", `Show slide ${index + 1} of ${slides.length}`);
+    dot.setAttribute(
+      "aria-label",
+      `Show ${title}, slide ${index + 1} of ${slides.length}`,
+    );
     indicators.append(dot);
 
     return dot;
@@ -65,9 +75,13 @@ export function initCarousel() {
     });
 
     if (status) {
-      const image = slides[activeIndex].querySelector("img");
-      const description = image?.alt ? `: ${image.alt}` : "";
-      status.textContent = `Slide ${activeIndex + 1} of ${slides.length}${description}`;
+      const title =
+        slides[activeIndex]
+          .querySelector(".offer__slide-caption strong")
+          ?.textContent?.trim() || "";
+      const description = title ? `: ${title}` : "";
+      status.textContent =
+        `Slide ${activeIndex + 1} of ${slides.length}${description}`;
     }
   }
 

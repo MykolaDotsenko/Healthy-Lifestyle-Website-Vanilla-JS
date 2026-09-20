@@ -156,10 +156,13 @@
   }
 
   .header {
+    padding-block: var(--space-4) var(--space-5);
+  }
+
+  .header__inner {
     display: grid;
     gap: var(--space-3);
     align-items: center;
-    padding: var(--space-4) var(--page-gutter) var(--space-5);
   }
 
   .header__left-block {
@@ -476,6 +479,12 @@
     inline-size: 100%;
   }
 
+  .btn_subtle {
+    background: transparent;
+    box-shadow: none;
+    font-weight: 650;
+  }
+
   .header__link::after {
     content: "";
     position: absolute;
@@ -748,6 +757,32 @@
     font-weight: 700;
   }
 
+  .calculating__activity-choice {
+    min-block-size: 5.75rem;
+    flex-direction: column;
+    gap: var(--space-1);
+    align-items: flex-start;
+    justify-content: center;
+    text-align: start;
+  }
+
+  .calculating__choice-title {
+    font-weight: 750;
+  }
+
+  .calculating__choice-help {
+    color: var(--color-text-muted);
+    font-size: 0.78rem;
+    font-weight: 500;
+    line-height: 1.35;
+  }
+
+  .calculating__choice-input:checked
+    + .calculating__activity-choice
+    .calculating__choice-help {
+    color: var(--color-accent-text);
+  }
+
   .calculating__choice-input:focus-visible + .calculating__choose-item {
     outline: 0.1875rem solid var(--color-focus);
     outline-offset: 0.1875rem;
@@ -782,6 +817,18 @@
     background: var(--color-surface);
     box-shadow: var(--shadow-sm);
     font-size: 1rem;
+  }
+
+  .menu__item_selected {
+    border-color: var(--color-accent);
+    box-shadow:
+      0 0 0 0.125rem color-mix(in srgb, var(--color-accent) 45%, transparent),
+      var(--shadow-sm);
+  }
+
+  .menu__item_selected .menu__item-week {
+    background: color-mix(in srgb, var(--color-accent) 14%, var(--color-surface));
+    color: var(--color-accent-text);
   }
 
   .menu__item img {
@@ -852,10 +899,30 @@
     color: rgba(255, 255, 255, 0.74);
   }
 
+  .footer__actions {
+    display: grid;
+    gap: var(--space-2);
+    justify-items: start;
+  }
+
   .footer__links {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-3) var(--space-5);
+  }
+
+  .footer__data-button {
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .footer__data-status {
+    max-inline-size: 28rem;
+    color: rgba(255, 255, 255, 0.74);
+    font-size: 0.8125rem;
   }
 
   .modal__close {
@@ -907,6 +974,13 @@
 
   .plan__saved .section-kicker {
     margin-block-end: 0;
+  }
+
+  .plan__saved-actions {
+    display: grid;
+    inline-size: 100%;
+    gap: var(--space-2);
+    justify-items: center;
   }
 
   .plan__saved > p:not(.section-kicker) {
@@ -1009,10 +1083,17 @@
   }
 
   .plan-summary__actions {
+    position: sticky;
+    inset-block-end: 0;
+    z-index: 2;
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-3);
+    gap: var(--space-2);
     margin-block-start: var(--space-5);
+    padding-block: var(--space-3);
+    border-block-start: 1px solid var(--color-border);
+    background: color-mix(in srgb, var(--color-surface) 96%, transparent);
+    backdrop-filter: blur(0.5rem);
   }
 
   .plan-summary__actions .btn {
@@ -1152,13 +1233,21 @@
     }
 
     .plan-summary__actions {
+      position: static;
       grid-template-columns: repeat(3, minmax(8rem, 1fr));
+      padding-block: 0;
+      border-block-start: 0;
+      background: transparent;
+      backdrop-filter: none;
     }
 
     .header {
+      padding-block: clamp(1.25rem, 4vw, 2.5rem);
+    }
+
+    .header__inner {
       grid-template-columns: minmax(0, 1fr) auto;
       gap: var(--space-5);
-      padding: clamp(1.25rem, 4vw, 2.5rem) var(--page-gutter);
     }
 
     .header__left-block {
@@ -1218,6 +1307,11 @@
 
     .footer .container {
       grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .footer__actions {
+      justify-items: end;
+      text-align: end;
     }
 
     .footer__links {
@@ -1334,7 +1428,8 @@
     }
 
     .tabheader__item_active,
-    .calculating__choice-input:checked + .calculating__choose-item {
+    .calculating__choice-input:checked + .calculating__choose-item,
+    .menu__item_selected {
       forced-color-adjust: none;
       border-color: Highlight;
       background: Highlight;

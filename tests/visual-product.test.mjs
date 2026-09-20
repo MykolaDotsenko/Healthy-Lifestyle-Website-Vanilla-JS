@@ -65,9 +65,10 @@ test("responsive and accessibility protections remain present", () => {
 });
 
 test("product copy is user-facing rather than implementation-facing", () => {
-  assert.match(html, /Everyday nutrition/);
+  assert.match(html, /Planning shortcuts/);
   assert.match(html, /Your daily estimate/);
   assert.match(html, /Explore This Week’s Meal Ideas/);
   assert.match(html, /Build Your NourishFlow Plan/);
+  assert.match(html, /Clear local data/);
   assert.doesNotMatch(html, /Interaction system|Pure domain logic|semantic HTML|Vanilla CSS|native JavaScript/i);
 });

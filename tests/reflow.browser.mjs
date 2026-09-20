@@ -31,7 +31,7 @@ const browser = await chromium.launch({ headless: true });
 try {
   for (const viewport of viewports) {
     const context = await browser.newContext({
-      viewport,
+      viewport: { width: viewport.width, height: viewport.height },
       hasTouch: viewport.mobile,
       isMobile: viewport.mobile,
       permissions: ["clipboard-read", "clipboard-write"],

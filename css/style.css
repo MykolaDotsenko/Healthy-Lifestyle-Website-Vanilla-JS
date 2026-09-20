@@ -189,7 +189,7 @@
   .calculating,
   .menu,
   .plan,
-  .promotion {
+  .weekly {
     position: relative;
     padding-block: var(--section-space);
   }
@@ -240,8 +240,8 @@
   .offer__text,
   .offer__advantages,
   .offer__slider,
-  .promotion__text,
-  .promotion__timer {
+  .weekly__text,
+  .weekly__timer {
     min-inline-size: 0;
   }
 
@@ -337,7 +337,7 @@
     text-align: center;
   }
 
-  .promotion .container {
+  .weekly .container {
     display: grid;
     gap: clamp(2rem, 6vw, 5rem);
   }
@@ -586,7 +586,7 @@
 
   .offer__descr,
   .offer__advantages-text,
-  .promotion__descr {
+  .weekly__descr {
     margin-block-start: var(--space-4);
     color: var(--color-text-muted);
     font-size: 1rem;
@@ -817,14 +817,14 @@
     line-height: 1.45;
   }
 
-  .promotion .bgc_y {
+  .weekly .bgc_y {
     inset-block: 1rem auto;
     inset-inline-start: 0;
     inline-size: min(58%, 44rem);
     block-size: 70%;
   }
 
-  .promotion__eyebrow {
+  .weekly__eyebrow {
     margin-block-end: var(--space-3);
     color: var(--color-text-muted);
     font-size: 0.8125rem;
@@ -1278,7 +1278,7 @@
       inline-size: min(100%, 13.75rem);
     }
 
-    .promotion .container {
+    .weekly .container {
       grid-template-columns: minmax(0, 1fr) minmax(26rem, 1fr);
       align-items: start;
     }
@@ -1345,7 +1345,7 @@
 
 
 @layer layout {
-  .promotion__timer {
+  .weekly__timer {
     display: grid;
     min-inline-size: 0;
     gap: var(--space-3);
@@ -1363,20 +1363,20 @@
 }
 
 @layer components {
-  .promotion__timer-title {
+  .weekly__timer-title {
     font-size: clamp(1.2rem, 2vw, 1.45rem);
     font-weight: 650;
     letter-spacing: -0.015em;
     line-height: 1.15;
   }
 
-  .promotion__deadline {
+  .weekly__deadline {
     color: var(--color-text-muted);
     font-size: 0.875rem;
     line-height: 1.5;
   }
 
-  .promotion__deadline time {
+  .weekly__deadline time {
     color: var(--color-text);
     font-weight: 700;
   }

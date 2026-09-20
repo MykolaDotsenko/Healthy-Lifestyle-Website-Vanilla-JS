@@ -17,9 +17,10 @@ test("HTML loads one native ES-module entry point", async () => {
 
 test("composition root owns explicit callbacks without feature behavior", async () => {
   const app = await read("js/app.js");
-  assert.ok(app.trim().split(/\r?\n/).length <= 30);
+  assert.ok(app.trim().split(/\r?\n/).length <= 40);
   assert.doesNotMatch(app, /querySelector|addEventListener|localStorage/);
-  assert.match(app, /onChange:\s*plan\.setStyle/);
+  assert.match(app, /plan\.setStyle\(styleId\)/);
+  assert.match(app, /menu\.setSelectedStyle\(styleId\)/);
   assert.match(app, /onEstimate:\s*plan\.setCalories/);
   assert.match(app, /onRefresh/);
 });

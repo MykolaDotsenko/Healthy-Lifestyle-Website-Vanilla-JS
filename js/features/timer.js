@@ -22,6 +22,7 @@ function formatDeadline(deadline) {
 export function initTimer({
   selector = ".timer",
   getDeadline = getNextWeeklyDeadline,
+  onRefresh = () => {},
 } = {}) {
   const timer = document.querySelector(selector);
 
@@ -33,7 +34,6 @@ export function initTimer({
     days: timer.querySelector('[data-timer-part="days"]'),
     hours: timer.querySelector('[data-timer-part="hours"]'),
     minutes: timer.querySelector('[data-timer-part="minutes"]'),
-    seconds: timer.querySelector('[data-timer-part="seconds"]'),
   };
   const deadlineOutput = document.querySelector("[data-timer-deadline]");
 
@@ -59,19 +59,18 @@ export function initTimer({
       deadline = getDeadline(new Date());
       remaining = getTimeRemaining(deadline);
       renderDeadline();
-      document.dispatchEvent(new CustomEvent("nourishflow:weekly-refresh"));
+      onRefresh();
     }
 
     fields.days.textContent = padTime(remaining.days);
     fields.hours.textContent = padTime(remaining.hours);
     fields.minutes.textContent = padTime(remaining.minutes);
-    fields.seconds.textContent = padTime(remaining.seconds);
   }
 
   renderDeadline();
   updateClock();
 
-  const intervalId = window.setInterval(updateClock, 1_000);
+  const intervalId = window.setInterval(updateClock, 15_000);
 
   return () => window.clearInterval(intervalId);
 }

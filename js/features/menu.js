@@ -30,10 +30,16 @@ function createMenuPicture(item) {
   return picture;
 }
 
-function createMenuCard(item) {
+function createMenuCard(item, selectedStyleId) {
+  const isSelected = item.styleId === selectedStyleId;
   const card = document.createElement("article");
   card.className = "menu__item";
+  card.classList.toggle("menu__item_selected", isSelected);
   card.dataset.styleId = item.styleId;
+
+  if (isSelected) {
+    card.setAttribute("aria-current", "true");
+  }
 
   const picture = createMenuPicture(item);
 
@@ -51,7 +57,9 @@ function createMenuCard(item) {
 
   const footer = document.createElement("p");
   footer.className = "menu__item-week";
-  footer.textContent = "This week's meal idea";
+  footer.textContent = isSelected
+    ? "Your current approach · This week's plan"
+    : "This week's meal idea";
 
   card.append(picture, style, title, description, footer);
 
@@ -61,6 +69,7 @@ function createMenuCard(item) {
 export function renderMenu({
   selector = "#menu-list",
   now = new Date(),
+  selectedStyleId = "whole-food",
 } = {}) {
   const container = document.querySelector(selector);
 
@@ -69,15 +78,28 @@ export function renderMenu({
   }
 
   const items = getWeeklyMenu(now);
-  container.replaceChildren(...items.map(createMenuCard));
+  container.replaceChildren(
+    ...items.map((item) => createMenuCard(item, selectedStyleId)),
+  );
 }
 
 export function initMenu(options = {}) {
+  let selectedStyleId = options.selectedStyleId ?? "whole-food";
+
   function render(now = new Date()) {
-    renderMenu({ ...options, now });
+    renderMenu({ ...options, now, selectedStyleId });
+  }
+
+  function setSelectedStyle(nextStyleId) {
+    if (typeof nextStyleId !== "string" || !nextStyleId) {
+      return;
+    }
+
+    selectedStyleId = nextStyleId;
+    render();
   }
 
   render();
 
-  return { render };
+  return { render, setSelectedStyle };
 }

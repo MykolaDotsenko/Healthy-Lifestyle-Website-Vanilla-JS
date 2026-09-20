@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta
     name="description"
-    content="Explore meal styles, estimate your daily energy needs, and build a simple weekly nutrition plan with NourishFlow."
+    content="Explore meal approaches, estimate your daily energy needs, and build a practical three-meal day with NourishFlow."
   >
   <meta name="theme-color" content="#ffffff">
   <meta name="robots" content="index,follow">
@@ -13,14 +13,13 @@
   <title>NourishFlow — Meal Ideas &amp; Daily Energy</title>
 
   <link rel="canonical" href="https://mykoladotsenko.github.io/Healthy-Lifestyle-Website-Vanilla-JS/">
-  <link rel="icon" href="icons/logo.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css">
 
   <meta property="og:type" content="website">
   <meta property="og:title" content="NourishFlow — Meal Ideas &amp; Daily Energy">
   <meta
     property="og:description"
-    content="Explore weekly meal ideas, estimate your daily energy needs, and bring your choices together in a simple NourishFlow plan."
+    content="Explore meal approaches, estimate your daily energy needs, and build a practical day you can swap, save, and reuse."
   >
   <meta property="og:url" content="https://mykoladotsenko.github.io/Healthy-Lifestyle-Website-Vanilla-JS/">
   <meta
@@ -46,16 +45,17 @@
 
   <header class="header">
     <div class="header__left-block">
-      <div class="header__logo">
-        <img src="icons/logo.svg" alt="NourishFlow" decoding="async">
-      </div>
+      <a class="header__logo brand" href="#main-content" aria-label="NourishFlow home">
+        <span class="brand__mark" aria-hidden="true"></span>
+        <span class="brand__name">NourishFlow</span>
+      </a>
       <nav class="header__links" aria-label="Primary navigation">
-        <a href="#meal-styles" class="header__link">Meal Styles</a>
+        <a href="#meal-styles" class="header__link">Meal Approaches</a>
         <a href="#calculator" class="header__link">Calorie Estimate</a>
       </nav>
     </div>
     <div class="header__right-block">
-      <button class="btn" type="button" data-plan>Build My Plan</button>
+      <a class="btn" href="#calculator">Start My Plan</a>
     </div>
   </header>
 
@@ -66,43 +66,43 @@
       <div class="container">
         <div class="tabcontainer">
           <div class="tabheader">
-            <h1 id="main-title">Choose Your Eating Style</h1>
-            <div class="tabheader__items" role="tablist" aria-label="Eating styles" aria-orientation="vertical">
+            <h1 id="main-title">Choose Your Meal Approach</h1>
+            <div class="tabheader__items" role="tablist" aria-label="Meal approaches" aria-orientation="vertical">
               <button
-                id="plan-fitness-control"
-                data-style-id="fitness"
+                id="plan-whole-food-control"
+                data-style-id="whole-food"
                 class="tabheader__item tabheader__item_active"
                 type="button"
                 role="tab"
-                aria-controls="plan-fitness"
+                aria-controls="plan-whole-food"
                 aria-selected="true"
                 tabindex="0"
               >
-                Fitness
+                Whole-Food
               </button>
               <button
-                id="plan-premium-control"
-                data-style-id="premium"
+                id="plan-mediterranean-control"
+                data-style-id="mediterranean"
                 class="tabheader__item"
                 type="button"
                 role="tab"
-                aria-controls="plan-premium"
+                aria-controls="plan-mediterranean"
                 aria-selected="false"
                 tabindex="-1"
               >
-                Premium
+                Mediterranean
               </button>
               <button
-                id="plan-vegetarian-control"
-                data-style-id="vegetarian"
+                id="plan-plant-based-control"
+                data-style-id="plant-based"
                 class="tabheader__item"
                 type="button"
                 role="tab"
-                aria-controls="plan-vegetarian"
+                aria-controls="plan-plant-based"
                 aria-selected="false"
                 tabindex="-1"
               >
-                Vegetarian
+                Plant-Based
               </button>
               <button
                 id="plan-balanced-control"
@@ -118,7 +118,7 @@
               </button>
             </div>
           </div>
-          <div class="tabcontent" id="plan-fitness" role="tabpanel" tabindex="0" aria-labelledby="plan-fitness-control">
+          <div class="tabcontent" id="plan-whole-food" role="tabpanel" tabindex="0" aria-labelledby="plan-whole-food-control">
             <picture>
                 <source
                   type="image/avif"
@@ -132,7 +132,7 @@
                 >
                 <img
                   src="img/tabs/vegy.jpg"
-                  alt="Fresh vegetables prepared for the Fitness menu"
+                  alt="Fresh vegetables for the Whole-Food meal approach"
                   width="1920"
                   height="1221"
                   sizes="(min-width: 64rem) 65vw, 100vw"
@@ -140,10 +140,10 @@
                 >
               </picture>
             <p class="tabcontent__descr">
-              Fresh, produce-forward meals with lighter ingredients and an easy everyday feel.
+              Simple meals built around vegetables, fruit, grains, legumes, and straightforward protein choices.
             </p>
           </div>
-          <div class="tabcontent" id="plan-premium" role="tabpanel" tabindex="0" aria-labelledby="plan-premium-control" hidden>
+          <div class="tabcontent" id="plan-mediterranean" role="tabpanel" tabindex="0" aria-labelledby="plan-mediterranean-control" hidden>
             <picture>
                 <source
                   type="image/avif"
@@ -157,7 +157,7 @@
                 >
                 <img
                   src="img/tabs/elite.jpg"
-                  alt="Premium seafood and fruit meal"
+                  alt="Seafood, fruit, and vegetables for the Mediterranean meal approach"
                   width="1920"
                   height="1281"
                   sizes="(min-width: 64rem) 65vw, 100vw" loading="lazy"
@@ -165,10 +165,10 @@
                 >
               </picture>
             <p class="tabcontent__descr">
-              Richer combinations built around seafood, fruit, and elevated seasonal ingredients.
+              Vegetables, legumes, grains, olive oil, herbs, and optional seafood in a Mediterranean-inspired rhythm.
             </p>
           </div>
-          <div class="tabcontent" id="plan-vegetarian" role="tabpanel" tabindex="0" aria-labelledby="plan-vegetarian-control" hidden>
+          <div class="tabcontent" id="plan-plant-based" role="tabpanel" tabindex="0" aria-labelledby="plan-plant-based-control" hidden>
             <picture>
                 <source
                   type="image/avif"
@@ -182,7 +182,7 @@
                 >
                 <img
                   src="img/tabs/post.jpg"
-                  alt="Plant-based Vegetarian menu"
+                  alt="Plant-based ingredients for the Plant-Based meal approach"
                   width="1920"
                   height="1280"
                   sizes="(min-width: 64rem) 65vw, 100vw" loading="lazy"
@@ -190,37 +190,37 @@
                 >
               </picture>
             <p class="tabcontent__descr">
-              Plant-based dishes centered on vegetables, grains, legumes, herbs, and bright seasonal flavors.
+              Meals centered on vegetables, grains, legumes, tofu, nuts, seeds, herbs, and other plant foods.
             </p>
           </div>
           <div class="tabcontent" id="plan-balanced" role="tabpanel" tabindex="0" aria-labelledby="plan-balanced-control" hidden>
             <picture>
                 <source
                   type="image/avif"
-                  srcset="img/optimized/tabs/vegy-768.avif 768w, img/optimized/tabs/vegy-1440.avif 1440w"
+                  srcset="img/optimized/slider/food-12-768.avif 768w, img/optimized/slider/food-12-1440.avif 1440w"
                   sizes="(min-width: 64rem) 65vw, 100vw"
                 >
                 <source
                   type="image/webp"
-                  srcset="img/optimized/tabs/vegy-768.webp 768w, img/optimized/tabs/vegy-1440.webp 1440w"
+                  srcset="img/optimized/slider/food-12-768.webp 768w, img/optimized/slider/food-12-1440.webp 1440w"
                   sizes="(min-width: 64rem) 65vw, 100vw"
                 >
                 <img
-                  src="img/tabs/vegy.jpg"
-                  alt="Balanced meal with vegetables"
+                  src="img/slider/food-12.jpg"
+                  alt="Prepared meal for the Balanced meal approach"
                   width="1920"
-                  height="1221"
+                  height="1080"
                   sizes="(min-width: 64rem) 65vw, 100vw" loading="lazy"
                   decoding="async"
                 >
               </picture>
             <p class="tabcontent__descr">
-              A practical mix of protein, vegetables, and carbohydrates for a simple everyday routine.
+              Flexible everyday meals that combine vegetables, a protein source, and a satisfying grain or starch.
             </p>
           </div>
 
         </div>
-        <p class="preview__life">Explore meal styles. Calculate your needs. Keep it simple.</p>
+        <p class="preview__life">Pick an approach, estimate your needs, and build a practical day.</p>
       </div>
     </section>
 
@@ -237,7 +237,7 @@
           </p>
         </div>
         <div class="offer__action">
-          <button class="btn btn_dark" type="button" data-plan>Build My Plan</button>
+          <a class="btn btn_dark" href="#calculator">Start with My Estimate</a>
         </div>
       </div>
 
@@ -253,7 +253,7 @@
           </p>
         </div>
 
-        <section class="offer__slider" aria-roledescription="carousel" aria-label="Meal inspiration">
+        <section class="offer__slider" aria-roledescription="carousel" aria-label="Practical planning shortcuts">
           <div class="offer__slider-counter">
             <button class="offer__slider-prev" type="button" aria-label="Previous slide">
               <img src="icons/left.svg" alt="" aria-hidden="true" decoding="async">
@@ -290,6 +290,10 @@
                   decoding="async"
                 >
               </picture>
+                <figcaption class="offer__slide-caption">
+                  <strong>Start with what you have</strong>
+                  <span>Choose one familiar staple, one vegetable or fruit, and one easy protein source before adding complexity.</span>
+                </figcaption>
               </figure>
               <figure class="offer__slide">
                 <picture>
@@ -312,6 +316,10 @@
                   decoding="async"
                 >
               </picture>
+                <figcaption class="offer__slide-caption">
+                  <strong>Use a simple three-part plate</strong>
+                  <span>Think vegetables, a protein source, and a satisfying grain or starch; swap components instead of restarting.</span>
+                </figcaption>
               </figure>
               <figure class="offer__slide">
                 <picture>
@@ -334,6 +342,10 @@
                   decoding="async"
                 >
               </picture>
+                <figcaption class="offer__slide-caption">
+                  <strong>Keep flavor flexible</strong>
+                  <span>Olive oil, herbs, citrus, spices, or a simple sauce can change the feel of the same base ingredients.</span>
+                </figcaption>
               </figure>
               <figure class="offer__slide">
                 <picture>
@@ -356,6 +368,10 @@
                   decoding="async"
                 >
               </picture>
+                <figcaption class="offer__slide-caption">
+                  <strong>Plan one easy swap</strong>
+                  <span>Keep one backup vegetable or protein in mind so the plan can survive a busy day.</span>
+                </figcaption>
               </figure>
             </div>
           </div>
@@ -532,36 +548,42 @@
         <p class="section-kicker section-kicker_center">Bring it together</p>
         <h2 class="title" id="plan-title">Build Your NourishFlow Plan</h2>
         <p class="plan__descr">
-          Combine your selected meal style, daily energy estimate, and this week’s meal idea into one simple summary you can copy and keep.
+          Turn your selected meal approach into a simple day with morning, midday, and evening ideas plus a small shopping starter.
         </p>
         <button class="btn btn_dark" type="button" data-plan>Build My Plan</button>
+        <div class="plan__saved" data-saved-plan hidden>
+          <p class="section-kicker">Saved on this device</p>
+          <strong data-saved-plan-title></strong>
+          <p data-saved-plan-meta></p>
+          <button class="btn btn_min" type="button" data-open-saved-plan>Open Saved Plan</button>
+        </div>
       </div>
     </section>
 
     <div class="divider" aria-hidden="true"></div>
 
-    <section class="promotion" aria-labelledby="promotion-title">
+    <section class="weekly" aria-labelledby="weekly-title">
       <div class="bgc_y" aria-hidden="true"></div>
       <div class="container">
-        <div class="promotion__text">
-          <p class="promotion__eyebrow">Weekly menu rhythm</p>
-          <h2 class="title" id="promotion-title">Fresh Ideas, Every Week</h2>
-          <p class="promotion__descr">
-            Meal ideas rotate every Monday at 09:00 in your local time.
-            The countdown shows when the next set arrives and automatically rolls forward each week.
+        <div class="weekly__text">
+          <p class="weekly__eyebrow">Four-week meal rotation</p>
+          <h2 class="title" id="weekly-title">A Fresh Set Each Week</h2>
+          <p class="weekly__descr">
+            NourishFlow rotates through a four-week set of meal ideas every Monday at 09:00 in your local time.
+            The countdown shows when the next set arrives and automatically rolls forward.
           </p>
         </div>
 
-        <div class="promotion__timer">
-          <h3 class="promotion__timer-title">Next Menu Refresh</h3>
-          <p class="promotion__deadline">
+        <div class="weekly__timer">
+          <h3 class="weekly__timer-title">Next Weekly Rotation</h3>
+          <p class="weekly__deadline">
             Scheduled for <time data-timer-deadline>the next Monday at 09:00</time>
           </p>
 
           <div
             class="timer"
             role="timer"
-            aria-label="Time until the next weekly menu refresh"
+            aria-label="Time until the next weekly meal rotation"
             aria-live="off"
           >
             <div class="timer__block">
@@ -575,10 +597,6 @@
             <div class="timer__block">
               <span id="minutes" data-timer-part="minutes">00</span>
               minutes
-            </div>
-            <div class="timer__block">
-              <span id="seconds" data-timer-part="seconds">00</span>
-              seconds
             </div>
           </div>
         </div>
@@ -607,37 +625,47 @@
     aria-labelledby="plan-dialog-title"
   >
     <div class="modal__content">
-      <button class="modal__close" type="button" data-close aria-label="Close plan summary">&times;</button>
+      <button class="modal__close" type="button" data-close aria-label="Close plan">&times;</button>
 
+      <p class="section-kicker section-kicker_center">Your practical day</p>
       <h2 class="modal__title" id="plan-dialog-title" tabindex="-1" data-dialog-initial-focus>
         Your NourishFlow Plan
       </h2>
 
-      <div class="plan-summary">
+      <div class="plan-summary__overview">
         <div class="plan-summary__item">
-          <span class="plan-summary__label">Meal style</span>
-          <strong data-plan-style>Fitness</strong>
+          <span class="plan-summary__label">Meal approach</span>
+          <strong data-plan-style>Whole-Food</strong>
         </div>
         <div class="plan-summary__item">
           <span class="plan-summary__label">Daily energy</span>
-          <strong data-plan-energy>Add your details in the energy calculator</strong>
+          <strong data-plan-energy>Optional — calculate your daily estimate above</strong>
         </div>
-        <div class="plan-summary__item">
-          <span class="plan-summary__label">This week’s idea</span>
-          <strong data-plan-meal></strong>
-          <p data-plan-meal-description></p>
-        </div>
+      </div>
+
+      <div class="plan-summary__intro">
+        <h3 data-plan-title>This week’s plan</h3>
+        <p data-plan-summary></p>
+      </div>
+
+      <div class="plan-meals" data-plan-meals></div>
+
+      <div class="plan-shopping">
+        <h3>Shopping starter</h3>
+        <p>Key ingredients for this set — not a complete grocery list.</p>
+        <ul data-plan-shopping></ul>
       </div>
 
       <p class="form-note">
-        Your calculator preferences stay on this device. This plan is not medical advice.
+        Your calculator preferences and any plan you save stay on this device. This plan is general meal inspiration, not medical advice.
       </p>
 
       <div class="plan-summary__actions">
-        <button class="btn btn_dark btn_min" type="button" data-copy-plan>Copy Plan</button>
-        <button class="btn btn_min" type="button" data-close>Close</button>
+        <button class="btn" type="button" data-swap-plan>Another Set</button>
+        <button class="btn btn_dark" type="button" data-save-plan>Save Plan</button>
+        <button class="btn" type="button" data-copy-plan>Copy Plan</button>
       </div>
-      <p class="calculating__status" data-plan-copy-status role="status"></p>
+      <p class="calculating__status" data-plan-status role="status"></p>
     </div>
   </dialog>
 

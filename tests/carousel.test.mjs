@@ -19,14 +19,16 @@ test("carousel layout styling stays in CSS instead of JavaScript", () => {
   assert.doesNotMatch(source, /style\.display/);
 });
 
-test("carousel exposes grouped slides and button pickers", () => {
-  assert.match(source, /aria-roledescription", "slide"/);
+test("carousel keeps native figure semantics and accessible button pickers", () => {
+  assert.doesNotMatch(source, /aria-roledescription/);
+  assert.doesNotMatch(source, /slide\.setAttribute\("role"/);
   assert.match(source, /carousel-indicator/);
   assert.match(source, /aria-current/);
   assert.match(source, /aria-disabled/);
   assert.match(source, /data-carousel-status/);
   assert.match(source, /Slide \$\{activeIndex \+ 1\} of \$\{slides\.length\}/);
-  assert.match(source, /aria-hidden/);
+  assert.match(source, /removeAttribute\("aria-hidden"\)/);
+  assert.match(source, /setAttribute\("aria-hidden", "true"\)/);
 });
 
 test("carousel wraps previous and next navigation", () => {

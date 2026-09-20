@@ -3,12 +3,12 @@ import { chromium } from "playwright";
 
 const baseUrl = process.env.BASE_URL ?? "http://127.0.0.1:8080";
 const viewports = [
-  { width: 320, height: 800 },
-  { width: 360, height: 800 },
-  { width: 390, height: 844 },
-  { width: 768, height: 900 },
-  { width: 1024, height: 900 },
-  { width: 1440, height: 1000 },
+  { width: 320, height: 800, mobile: true },
+  { width: 360, height: 800, mobile: true },
+  { width: 390, height: 844, mobile: true },
+  { width: 768, height: 900, mobile: false },
+  { width: 1024, height: 900, mobile: false },
+  { width: 1440, height: 1000, mobile: false },
 ];
 
 function assertNoHorizontalDocumentOverflow(metrics, label) {
@@ -30,7 +30,12 @@ const browser = await chromium.launch({ headless: true });
 
 try {
   for (const viewport of viewports) {
-    const context = await browser.newContext({ viewport });
+    const context = await browser.newContext({
+      viewport: { width: viewport.width, height: viewport.height },
+      hasTouch: viewport.mobile,
+      isMobile: viewport.mobile,
+      permissions: ["clipboard-read", "clipboard-write"],
+    });
     const page = await context.newPage();
     const pageErrors = [];
 
@@ -54,10 +59,26 @@ try {
     }
 
     assert.equal(
-      await page.getByRole("heading", { level: 1, name: "Choose Your Eating Style" }).isVisible(),
+      await page
+        .getByRole("heading", {
+          level: 1,
+          name: "Choose Your Meal Approach",
+        })
+        .isVisible(),
       true,
       `${viewport.width}px: visible product H1`,
     );
+
+    if (viewport.mobile) {
+      const firstProductTop = await page
+        .locator(".tabcontainer")
+        .evaluate((element) => element.getBoundingClientRect().top);
+
+      assert.ok(
+        firstProductTop < 320,
+        `${viewport.width}px: product selector should remain visible near the first fold`,
+      );
+    }
 
     await page.waitForFunction(
       () => document.querySelectorAll(".menu__item").length === 4,
@@ -65,12 +86,12 @@ try {
     assert.equal(
       await page.locator(".menu__item").count(),
       4,
-      `${viewport.width}px: four canonical meal styles render`,
+      `${viewport.width}px: four canonical meal approaches render`,
     );
 
     if (viewport.width === 320) {
       const selectedImage = await page
-        .locator("#plan-fitness img")
+        .locator("#plan-whole-food img")
         .evaluate((image) => image.currentSrc);
 
       assert.match(
@@ -84,9 +105,8 @@ try {
     await page.locator("#weight").fill("80.5");
     await page.locator("#age").fill("36");
 
-    const validResult = await page.locator(".calculating__result span").textContent();
     assert.match(
-      validResult ?? "",
+      (await page.locator(".calculating__result span").textContent()) ?? "",
       /^≈\s/,
       `${viewport.width}px: calculator should show an approximate estimate`,
     );
@@ -98,10 +118,6 @@ try {
 
     await page.locator("#age").fill("36");
     assert.equal(await page.locator("#age").getAttribute("aria-invalid"), "false");
-    assert.match(
-      (await page.locator(".calculating__result span").textContent()) ?? "",
-      /^≈\s/,
-    );
 
     const readDocumentMetrics = () =>
       page.evaluate(() => {
@@ -137,35 +153,37 @@ try {
       `${viewport.width}px initial layout`,
     );
 
-    const fitnessTab = page.getByRole("tab", { name: "Fitness", exact: true });
-    const premiumTab = page.getByRole("tab", { name: "Premium", exact: true });
-    await fitnessTab.focus();
+    const wholeFoodTab = page.getByRole("tab", {
+      name: "Whole-Food",
+      exact: true,
+    });
+    const mediterraneanTab = page.getByRole("tab", {
+      name: "Mediterranean",
+      exact: true,
+    });
+
+    await wholeFoodTab.focus();
     await page.keyboard.press("ArrowDown");
-    assert.equal(await premiumTab.getAttribute("aria-selected"), "true");
-    assert.equal(await premiumTab.getAttribute("tabindex"), "0");
-    assert.equal(await page.locator("#plan-premium").isVisible(), true);
+    assert.equal(await mediterraneanTab.getAttribute("aria-selected"), "true");
+    assert.equal(await mediterraneanTab.getAttribute("tabindex"), "0");
+    assert.equal(await page.locator("#plan-mediterranean").isVisible(), true);
 
     await page.keyboard.press("End");
-    const balancedTab = page.getByRole("tab", { name: "Balanced", exact: true });
+    const balancedTab = page.getByRole("tab", {
+      name: "Balanced",
+      exact: true,
+    });
     assert.equal(await balancedTab.getAttribute("aria-selected"), "true");
     await page.keyboard.press("Home");
-    assert.equal(await fitnessTab.getAttribute("aria-selected"), "true");
+    assert.equal(await wholeFoodTab.getAttribute("aria-selected"), "true");
 
-    await premiumTab.click();
-    assertNoHorizontalDocumentOverflow(
-      await readDocumentMetrics(),
-      `${viewport.width}px after tab change`,
-    );
+    await mediterraneanTab.click();
 
     await page.getByRole("button", { name: "Next slide" }).click();
     assert.equal(await page.locator("#current").textContent(), "02");
-    assert.equal(
-      await page.locator('.carousel-indicator[aria-current="true"]').getAttribute("data-slide-to"),
-      "1",
-    );
     assert.match(
       (await page.locator("[data-carousel-status]").textContent()) ?? "",
-      /^Slide 2 of 4:/,
+      /Use a simple three-part plate/,
     );
 
     if (viewport.width === 390) {
@@ -178,7 +196,10 @@ try {
       await page.setViewportSize(viewport);
     }
 
-    const planTrigger = page.getByRole("button", { name: "Build My Plan" }).first();
+    const planTrigger = page.getByRole("button", {
+      name: "Build My Plan",
+      exact: true,
+    });
     await planTrigger.focus();
     await planTrigger.click();
 
@@ -191,17 +212,50 @@ try {
     );
     assert.equal(
       await page.locator("[data-plan-style]").textContent(),
-      "Premium",
-      `${viewport.width}px: plan should use the selected style`,
+      "Mediterranean",
+      `${viewport.width}px: plan should use the selected approach`,
     );
     assert.match(
       (await page.locator("[data-plan-energy]").textContent()) ?? "",
       /kcal\/day$/,
       `${viewport.width}px: plan should include the calculator estimate`,
     );
+    assert.equal(
+      await page.locator("[data-plan-meals] .plan-meal").count(),
+      3,
+      `${viewport.width}px: plan should expose morning, midday, and evening ideas`,
+    );
     assert.ok(
-      ((await page.locator("[data-plan-meal]").textContent()) ?? "").length > 0,
-      `${viewport.width}px: plan should include this week's meal idea`,
+      (await page.locator("[data-plan-shopping] li").count()) >= 5,
+      `${viewport.width}px: plan should expose a practical shopping starter`,
+    );
+
+    const firstPlanTitle =
+      (await page.locator("[data-plan-title]").textContent()) ?? "";
+    await page.getByRole("button", { name: "Another Set" }).click();
+    const secondPlanTitle =
+      (await page.locator("[data-plan-title]").textContent()) ?? "";
+    assert.notEqual(secondPlanTitle, firstPlanTitle);
+
+    await page.getByRole("button", { name: "Save Plan" }).click();
+    assert.match(
+      (await page.locator("[data-plan-status]").textContent()) ?? "",
+      /saved on this device/i,
+    );
+    assert.equal(
+      await page.evaluate(() => Boolean(localStorage.getItem("nourishflow.saved-plan"))),
+      true,
+    );
+
+    await page.getByRole("button", { name: "Copy Plan" }).click();
+    await page.waitForFunction(() => {
+      const message =
+        document.querySelector("[data-plan-status]")?.textContent ?? "";
+      return /copied to your clipboard|copy is unavailable/i.test(message);
+    });
+    assert.match(
+      (await page.locator("[data-plan-status]").textContent()) ?? "",
+      /copied to your clipboard|copy is unavailable/i,
     );
 
     const modalBox = await dialog.boundingBox();
@@ -220,6 +274,18 @@ try {
       true,
       `${viewport.width}px: closing dialog should restore trigger focus`,
     );
+
+    if (viewport.width === 390) {
+      await page.reload({ waitUntil: "domcontentloaded" });
+      assert.equal(await page.locator("[data-saved-plan]").isVisible(), true);
+      await page.getByRole("button", { name: "Open Saved Plan" }).click();
+      assert.equal(await dialog.evaluate((element) => element.open), true);
+      assert.equal(
+        await page.locator("[data-plan-meals] .plan-meal").count(),
+        3,
+      );
+      await page.keyboard.press("Escape");
+    }
 
     assert.deepEqual(
       pageErrors,

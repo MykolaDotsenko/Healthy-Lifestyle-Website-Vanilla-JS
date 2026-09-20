@@ -17,7 +17,7 @@ function count(value, pattern) {
 test("document exposes a semantic product structure", () => {
   assert.equal(count(html, /<main\b/g), 1);
   assert.equal(count(html, /<h1\b/g), 1);
-  assert.match(html, /<h1 id="main-title">Choose Your Eating Style<\/h1>/);
+  assert.match(html, /<h1 id="main-title">Choose Your Meal Approach<\/h1>/);
   assert.match(html, /<a class="skip-link" href="#main-content">/);
   assert.match(html, /<main id="main-content">/);
 });
@@ -56,11 +56,11 @@ test("calculator controls use native labels, groups, and output", () => {
   assert.match(html, /revised Harris–Benedict/);
 });
 
-test("navigation and plan actions point to real product destinations", () => {
+test("CTA flow starts with the calculator and builds the plan later", () => {
   assert.match(html, /href="#meal-styles"/);
-  assert.match(html, /href="#calculator"/);
+  assert.ok(count(html, /href="#calculator"/g) >= 2);
+  assert.equal(count(html, /data-plan>/g), 1);
   assert.doesNotMatch(html, /href="#"/);
-  assert.ok(count(html, /data-plan/g) >= 3);
 });
 
 test("product surface does not request personal information", () => {
@@ -69,15 +69,21 @@ test("product surface does not request personal information", () => {
   assert.doesNotMatch(html, /Your Phone Number|Your Name/);
 });
 
-test("plan summary uses a native dialog and explicit close controls", () => {
+test("plan dialog is labeled and exposes practical actions", () => {
   assert.equal(count(html, /<dialog\b/g), 1);
   assert.match(html, /id="plan-dialog"/);
   assert.match(html, /aria-labelledby="plan-dialog-title"/);
-  assert.ok(count(html, /data-close/g) >= 2);
+  assert.ok(count(html, /data-close/g) >= 1);
+  assert.match(html, /data-swap-plan/);
+  assert.match(html, /data-save-plan/);
+  assert.match(html, /data-copy-plan/);
+  assert.match(html, /data-plan-meals/);
+  assert.match(html, /data-plan-shopping/);
 });
 
-test("carousel controls remain native buttons", () => {
+test("carousel controls remain native buttons and slides have visible captions", () => {
   assert.match(html, /<button class="offer__slider-prev" type="button"/);
   assert.match(html, /<button class="offer__slider-next" type="button"/);
+  assert.equal(count(html, /class="offer__slide-caption"/g), 4);
   assert.match(carousel, /document\.createElement\("button"\)/);
 });

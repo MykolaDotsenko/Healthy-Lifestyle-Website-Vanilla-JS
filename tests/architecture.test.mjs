@@ -15,10 +15,13 @@ test("HTML loads one native ES-module entry point", async () => {
   assert.match(html, /<script type="module" src="js\/app\.js"><\/script>/);
 });
 
-test("composition root wires features without owning feature behavior", async () => {
+test("composition root owns explicit callbacks without feature behavior", async () => {
   const app = await read("js/app.js");
-  assert.ok(app.trim().split(/\r?\n/).length <= 24);
+  assert.ok(app.trim().split(/\r?\n/).length <= 30);
   assert.doesNotMatch(app, /querySelector|addEventListener|localStorage/);
+  assert.match(app, /onChange:\s*plan\.setStyle/);
+  assert.match(app, /onEstimate:\s*plan\.setCalories/);
+  assert.match(app, /onRefresh/);
 });
 
 test("domain modules stay browser-independent", async () => {
@@ -32,16 +35,26 @@ test("domain modules stay browser-independent", async () => {
   }
 });
 
-test("cross-feature coordination uses explicit domain imports or product events", async () => {
-  const menu = await read("js/features/menu.js");
-  const plan = await read("js/features/plan.js");
-  const timer = await read("js/features/timer.js");
+test("features do not coordinate through a document-level event bus", async () => {
+  for (const path of [
+    "js/ui/tabs.js",
+    "js/features/calculator.js",
+    "js/features/menu.js",
+    "js/features/plan.js",
+    "js/features/timer.js",
+  ]) {
+    const source = await read(path);
+    assert.doesNotMatch(source, /CustomEvent|nourishflow:/);
+  }
+});
 
-  assert.match(menu, /\.\.\/domain\/meal-styles\.js/);
-  assert.match(plan, /\.\.\/domain\/meal-styles\.js/);
-  assert.match(timer, /\.\.\/domain\/weekly-cycle\.js/);
-  assert.match(plan, /nourishflow:meal-style/);
-  assert.match(plan, /nourishflow:estimate/);
+test("plan persistence stays behind a small storage adapter", async () => {
+  const plan = await read("js/features/plan.js");
+  const storage = await read("js/features/plan-storage.js");
+
+  assert.match(plan, /\.\/plan-storage\.js/);
+  assert.match(storage, /nourishflow\.saved-plan/);
+  assert.doesNotMatch(storage, /document\.|querySelector/);
 });
 
 test("legacy monolith and obsolete forms feature are removed", async () => {

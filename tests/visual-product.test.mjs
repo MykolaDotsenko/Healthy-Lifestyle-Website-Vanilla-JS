@@ -10,17 +10,14 @@ const [html, css] = await Promise.all([
   readFile(resolve(root, "css/style.css"), "utf8"),
 ]);
 
-test("first screen stays product-first without recruiter meta UI", () => {
-  assert.match(html, /<h1 id="main-title">Choose Your Eating Style<\/h1>/);
+test("first screen stays product-first with a real NourishFlow identity", () => {
+  assert.match(html, /<h1 id="main-title">Choose Your Meal Approach<\/h1>/);
   assert.match(html, /class="tabcontainer"/);
   assert.match(html, /class="preview__life"/);
-  assert.doesNotMatch(html, /Zero-framework frontend portfolio project/);
-});
-
-test("header keeps the lightweight NourishFlow logo treatment", () => {
-  assert.match(html, /class="header__logo"/);
-  assert.match(html, /src="icons\/logo\.svg"/);
-  assert.doesNotMatch(html, /class="brand__mark"/);
+  assert.match(html, /class="header__logo brand"/);
+  assert.match(html, /class="brand__mark"/);
+  assert.match(html, /class="brand__name">NourishFlow<\/span>/);
+  assert.doesNotMatch(html, /icons\/logo\.svg|>Logotype</i);
 });
 
 test("visual system keeps the original light product language", () => {
@@ -30,12 +27,31 @@ test("visual system keeps the original light product language", () => {
   assert.match(css, /--color-accent:\s*#54ed39/);
   assert.match(css, /\.bgc_blue\s*\{/);
   assert.match(css, /\.offer \.bgc_y\s*\{/);
-  assert.doesNotMatch(css, /fonts\.googleapis\.com/);
+  assert.doesNotMatch(css, /fonts\.googleapis\.com|\bInter,/);
 });
 
-test("plan UI uses existing design tokens instead of a new visual system", () => {
-  assert.match(css, /\.plan-summary\s*\{/);
-  assert.match(css, /\.plan-summary__item\s*\{/);
+test("first-screen heading has visible product hierarchy", () => {
+  assert.match(css, /\.tabheader h1\s*\{[\s\S]*clamp\(1\.35rem/);
+  assert.doesNotMatch(css, /\.tabheader h1\s*\{[\s\S]{0,120}font-size:\s*1rem/);
+});
+
+test("carousel now carries useful visible planning content", () => {
+  assert.equal((html.match(/class="offer__slide-caption"/g) ?? []).length, 4);
+  assert.match(html, /Start with what you have/);
+  assert.match(html, /Use a simple three-part plate/);
+  assert.match(css, /\.offer__slide-caption\s*\{/);
+});
+
+test("deeper plan UI uses the existing design tokens", () => {
+  for (const selector of [
+    ".plan-summary__overview",
+    ".plan-meals",
+    ".plan-meal",
+    ".plan-shopping",
+    ".plan__saved",
+  ]) {
+    assert.match(css, new RegExp(selector.replace(".", "\\.") + "\\s*\\{"));
+  }
   assert.match(css, /var\(--color-surface-soft\)/);
   assert.match(css, /var\(--color-border\)/);
 });

@@ -25,7 +25,7 @@ function readNumericValue(input) {
   return Number.isFinite(input.valueAsNumber) ? input.valueAsNumber : null;
 }
 
-export function initCalculator() {
+export function initCalculator({ onEstimate = () => {} } = {}) {
   const result = document.querySelector(".calculating__result span");
   const status = document.querySelector("#calculator-status");
   const storage = getLocalStorage();
@@ -93,20 +93,12 @@ export function initCalculator() {
       const rounded = Math.round(calculation.calories / 10) * 10;
       result.textContent = `≈ ${new Intl.NumberFormat().format(rounded)}`;
       status.textContent = "Estimated daily maintenance energy.";
-      document.dispatchEvent(
-        new CustomEvent("nourishflow:estimate", {
-          detail: { calories: calculation.calories },
-        }),
-      );
+      onEstimate(calculation.calories);
       return;
     }
 
     result.textContent = "—";
-    document.dispatchEvent(
-      new CustomEvent("nourishflow:estimate", {
-        detail: { calories: null },
-      }),
-    );
+    onEstimate(null);
 
     const visibleErrors = Object.values(NUMERIC_FIELDS).some(
       ({ stateKey }) =>

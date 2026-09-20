@@ -5,20 +5,24 @@ import { fileURLToPath } from "node:url";
 import test from "node:test";
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
-const css = await readFile(resolve(root, "css/style.css"), "utf8");
+const [html, css] = await Promise.all([
+  readFile(resolve(root, "index.html"), "utf8"),
+  readFile(resolve(root, "css/style.css"), "utf8"),
+]);
 
-test("removed demo-request and stale promotion CSS stays removed", () => {
+test("removed demo-request and obsolete weekly-promotion CSS stays removed", () => {
   for (const selector of [
     ".order__form",
     ".order__input",
     ".modal__input",
-    ".promotion__principles",
-    ".promotion__principle",
     ".menu__item-price",
     ".menu__item-divider",
+    ".promotion",
   ]) {
     assert.doesNotMatch(css, new RegExp(selector.replace(".", "\\.")));
   }
+
+  assert.doesNotMatch(html, /class="[^"]*promotion/);
 });
 
 test("removed legacy application files stay removed", async () => {
@@ -31,8 +35,9 @@ test("removed legacy application files stay removed", async () => {
   }
 });
 
-test("removed social and decorative assets stay removed", async () => {
+test("removed template branding and decorative assets stay removed", async () => {
   for (const path of [
+    "icons/logo.svg",
     "icons/facebook.svg",
     "icons/instagram.svg",
     "icons/switch.svg",
@@ -40,4 +45,6 @@ test("removed social and decorative assets stay removed", async () => {
   ]) {
     await assert.rejects(access(resolve(root, path)));
   }
+
+  assert.doesNotMatch(html, /Logotype|icons\/logo\.svg/);
 });

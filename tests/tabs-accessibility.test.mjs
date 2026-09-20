@@ -22,3 +22,9 @@ test("tab activation keeps panel visibility synchronized", () => {
   assert.match(source, /panel\.hidden = !isActive/);
   assert.match(source, /aria-controls/);
 });
+
+test("selected meal approach is reported through an explicit callback", () => {
+  assert.match(source, /onChange = \(\) => \{\}/);
+  assert.match(source, /onChange\(activeTab\.dataset\.styleId/);
+  assert.doesNotMatch(source, /CustomEvent|document\.dispatchEvent/);
+});

@@ -20,12 +20,14 @@ const sources = [
 ];
 
 const requestedWidths = [768, 1440];
+const FORMAT_OPTIONS = Object.freeze({
+  avif: Object.freeze({ quality: 50, effort: 6 }),
+  webp: Object.freeze({ quality: 80, effort: 6, smartSubsample: true }),
+});
+
 const manifest = {
   generator: "sharp@0.35.4",
-  formats: {
-    avif: { quality: 50, effort: 6 },
-    webp: { quality: 80, effort: 6 },
-  },
+  formats: FORMAT_OPTIONS,
   images: {},
 };
 
@@ -79,10 +81,7 @@ for (const sourcePath of sources) {
           fit: "inside",
         });
 
-      pipeline =
-        format === "avif"
-          ? pipeline.avif({ quality: 50, effort: 6 })
-          : pipeline.webp({ quality: 80, effort: 6, smartSubsample: true });
+      pipeline = pipeline[format](FORMAT_OPTIONS[format]);
 
       const info = await pipeline.toFile(output);
       const outputStat = await stat(output);

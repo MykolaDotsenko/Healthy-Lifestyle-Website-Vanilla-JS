@@ -1,6 +1,6 @@
 const ACTIVE_CLASS = "tabheader__item_active";
 
-export function initTabs() {
+export function initTabs({ onChange = () => {} } = {}) {
   const tabList = document.querySelector('[role="tablist"]');
   const tabs = [...document.querySelectorAll('[role="tab"]')];
 
@@ -31,11 +31,7 @@ export function initTabs() {
     });
 
     const activeTab = tabs[activeIndex];
-    document.dispatchEvent(
-      new CustomEvent("nourishflow:meal-style", {
-        detail: { styleId: activeTab.dataset.styleId ?? "" },
-      }),
-    );
+    onChange(activeTab.dataset.styleId ?? "");
 
     if (focus) {
       activeTab.focus();

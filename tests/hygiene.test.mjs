@@ -7,12 +7,27 @@ import test from "node:test";
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const css = await readFile(resolve(root, "css/style.css"), "utf8");
 
-test("removed product chrome does not leave dead CSS behind", () => {
+test("removed demo-request and stale promotion CSS stays removed", () => {
   for (const selector of [
-    ".pepper",
-    ".order__form > img",
+    ".order__form",
+    ".order__input",
+    ".modal__input",
+    ".promotion__principles",
+    ".promotion__principle",
+    ".menu__item-price",
+    ".menu__item-divider",
   ]) {
     assert.doesNotMatch(css, new RegExp(selector.replace(".", "\\.")));
+  }
+});
+
+test("removed legacy application files stay removed", async () => {
+  for (const path of [
+    "js/script.js",
+    "js/features/forms.js",
+    "tests/forms.test.mjs",
+  ]) {
+    await assert.rejects(access(resolve(root, path)));
   }
 });
 

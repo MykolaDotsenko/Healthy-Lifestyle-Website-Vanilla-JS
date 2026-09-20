@@ -25,9 +25,9 @@ for (const [name, browserType] of browsers) {
     await page.goto(baseUrl, { waitUntil: "domcontentloaded" });
 
     assert.equal(
-      await page.locator(".tabcontainer").isVisible(),
+      await page.getByRole("heading", { level: 1, name: "Choose Your Eating Style" }).isVisible(),
       true,
-      `${name}: product-first meal selector is visible`,
+      `${name}: product-first H1 is visible`,
     );
     assert.equal(
       await page.locator(".preview__intro").count(),
@@ -57,26 +57,37 @@ for (const [name, browserType] of browsers) {
     await page.locator("#age").fill("36");
     assert.match(
       (await page.locator(".calculating__result span").textContent()) ?? "",
-      /^\d+$/,
-      `${name}: calculator result`,
+      /^≈\s/,
+      `${name}: approximate calculator result`,
     );
 
-    const trigger = page.getByRole("button", { name: "Preview Request" }).first();
+    const trigger = page.getByRole("button", { name: "Build My Plan" }).first();
     await trigger.focus();
     await trigger.click();
 
-    const dialog = page.locator("#contact-dialog");
+    const dialog = page.locator("#plan-dialog");
     assert.equal(
       await dialog.evaluate((element) => element.open),
       true,
-      `${name}: native dialog opens`,
+      `${name}: native plan dialog opens`,
+    );
+
+    assert.equal(
+      await page.locator("[data-plan-style]").textContent(),
+      "Premium",
+      `${name}: plan uses selected meal style`,
     );
 
     await page.keyboard.press("Escape");
     assert.equal(
       await dialog.evaluate((element) => element.open),
       false,
-      `${name}: native Escape closes dialog`,
+      `${name}: native Escape closes plan dialog`,
+    );
+    assert.equal(
+      await trigger.evaluate((element) => document.activeElement === element),
+      true,
+      `${name}: dialog restores trigger focus`,
     );
 
     assert.deepEqual(pageErrors, [], `${name}: page errors`);

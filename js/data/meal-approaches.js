@@ -6,7 +6,7 @@ function freezePlan(plan) {
   });
 }
 
-function freezeStyle(style) {
+function freezeApproach(style) {
   return Object.freeze({
     ...style,
     weeklyPlans: Object.freeze(style.weeklyPlans.map(freezePlan)),
@@ -14,7 +14,7 @@ function freezeStyle(style) {
 }
 
 export const MEAL_APPROACHES = Object.freeze([
-  freezeStyle({
+  freezeApproach({
     id: "whole-food",
     label: "Whole-Food",
     image: "img/tabs/vegy.jpg",
@@ -131,7 +131,7 @@ export const MEAL_APPROACHES = Object.freeze([
       },
     ],
   }),
-  freezeStyle({
+  freezeApproach({
     id: "mediterranean",
     label: "Mediterranean",
     image: "img/tabs/elite.jpg",
@@ -248,7 +248,7 @@ export const MEAL_APPROACHES = Object.freeze([
       },
     ],
   }),
-  freezeStyle({
+  freezeApproach({
     id: "plant-based",
     label: "Plant-Based",
     image: "img/tabs/post.jpg",
@@ -365,7 +365,7 @@ export const MEAL_APPROACHES = Object.freeze([
       },
     ],
   }),
-  freezeStyle({
+  freezeApproach({
     id: "balanced",
     label: "Balanced",
     image: "img/slider/food-12.jpg",

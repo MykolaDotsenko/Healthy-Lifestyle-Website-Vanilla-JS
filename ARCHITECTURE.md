@@ -2,12 +2,13 @@
 
 ## Goals
 
-NourishFlow optimizes for four things:
+NourishFlow optimizes for:
 
-1. **Traceability** — behavior should be easy to locate.
-2. **Native platform leverage** — prefer HTML, CSS, and browser APIs over custom infrastructure.
-3. **Testability** — product rules should stay browser-independent where practical.
-4. **Proportionality** — architecture should match a small privacy-first nutrition product.
+1. **Product coherence** — each screen should contribute to one planning flow.
+2. **Traceability** — behavior and state ownership should be obvious from the module map.
+3. **Native platform leverage** — prefer HTML, CSS, and browser APIs over custom infrastructure.
+4. **Testability** — product rules remain browser-independent where practical.
+5. **Proportionality** — the architecture stays smaller than the problem it solves.
 
 ## Module map
 
@@ -23,8 +24,10 @@ flowchart TD
     APP --> TIMER[features/timer.js]
     APP --> CALC[features/calculator.js]
 
-    TABS -->|meal-style event| PLAN
-    CALC -->|energy event| PLAN
+    TABS -->|onChange| PLAN
+    CALC -->|onEstimate| PLAN
+    TIMER -->|onRefresh| MENU
+    TIMER -->|onRefresh| PLAN
     PLAN --> MODAL
 
     MENU --> STYLES[domain/meal-styles.js]
@@ -33,68 +36,105 @@ flowchart TD
     TIMER --> WEEKLY
 
     CALC --> CALCDOMAIN[domain/calculator.js]
-    CALC --> STORAGE[features/calculator-storage.js]
-    STORAGE --> CALCDOMAIN
-    STORAGE -->|versioned preferences| LS[(localStorage)]
+    CALC --> CALCSTORE[features/calculator-storage.js]
+    PLAN --> PLANSTORE[features/plan-storage.js]
+
+    CALCSTORE --> LS[(localStorage)]
+    PLANSTORE --> LS
 ```
 
 ## Composition root
 
-`js/app.js` owns initialization order and wiring only. It contains no DOM querying, persistence, or product rules.
+`js/app.js` owns cross-feature wiring and initialization order.
 
-This avoids hidden initialization, global event buses, dependency-injection containers, and framework lifecycle coupling.
+Feature modules expose small callback-oriented APIs instead of coordinating through a document-level event bus:
+
+- `initTabs({ onChange })`;
+- `initCalculator({ onEstimate })`;
+- `initTimer({ onRefresh })`;
+- `initMenu()` returns a renderer;
+- `initPlan()` returns `setStyle`, `setCalories`, and `refreshWeekly`.
+
+The composition root contains no DOM queries, storage access, or product calculations.
 
 ## Domain modules
 
 ### Calculator
 
-`domain/calculator.js` contains pure validation and calorie-estimate logic. It cannot access `window`, `document`, or storage.
+`domain/calculator.js` contains pure validation and the preserved revised Harris–Benedict calculation. It cannot access `window`, `document`, or storage.
 
-### Meal styles
+### Meal approaches
 
-`domain/meal-styles.js` is the canonical meal-style model for Fitness, Premium, Vegetarian, and Balanced. It also selects each style's weekly idea.
+`domain/meal-styles.js` is the canonical content model for:
+
+- Whole-Food;
+- Mediterranean;
+- Plant-Based;
+- Balanced.
+
+Each approach has four authored weekly variants. Every variant contains:
+
+- a title and summary;
+- Morning, Midday, and Evening meal ideas;
+- a small shopping starter.
+
+The same domain drives generated weekly cards and the plan dialog. Static first-screen tabs are guarded by tests that verify their labels, images, and descriptions against the canonical model so HTML/domain drift is caught.
 
 ### Weekly cycle
 
-`domain/weekly-cycle.js` defines the shared Monday 09:00 local-time boundary used by both the countdown and weekly meal rotation. Keeping this boundary in one domain module prevents the UI promise and the rendered menu from drifting apart.
+`domain/weekly-cycle.js` defines the local Monday 09:00 boundary shared by menu rotation and the countdown.
+
+The timer displays days, hours, and minutes rather than promotion-style seconds.
 
 ## UI modules
 
 ### Tabs
 
-`ui/tabs.js` owns the WAI-style tab state and keyboard model. The tablist precedes tabpanels in DOM order, while CSS controls the visual desktop placement. Activation publishes the selected meal-style id as a small product event.
+`ui/tabs.js` owns roving tabindex, selected state, panel visibility, and the vertical keyboard model. It reports the selected approach through an explicit callback.
 
 ### Dialog
 
-`ui/modal.js` delegates modality to native `<dialog>`. JavaScript adds only open/close behavior, initial focus, and deterministic focus restoration.
+`ui/modal.js` delegates modality to native `<dialog>` and adds only explicit open/close behavior, initial focus, and focus restoration.
 
 ## Feature modules
 
 ### Menu
 
-`features/menu.js` renders four weekly meal ideas from the canonical meal-style domain. It rerenders when the weekly boundary event fires.
+`features/menu.js` renders the four current weekly approach cards from domain data and exposes a `render()` method to the composition root.
 
 ### Plan
 
-`features/plan.js` combines selected meal style, current energy estimate, and this week's idea into a useful local summary. It requests no personal information and can copy the summary to the clipboard.
+`features/plan.js` owns the ephemeral current plan:
+
+- selected approach;
+- optional energy estimate;
+- alternative-plan offset;
+- rendered three-meal set;
+- shopping starter.
+
+It can produce another authored set, copy the plan, save one plan locally, and reopen the saved snapshot.
+
+### Plan persistence
+
+`features/plan-storage.js` validates and stores one versioned plan snapshot under `nourishflow.saved-plan`.
+
+Unsupported or malformed data is ignored rather than silently coerced into a different shape.
 
 ### Carousel
 
-The carousel stores a single active slide index and uses percentage transforms, so state does not depend on measured pixel widths.
-
-### Weekly countdown
-
-`features/timer.js` presents the next shared weekly boundary and publishes a refresh event after rollover.
+The carousel stores a single active index, uses percentage transforms, has no autoplay, and exposes visible planning tips rather than decorative imagery alone.
 
 ### Calculator
 
 The calculator is split into:
 
-- `domain/calculator.js` — pure validation and calculation;
+- `domain/calculator.js` — pure rules;
 - `features/calculator-storage.js` — versioned preference persistence and migration;
 - `features/calculator.js` — DOM/controller boundary.
 
-The storage adapter migrates the previous NourishFlow key and preserves unknown future schema versions instead of destructively downgrading them.
+### Weekly countdown
+
+`features/timer.js` reads the shared weekly domain and reports boundary rollover through a callback. It has no knowledge of menus or plans.
 
 ## CSS architecture
 
@@ -104,13 +144,20 @@ The stylesheet uses ordered cascade layers:
 reset → tokens → base → layout → components → utilities → responsive
 ```
 
-The responsive model is mobile-first. Layout uses fluid containers, Grid/Flexbox, logical properties, `minmax()`, and `clamp()`.
+The responsive model is mobile-first and uses fluid containers, Grid/Flexbox, logical properties, `minmax()`, and `clamp()`.
+
+The visual system intentionally remains close to the original product: white, pale blue, pale yellow, dark text, and one bright-green accent.
 
 ## Data and privacy boundaries
 
-NourishFlow has no production API and no remote persistence.
+There is no production API and no remote persistence.
 
-The only persisted state is calculator preference data in a versioned local-storage object. The plan is derived locally and contains no name, phone number, account, or other personal profile data.
+Local storage contains only:
+
+- calculator preferences;
+- one user-saved plan snapshot.
+
+The product does not collect personal identity information.
 
 ## Deliberate non-goals
 
@@ -118,9 +165,10 @@ The only persisted state is calculator preference data in a versioned local-stor
 - backend simulation;
 - authentication;
 - global state library;
-- custom design-system package;
-- repository/service/factory layers for static local data;
+- cloud plan history;
+- automated grocery quantities;
+- medical or diet-prescription claims;
 - autoplay interactions;
-- fabricated scarcity or discount deadlines.
+- fabricated scarcity.
 
-These would add conceptual load without improving the current product problem.
+These would add conceptual or product risk without improving the current use case.

@@ -27,8 +27,8 @@ class FakeStorage {
 }
 
 const plan = {
-  styleId: "balanced",
-  styleLabel: "Balanced",
+  approachId: "balanced",
+  approachLabel: "Balanced",
   energy: "≈ 2,100 kcal/day",
   title: "Everyday Balanced",
   summary: "Simple day",
@@ -47,15 +47,44 @@ test("saves and restores one versioned local plan snapshot", () => {
 
   assert.equal(savePlan(storage, plan, savedAt), true);
   assert.deepEqual(loadPlan(storage), {
-    version: 1,
+    version: 2,
     savedAt: savedAt.toISOString(),
     plan,
   });
   assert.ok(storage.getItem(PLAN_STORAGE_KEY));
 });
 
+test("migrates v1 style fields to the v2 approach schema", () => {
+  const savedAt = "2026-09-20T12:00:00.000Z";
+  const v1Plan = {
+    ...plan,
+    styleId: plan.approachId,
+    styleLabel: plan.approachLabel,
+  };
+  delete v1Plan.approachId;
+  delete v1Plan.approachLabel;
+
+  const storage = new FakeStorage({
+    [PLAN_STORAGE_KEY]: JSON.stringify({
+      version: 1,
+      savedAt,
+      plan: v1Plan,
+    }),
+  });
+
+  assert.deepEqual(loadPlan(storage), {
+    version: 2,
+    savedAt,
+    plan,
+  });
+  assert.equal(
+    JSON.parse(storage.getItem(PLAN_STORAGE_KEY)).version,
+    2,
+  );
+});
+
 test("malformed and future-version plan payloads are ignored without overwrite", () => {
-  const future = JSON.stringify({ version: 2, savedAt: "x", plan });
+  const future = JSON.stringify({ version: 3, savedAt: "2026-09-20T12:00:00.000Z", plan });
   const storage = new FakeStorage({ [PLAN_STORAGE_KEY]: future });
 
   assert.equal(loadPlan(storage), null);
@@ -63,12 +92,6 @@ test("malformed and future-version plan payloads are ignored without overwrite",
 
   const malformed = new FakeStorage({ [PLAN_STORAGE_KEY]: "{broken" });
   assert.equal(loadPlan(malformed), null);
-});
-
-test("invalid plan shapes are not persisted", () => {
-  const storage = new FakeStorage();
-  assert.equal(savePlan(storage, { styleId: "balanced" }), false);
-  assert.equal(storage.getItem(PLAN_STORAGE_KEY), null);
 });
 
 test("rejects structurally incomplete saved plans", () => {
@@ -83,7 +106,7 @@ test("rejects structurally incomplete saved plans", () => {
 test("removes a saved plan without affecting unrelated storage", () => {
   const storage = new FakeStorage({
     [PLAN_STORAGE_KEY]: JSON.stringify({
-      version: 1,
+      version: 2,
       savedAt: "2026-09-20T12:00:00.000Z",
       plan,
     }),

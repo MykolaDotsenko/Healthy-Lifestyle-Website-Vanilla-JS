@@ -1,5 +1,5 @@
 export const PLAN_STORAGE_KEY = "nourishflow.saved-plan";
-const PLAN_STORAGE_VERSION = 1;
+const PLAN_STORAGE_VERSION = 2;
 
 function isNonEmptyString(value) {
   return typeof value === "string" && value.trim().length > 0 && value.length <= 500;
@@ -19,8 +19,8 @@ function isPlan(value) {
   return (
     value &&
     typeof value === "object" &&
-    isNonEmptyString(value.styleId) &&
-    isNonEmptyString(value.styleLabel) &&
+    isNonEmptyString(value.approachId) &&
+    isNonEmptyString(value.approachLabel) &&
     isNonEmptyString(value.energy) &&
     isNonEmptyString(value.title) &&
     isNonEmptyString(value.summary) &&
@@ -35,6 +35,23 @@ function isPlan(value) {
     value.shopping.length <= 24 &&
     value.shopping.every(isNonEmptyString)
   );
+}
+
+function migrateV1Plan(plan) {
+  if (!plan || typeof plan !== "object") {
+    return null;
+  }
+
+  const migrated = {
+    ...plan,
+    approachId: plan.styleId,
+    approachLabel: plan.styleLabel,
+  };
+
+  delete migrated.styleId;
+  delete migrated.styleLabel;
+
+  return isPlan(migrated) ? migrated : null;
 }
 
 export function savePlan(storage, plan, savedAt = new Date()) {
@@ -70,16 +87,32 @@ export function loadPlan(storage) {
 
     const parsed = JSON.parse(raw);
 
-    if (
-      parsed?.version !== PLAN_STORAGE_VERSION ||
-      typeof parsed.savedAt !== "string" ||
-      Number.isNaN(Date.parse(parsed.savedAt)) ||
-      !isPlan(parsed.plan)
-    ) {
+    if (typeof parsed?.savedAt !== "string" || Number.isNaN(Date.parse(parsed.savedAt))) {
       return null;
     }
 
-    return parsed;
+    if (parsed.version === PLAN_STORAGE_VERSION && isPlan(parsed.plan)) {
+      return parsed;
+    }
+
+    if (parsed.version === 1) {
+      const migratedPlan = migrateV1Plan(parsed.plan);
+
+      if (!migratedPlan) {
+        return null;
+      }
+
+      const migratedRecord = {
+        version: PLAN_STORAGE_VERSION,
+        savedAt: parsed.savedAt,
+        plan: migratedPlan,
+      };
+
+      storage.setItem(PLAN_STORAGE_KEY, JSON.stringify(migratedRecord));
+      return migratedRecord;
+    }
+
+    return null;
   } catch {
     return null;
   }

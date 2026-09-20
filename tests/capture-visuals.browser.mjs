@@ -55,8 +55,14 @@ async function loadLazyContent(page) {
       );
     }
 
+    await Promise.allSettled(
+      images.map((image) =>
+        typeof image.decode === "function" ? image.decode() : Promise.resolve(),
+      ),
+    );
+
     window.scrollTo(0, 0);
-    await delay(120);
+    await delay(160);
   });
 }
 

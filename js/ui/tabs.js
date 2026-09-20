@@ -31,7 +31,7 @@ export function initTabs({ onChange = () => {} } = {}) {
     });
 
     const activeTab = tabs[activeIndex];
-    onChange(activeTab.dataset.styleId ?? "");
+    onChange(activeTab.dataset.approachId ?? "");
 
     if (focus) {
       activeTab.focus();

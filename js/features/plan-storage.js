@@ -1,13 +1,17 @@
 export const PLAN_STORAGE_KEY = "nourishflow.saved-plan";
 const PLAN_STORAGE_VERSION = 1;
 
+function isNonEmptyString(value) {
+  return typeof value === "string" && value.trim().length > 0 && value.length <= 500;
+}
+
 function isMeal(value) {
   return (
     value &&
     typeof value === "object" &&
-    typeof value.slot === "string" &&
-    typeof value.title === "string" &&
-    typeof value.description === "string"
+    isNonEmptyString(value.slot) &&
+    isNonEmptyString(value.title) &&
+    isNonEmptyString(value.description)
   );
 }
 
@@ -15,15 +19,21 @@ function isPlan(value) {
   return (
     value &&
     typeof value === "object" &&
-    typeof value.styleId === "string" &&
-    typeof value.styleLabel === "string" &&
-    typeof value.energy === "string" &&
-    typeof value.title === "string" &&
+    isNonEmptyString(value.styleId) &&
+    isNonEmptyString(value.styleLabel) &&
+    isNonEmptyString(value.energy) &&
+    isNonEmptyString(value.title) &&
+    isNonEmptyString(value.summary) &&
+    Number.isInteger(value.variantIndex) &&
+    value.variantIndex >= 0 &&
+    value.variantIndex < 100 &&
     Array.isArray(value.meals) &&
     value.meals.length === 3 &&
     value.meals.every(isMeal) &&
     Array.isArray(value.shopping) &&
-    value.shopping.every((item) => typeof item === "string")
+    value.shopping.length > 0 &&
+    value.shopping.length <= 24 &&
+    value.shopping.every(isNonEmptyString)
   );
 }
 
@@ -63,6 +73,7 @@ export function loadPlan(storage) {
     if (
       parsed?.version !== PLAN_STORAGE_VERSION ||
       typeof parsed.savedAt !== "string" ||
+      Number.isNaN(Date.parse(parsed.savedAt)) ||
       !isPlan(parsed.plan)
     ) {
       return null;
@@ -71,5 +82,18 @@ export function loadPlan(storage) {
     return parsed;
   } catch {
     return null;
+  }
+}
+
+export function removePlan(storage) {
+  if (!storage) {
+    return false;
+  }
+
+  try {
+    storage.removeItem(PLAN_STORAGE_KEY);
+    return true;
+  } catch {
+    return false;
   }
 }

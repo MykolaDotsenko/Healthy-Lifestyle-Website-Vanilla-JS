@@ -17,12 +17,12 @@ test("formats daily energy as an intentionally approximate rounded value", () =>
 
 test("builds a useful three-meal plan without personal information", () => {
   const plan = buildPlanSummary({
-    styleId: "plant-based",
+    approachId: "plant-based",
     calories: 2182,
     now: new Date(2026, 8, 20, 12),
   });
 
-  assert.equal(plan.styleLabel, "Plant-Based");
+  assert.equal(plan.approachLabel, "Plant-Based");
   assert.match(plan.energy, /kcal\/day$/);
   assert.ok(plan.title.length > 0);
   assert.ok(plan.summary.length > 0);
@@ -34,24 +34,24 @@ test("builds a useful three-meal plan without personal information", () => {
 
 test("alternative offset produces another plan without changing the meal approach", () => {
   const first = buildPlanSummary({
-    styleId: "balanced",
+    approachId: "balanced",
     now: new Date(2026, 8, 20, 12),
     offset: 0,
   });
   const second = buildPlanSummary({
-    styleId: "balanced",
+    approachId: "balanced",
     now: new Date(2026, 8, 20, 12),
     offset: 1,
   });
 
-  assert.equal(first.styleLabel, "Balanced");
-  assert.equal(second.styleLabel, "Balanced");
+  assert.equal(first.approachLabel, "Balanced");
+  assert.equal(second.approachLabel, "Balanced");
   assert.notEqual(first.title, second.title);
 });
 
 test("copy text contains the meal slots and shopping starter", () => {
   const plan = buildPlanSummary({
-    styleId: "mediterranean",
+    approachId: "mediterranean",
     calories: 2000,
     now: new Date(2026, 8, 20, 12),
   });

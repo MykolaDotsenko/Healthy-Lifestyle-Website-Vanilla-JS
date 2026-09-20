@@ -39,7 +39,7 @@ jobs:
         run: npx --yes html-validate@10.12.0 index.html
 
       - name: Install browser quality dependencies
-        run: npm install --no-save --package-lock=false playwright@1.63.0 @axe-core/playwright@4.13.0
+        run: npm install --no-save --package-lock=false playwright@1.63.0 @axe-core/playwright@4.13.0 sharp@0.35.4
 
       - name: Install browser engines
         run: npx playwright install --with-deps chromium firefox webkit
@@ -62,12 +62,15 @@ jobs:
           node tests/accessibility.browser.mjs
           node tests/cross-browser.browser.mjs
           node tests/capture-visuals.browser.mjs
+          node scripts/build-brand-assets.mjs
 
       - name: Upload visual audit screenshots
         if: success()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: nourishflow-visual-audit
-          path: artifacts/visual-audit/*.png
+          path: |
+            artifacts/visual-audit/*.png
+            artifacts/brand/*.png
           if-no-files-found: error
           retention-days: 7

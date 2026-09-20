@@ -8,6 +8,7 @@ on:
       - completed
 
 permissions:
+  actions: read
   contents: read
   pages: write
   id-token: write
@@ -35,6 +36,21 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Download verified brand assets
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: nourishflow-visual-audit
+          path: .verified-artifacts
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: Install verified brand assets
+        run: |
+          mkdir -p img/brand
+          cp .verified-artifacts/brand/nourishflow-og.png img/brand/nourishflow-og.png
+          cp .verified-artifacts/brand/nourishflow-readme-preview.png img/brand/nourishflow-readme-preview.png
+          rm -rf .verified-artifacts
 
       - name: Configure Pages
         uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5

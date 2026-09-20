@@ -6,6 +6,8 @@
 
 [Live site](https://mykoladotsenko.github.io/Healthy-Lifestyle-Website-Vanilla-JS/) · [Architecture](ARCHITECTURE.md) · [Quality strategy](QUALITY.md)
 
+![NourishFlow — privacy-first meal planning interface](https://mykoladotsenko.github.io/Healthy-Lifestyle-Website-Vanilla-JS/img/brand/nourishflow-readme-preview.png)
+
 ## Product
 
 NourishFlow helps a user move through one small, coherent planning loop:
@@ -159,7 +161,7 @@ GitHub Actions additionally runs:
 - Chromium, Firefox, and WebKit critical journeys;
 - screenshot capture at mobile, tablet, and desktop sizes.
 
-The screenshots are uploaded as the `nourishflow-visual-audit` workflow artifact for manual visual review. The capture step fails if an expected image finishes with `naturalWidth === 0`, so a green visual artifact cannot silently contain broken rendered media.
+The screenshots are uploaded as the `nourishflow-visual-audit` workflow artifact for manual visual review. The capture step fails if an expected image finishes with `naturalWidth === 0`, so a green visual artifact cannot silently contain broken rendered media. The same verified desktop render is then composed into the branded README preview and 1200×630 social card that ship with GitHub Pages.
 
 GitHub Pages deployment is triggered only after a successful **Quality** run for a trusted push to `main`, and deploys the exact verified commit SHA.
 

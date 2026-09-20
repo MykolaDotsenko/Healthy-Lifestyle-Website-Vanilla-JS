@@ -101,9 +101,16 @@ It captures both first-fold and full-page states, forces lazy media to load, ver
 
 The files are uploaded as the `nourishflow-visual-audit` workflow artifact for manual review. This exists because overflow tests and axe cannot judge hierarchy, cropping, whitespace, brand quality, or whether a CTA visually dominates the wrong part of the page.
 
+After the verified screenshots are captured, `scripts/build-brand-assets.mjs` uses the desktop first-fold render to generate:
+
+- `artifacts/brand/nourishflow-readme-preview.png`;
+- `artifacts/brand/nourishflow-og.png` at 1200 × 630.
+
+Both generated files travel inside the same Quality artifact. The Pages workflow downloads that exact artifact from the successful triggering run and publishes the branded images alongside the verified commit.
+
 ## Dependency policy
 
-The shipped product has no runtime dependencies. Browser quality tools are pinned to explicit top-level versions in CI and are not shipped to the user.
+The shipped product has no runtime dependencies. Browser quality tools and the CI-only Sharp renderer used for branded assets are pinned to explicit top-level versions in CI and are not shipped to the user.
 
 ## What remains manual
 

@@ -29,11 +29,13 @@ test("core product surface stays intact", () => {
   );
   assert.equal(countMatches(html, /class="offer__slide"/g), 4);
   assert.equal(countMatches(html, /<form\b/g), 0);
-  assert.match(html, /Build My Plan/);
+  assert.match(html, />Start My Plan<\/a>/);
+  assert.match(html, />Build My Plan<\/button>/);
   assert.match(html, /id="plan-dialog"/);
+  assert.match(html, /data-saved-plan/);
 });
 
-test("composition keeps useful product features initialized", () => {
+test("composition owns cross-feature wiring explicitly", () => {
   for (const name of [
     "initTabs",
     "initTimer",
@@ -46,9 +48,12 @@ test("composition keeps useful product features initialized", () => {
     assert.match(app, new RegExp("\\b" + name + "\\b"));
   }
 
+  assert.match(app, /onChange:\s*plan\.setStyle/);
+  assert.match(app, /onEstimate:\s*plan\.setCalories/);
+  assert.match(app, /onRefresh/);
   assert.match(menu, /getWeeklyMenu/);
   assert.match(plan, /buildPlanSummary/);
-  assert.match(timer, /nourishflow:weekly-refresh/);
+  assert.doesNotMatch([app, plan, timer].join("\n"), /CustomEvent|nourishflow:/);
 });
 
 test("legacy fake-product mechanics do not return", () => {
@@ -57,4 +62,5 @@ test("legacy fake-product mechanics do not return", () => {
   assert.doesNotMatch(combined, /Preview Request|Portfolio demo|Demo price:/i);
   assert.doesNotMatch(combined, /localhost:3000|json-server/i);
   assert.doesNotMatch(combined, /Your Phone Number|Your Name/);
+  assert.doesNotMatch(html, />Fitness<|>Premium<|>Vegetarian</);
 });

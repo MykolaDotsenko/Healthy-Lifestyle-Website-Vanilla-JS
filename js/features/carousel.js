@@ -58,7 +58,11 @@ export function initCarousel() {
     current.textContent = formatSlideNumber(activeIndex + 1, slides.length);
 
     slides.forEach((slide, index) => {
-      slide.setAttribute("aria-hidden", String(index !== activeIndex));
+      if (index === activeIndex) {
+        slide.removeAttribute("aria-hidden");
+      } else {
+        slide.setAttribute("aria-hidden", "true");
+      }
     });
 
     dots.forEach((dot, index) => {

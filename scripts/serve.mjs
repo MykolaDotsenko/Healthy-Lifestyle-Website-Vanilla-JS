@@ -7,12 +7,14 @@ const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const port = Number.parseInt(process.env.PORT ?? "8080", 10);
 
 const contentTypes = {
+  ".avif": "image/avif",
   ".css": "text/css; charset=utf-8",
   ".html": "text/html; charset=utf-8",
   ".jpg": "image/jpeg",
   ".js": "text/javascript; charset=utf-8",
   ".json": "application/json; charset=utf-8",
   ".svg": "image/svg+xml",
+  ".webp": "image/webp",
 };
 
 function resolveRequestPath(requestUrl = "/") {
@@ -49,5 +51,5 @@ const server = createServer(async (request, response) => {
 });
 
 server.listen(port, "127.0.0.1", () => {
-  console.log(`Healthy Lifestyle Website: http://127.0.0.1:${port}`);
+  console.log(`NourishFlow: http://127.0.0.1:${port}`);
 });

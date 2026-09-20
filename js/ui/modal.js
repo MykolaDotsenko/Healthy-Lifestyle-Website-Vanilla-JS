@@ -1,5 +1,5 @@
 export function initModal() {
-  const dialog = document.querySelector("#contact-dialog");
+  const dialog = document.querySelector("#plan-dialog");
 
   if (!(dialog instanceof HTMLDialogElement)) {
     return {

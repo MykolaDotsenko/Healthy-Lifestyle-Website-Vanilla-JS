@@ -13,8 +13,8 @@ const menu = initMenu();
 
 initTabs({
   onChange(styleId) {
-    plan.setStyle(styleId);
-    menu.setSelectedStyle(styleId);
+    plan.setApproach(styleId);
+    menu.setSelectedApproach(styleId);
   },
 });
 initTimer({

@@ -12,9 +12,9 @@ const plan = initPlan(modal);
 const menu = initMenu();
 
 initTabs({
-  onChange(styleId) {
-    plan.setApproach(styleId);
-    menu.setSelectedApproach(styleId);
+  onChange(approachId) {
+    plan.setApproach(approachId);
+    menu.setSelectedApproach(approachId);
   },
 });
 initTimer({

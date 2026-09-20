@@ -44,6 +44,17 @@ async function loadLazyContent(page) {
     );
 
     await Promise.race([settleImages, delay(4_000)]);
+
+    const failedImages = images
+      .filter((image) => !image.complete || image.naturalWidth === 0)
+      .map((image) => image.currentSrc || image.src || "(unknown image)");
+
+    if (failedImages.length > 0) {
+      throw new Error(
+        `Visual audit found unloaded images: ${failedImages.join(", ")}`,
+      );
+    }
+
     window.scrollTo(0, 0);
     await delay(120);
   });

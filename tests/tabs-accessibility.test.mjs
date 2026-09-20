@@ -25,6 +25,6 @@ test("tab activation keeps panel visibility synchronized", () => {
 
 test("selected meal approach is reported through an explicit callback", () => {
   assert.match(source, /onChange = \(\) => \{\}/);
-  assert.match(source, /onChange\(activeTab\.dataset\.styleId/);
+  assert.match(source, /onChange\(activeTab\.dataset\.approachId/);
   assert.doesNotMatch(source, /CustomEvent|document\.dispatchEvent/);
 });

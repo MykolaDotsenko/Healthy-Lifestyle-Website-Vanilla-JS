@@ -20,7 +20,7 @@ Quality checks are split by failure type so regressions are caught at the cheape
 - static HTML/domain alignment for tab labels, images, and descriptions;
 - another-set behavior;
 - plan text generation;
-- saved-plan validation and versioned persistence;
+- saved-plan validation, v1→v2 migration, removal, and local-data clearing;
 - module/domain boundaries;
 - callback-oriented composition instead of a document event bus;
 - accessible tab and carousel contracts;
@@ -50,8 +50,9 @@ The journey verifies:
 
 - the product selector remains near the first fold on small screens;
 - no document-level horizontal overflow;
-- four meal approaches render;
+- four meal approaches render and the selected approach is reflected in weekly cards;
 - responsive AVIF selection;
+- weekly-card images complete with a non-zero natural width;
 - calculator valid/invalid recovery;
 - keyboard tabs;
 - carousel state and useful live announcement;
@@ -62,6 +63,8 @@ The journey verifies:
 - Copy Plan provides success feedback;
 - dialog sizing and focus restoration;
 - saved-plan recovery after reload;
+- Another Set preserves the restored saved approach;
+- saved-plan removal clears its local-storage record;
 - no browser runtime errors.
 
 ## 5. Automated accessibility
@@ -94,7 +97,7 @@ CI captures actual rendered screenshots at:
 - 768px tablet;
 - 1440px desktop.
 
-It captures both first-fold and full-page states, forces lazy media to load, and also captures the mobile plan dialog.
+It captures both first-fold and full-page states, forces lazy media to load, verifies that expected images have a non-zero `naturalWidth`, and also captures the mobile plan dialog.
 
 The files are uploaded as the `nourishflow-visual-audit` workflow artifact for manual review. This exists because overflow tests and axe cannot judge hierarchy, cropping, whitespace, brand quality, or whether a CTA visually dominates the wrong part of the page.
 
@@ -117,3 +120,14 @@ Before release, inspect the visual-audit artifacts for:
 - clipboard fallback messaging.
 
 Automation protects contracts. It does not decide whether the product feels good.
+
+## 8. Verified deployment
+
+GitHub Pages does not deploy directly from an arbitrary push. The Pages workflow listens for completion of the **Quality** workflow and runs only when:
+
+- the Quality conclusion is `success`;
+- the triggering Quality event was a `push`;
+- the verified branch is `main`;
+- the workflow originated from this repository.
+
+The deploy job checks out `workflow_run.head_sha`, so the exact commit that passed the gates is the commit that is published.

@@ -44,24 +44,26 @@
   <a class="skip-link" href="#main-content">Skip to main content</a>
 
   <header class="header">
-    <div class="header__left-block">
+    <div class="header__inner container">
+      <div class="header__left-block">
       <a class="header__logo brand" href="#main-content" aria-label="NourishFlow home">
         <span class="brand__mark" aria-hidden="true"></span>
         <span class="brand__name">NourishFlow</span>
       </a>
       <nav class="header__links" aria-label="Primary navigation">
-        <a href="#meal-styles" class="header__link">Meal Approaches</a>
+        <a href="#meal-approaches" class="header__link">Meal Approaches</a>
         <a href="#calculator" class="header__link">Calorie Estimate</a>
       </nav>
     </div>
-    <div class="header__right-block">
-      <a class="btn" href="#calculator">Start My Plan</a>
+      <div class="header__right-block">
+        <a class="btn" href="#calculator">Start My Plan</a>
+      </div>
     </div>
   </header>
 
 
   <main id="main-content">
-    <section class="preview" id="meal-styles" aria-labelledby="main-title">
+    <section class="preview" id="meal-approaches" aria-labelledby="main-title">
       <div class="bgc_blue" aria-hidden="true"></div>
       <div class="container">
         <div class="tabcontainer">
@@ -70,7 +72,7 @@
             <div class="tabheader__items" role="tablist" aria-label="Meal approaches" aria-orientation="vertical">
               <button
                 id="plan-whole-food-control"
-                data-style-id="whole-food"
+                data-approach-id="whole-food"
                 class="tabheader__item tabheader__item_active"
                 type="button"
                 role="tab"
@@ -82,7 +84,7 @@
               </button>
               <button
                 id="plan-mediterranean-control"
-                data-style-id="mediterranean"
+                data-approach-id="mediterranean"
                 class="tabheader__item"
                 type="button"
                 role="tab"
@@ -94,7 +96,7 @@
               </button>
               <button
                 id="plan-plant-based-control"
-                data-style-id="plant-based"
+                data-approach-id="plant-based"
                 class="tabheader__item"
                 type="button"
                 role="tab"
@@ -106,7 +108,7 @@
               </button>
               <button
                 id="plan-balanced-control"
-                data-style-id="balanced"
+                data-approach-id="balanced"
                 class="tabheader__item"
                 type="button"
                 role="tab"
@@ -226,18 +228,217 @@
 
     <div class="divider" aria-hidden="true"></div>
 
+    <div class="divider" aria-hidden="true"></div>
+
+    <section class="calculating" id="calculator" aria-labelledby="calculator-title">
+      <div class="container">
+        <p class="section-kicker section-kicker_center">Your daily estimate</p>
+        <h2 class="title" id="calculator-title">Estimate Your Daily Energy Needs</h2>
+        <p class="calculating__guidance" id="calculator-guidance">
+          Adult maintenance estimate using the revised Harris–Benedict equation and an activity factor. For general information only; not medical advice.
+        </p>
+
+        <div class="calculating__field">
+          <fieldset class="calculating__group">
+            <legend class="calculating__subtitle">Sex Used by the Estimate</legend>
+            <div class="calculating__choose" id="gender">
+              <input
+                class="calculating__choice-input visually-hidden"
+                type="radio"
+                id="female"
+                name="sex"
+                value="female"
+                checked
+              >
+              <label class="calculating__choose-item" for="female">Female</label>
+
+              <input
+                class="calculating__choice-input visually-hidden"
+                type="radio"
+                id="male"
+                name="sex"
+                value="male"
+              >
+              <label class="calculating__choose-item" for="male">Male</label>
+            </div>
+          </fieldset>
+
+          <fieldset class="calculating__group">
+            <legend class="calculating__subtitle">Your Details</legend>
+            <div class="calculating__choose calculating__choose_medium">
+              <div class="calculating__input-group">
+                <label class="calculating__input-label" for="height">Height (cm)</label>
+                <input
+                  type="number"
+                  id="height"
+                  inputmode="decimal"
+                  min="100"
+                  max="250"
+                  step="0.1"
+                  placeholder="e.g. 180"
+                  class="calculating__choose-item"
+                  aria-describedby="calculator-guidance height-error"
+                  aria-invalid="false"
+                  required
+                >
+                <p class="calculating__error" id="height-error" hidden></p>
+              </div>
+
+              <div class="calculating__input-group">
+                <label class="calculating__input-label" for="weight">Weight (kg)</label>
+                <input
+                  type="number"
+                  id="weight"
+                  inputmode="decimal"
+                  min="30"
+                  max="350"
+                  step="0.1"
+                  placeholder="e.g. 75.5"
+                  class="calculating__choose-item"
+                  aria-describedby="calculator-guidance weight-error"
+                  aria-invalid="false"
+                  required
+                >
+                <p class="calculating__error" id="weight-error" hidden></p>
+              </div>
+
+              <div class="calculating__input-group">
+                <label class="calculating__input-label" for="age">Age</label>
+                <input
+                  type="number"
+                  id="age"
+                  inputmode="numeric"
+                  min="18"
+                  max="120"
+                  step="1"
+                  placeholder="e.g. 36"
+                  class="calculating__choose-item"
+                  aria-describedby="calculator-guidance age-error"
+                  aria-invalid="false"
+                  required
+                >
+                <p class="calculating__error" id="age-error" hidden></p>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="calculating__group">
+            <legend class="calculating__subtitle">Choose Your Physical Activity Level</legend>
+            <div class="calculating__choose calculating__choose_big">
+              <input
+                class="calculating__choice-input visually-hidden"
+                type="radio"
+                id="low"
+                name="activity"
+                value="1.2"
+              >
+              <label class="calculating__choose-item calculating__activity-choice" for="low">
+                <span class="calculating__choice-title">Sedentary</span>
+                <span class="calculating__choice-help">Mostly seated with little structured activity</span>
+              </label>
+
+              <input
+                class="calculating__choice-input visually-hidden"
+                type="radio"
+                id="small"
+                name="activity"
+                value="1.375"
+                checked
+              >
+              <label class="calculating__choose-item calculating__activity-choice" for="small">
+                <span class="calculating__choice-title">Lightly Active</span>
+                <span class="calculating__choice-help">Regular walking or light activity through the week</span>
+              </label>
+
+              <input
+                class="calculating__choice-input visually-hidden"
+                type="radio"
+                id="medium"
+                name="activity"
+                value="1.55"
+              >
+              <label class="calculating__choose-item calculating__activity-choice" for="medium">
+                <span class="calculating__choice-title">Moderately Active</span>
+                <span class="calculating__choice-help">Frequent purposeful exercise or an active routine</span>
+              </label>
+
+              <input
+                class="calculating__choice-input visually-hidden"
+                type="radio"
+                id="high"
+                name="activity"
+                value="1.725"
+              >
+              <label class="calculating__choose-item calculating__activity-choice" for="high">
+                <span class="calculating__choice-title">Very Active</span>
+                <span class="calculating__choice-help">Hard training or sustained physical activity most days</span>
+              </label>
+            </div>
+          </fieldset>
+
+          <div class="calculating__divider" aria-hidden="true"></div>
+
+          <div class="calculating__total">
+            <span class="calculating__subtitle">Estimated Daily Energy Context:</span>
+            <output
+              class="calculating__result"
+              for="female male height weight age low small medium high"
+              aria-describedby="calculator-guidance calculator-status"
+            >
+              <span>—</span> kcal/day
+            </output>
+          </div>
+          <p class="calculating__status" id="calculator-status" role="status">
+            Enter your details to calculate an estimate.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider" aria-hidden="true"></div>
+
+    <section class="menu" id="menu" aria-labelledby="menu-title">
+      <h2 class="title" id="menu-title">Explore This Week’s Meal Ideas</h2>
+      <div class="menu__field">
+        <div class="container" id="menu-list"></div>
+      </div>
+    </section>
+
+    <section class="plan" aria-labelledby="plan-title">
+      <div class="container">
+        <p class="section-kicker section-kicker_center">Bring it together</p>
+        <h2 class="title" id="plan-title">Build Your NourishFlow Plan</h2>
+        <p class="plan__descr">
+          Turn your selected meal approach into a simple day with morning, midday, and evening ideas plus a small shopping starter.
+        </p>
+        <button class="btn btn_dark" type="button" data-plan>Build My Plan</button>
+        <div class="plan__saved" data-saved-plan hidden>
+          <p class="section-kicker">Saved on this device</p>
+          <strong data-saved-plan-title></strong>
+          <p data-saved-plan-meta></p>
+          <div class="plan__saved-actions">
+            <button class="btn" type="button" data-open-saved-plan>Open Saved Plan</button>
+            <button class="btn btn_subtle" type="button" data-remove-saved-plan>Remove Saved Plan</button>
+          </div>
+        </div>
+        <p class="calculating__status plan__status" data-plan-page-status role="status"></p>
+      </div>
+    </section>
+
+    <div class="divider" aria-hidden="true"></div>
+
     <section class="offer" aria-labelledby="offer-title">
       <div class="bgc_y" aria-hidden="true"></div>
       <div class="container">
         <div class="offer__text">
-          <p class="section-kicker">Everyday nutrition</p>
-          <h2 class="title" id="offer-title">What NourishFlow Brings Together</h2>
+          <p class="section-kicker">Planning shortcuts</p>
+          <h2 class="title" id="offer-title">Make the Plan Easier to Use</h2>
           <p class="offer__descr">
-            NourishFlow brings meal ideas, a daily energy estimate, and a simple weekly plan into one lightweight experience.
+            Use a few practical shortcuts to keep the plan flexible when ingredients, time, or appetite change.
           </p>
         </div>
         <div class="offer__action">
-          <a class="btn btn_dark" href="#calculator">Start with My Estimate</a>
+          <a class="btn btn_dark" href="#meal-approaches">Change My Approach</a>
         </div>
       </div>
 
@@ -249,7 +450,7 @@
           </p>
           <h3>Respectful by Design</h3>
           <p class="offer__advantages-text">
-            Your meal style and calculator preferences stay on your device, so you can explore without creating an account or sending personal details.
+            Your meal approach and calculator preferences stay on your device, so you can explore without creating an account or sending personal details.
           </p>
         </div>
 
@@ -379,186 +580,7 @@
       </div>
     </section>
 
-    <div class="divider" aria-hidden="true"></div>
 
-    <section class="calculating" id="calculator" aria-labelledby="calculator-title">
-      <div class="container">
-        <p class="section-kicker section-kicker_center">Your daily estimate</p>
-        <h2 class="title" id="calculator-title">Let's Calculate Your Daily Caloric Needs</h2>
-        <p class="calculating__guidance" id="calculator-guidance">
-          Adult maintenance estimate using the revised Harris–Benedict equation and an activity factor. For general information only; not medical advice.
-        </p>
-
-        <div class="calculating__field">
-          <fieldset class="calculating__group">
-            <legend class="calculating__subtitle">Sex Used by the Estimate</legend>
-            <div class="calculating__choose" id="gender">
-              <input
-                class="calculating__choice-input visually-hidden"
-                type="radio"
-                id="female"
-                name="sex"
-                value="female"
-                checked
-              >
-              <label class="calculating__choose-item" for="female">Female</label>
-
-              <input
-                class="calculating__choice-input visually-hidden"
-                type="radio"
-                id="male"
-                name="sex"
-                value="male"
-              >
-              <label class="calculating__choose-item" for="male">Male</label>
-            </div>
-          </fieldset>
-
-          <fieldset class="calculating__group">
-            <legend class="calculating__subtitle">Your Details</legend>
-            <div class="calculating__choose calculating__choose_medium">
-              <div class="calculating__input-group">
-                <label class="calculating__input-label" for="height">Height (cm)</label>
-                <input
-                  type="number"
-                  id="height"
-                  inputmode="decimal"
-                  min="100"
-                  max="250"
-                  step="0.1"
-                  placeholder="e.g. 180"
-                  class="calculating__choose-item"
-                  aria-describedby="calculator-guidance height-error"
-                  aria-invalid="false"
-                  required
-                >
-                <p class="calculating__error" id="height-error" hidden></p>
-              </div>
-
-              <div class="calculating__input-group">
-                <label class="calculating__input-label" for="weight">Weight (kg)</label>
-                <input
-                  type="number"
-                  id="weight"
-                  inputmode="decimal"
-                  min="30"
-                  max="350"
-                  step="0.1"
-                  placeholder="e.g. 75.5"
-                  class="calculating__choose-item"
-                  aria-describedby="calculator-guidance weight-error"
-                  aria-invalid="false"
-                  required
-                >
-                <p class="calculating__error" id="weight-error" hidden></p>
-              </div>
-
-              <div class="calculating__input-group">
-                <label class="calculating__input-label" for="age">Age</label>
-                <input
-                  type="number"
-                  id="age"
-                  inputmode="numeric"
-                  min="18"
-                  max="120"
-                  step="1"
-                  placeholder="e.g. 36"
-                  class="calculating__choose-item"
-                  aria-describedby="calculator-guidance age-error"
-                  aria-invalid="false"
-                  required
-                >
-                <p class="calculating__error" id="age-error" hidden></p>
-              </div>
-            </div>
-          </fieldset>
-
-          <fieldset class="calculating__group">
-            <legend class="calculating__subtitle">Choose Your Physical Activity Level</legend>
-            <div class="calculating__choose calculating__choose_big">
-              <input
-                class="calculating__choice-input visually-hidden"
-                type="radio"
-                id="low"
-                name="activity"
-                value="1.2"
-              >
-              <label class="calculating__choose-item" for="low">Sedentary</label>
-
-              <input
-                class="calculating__choice-input visually-hidden"
-                type="radio"
-                id="small"
-                name="activity"
-                value="1.375"
-                checked
-              >
-              <label class="calculating__choose-item" for="small">Lightly Active</label>
-
-              <input
-                class="calculating__choice-input visually-hidden"
-                type="radio"
-                id="medium"
-                name="activity"
-                value="1.55"
-              >
-              <label class="calculating__choose-item" for="medium">Moderately Active</label>
-
-              <input
-                class="calculating__choice-input visually-hidden"
-                type="radio"
-                id="high"
-                name="activity"
-                value="1.725"
-              >
-              <label class="calculating__choose-item" for="high">Very Active</label>
-            </div>
-          </fieldset>
-
-          <div class="calculating__divider" aria-hidden="true"></div>
-
-          <div class="calculating__total">
-            <span class="calculating__subtitle">Estimated Daily Energy Requirement:</span>
-            <output
-              class="calculating__result"
-              for="female male height weight age low small medium high"
-              aria-describedby="calculator-guidance calculator-status"
-            >
-              <span>—</span> kcal/day
-            </output>
-          </div>
-          <p class="calculating__status" id="calculator-status" role="status">
-            Enter your details to calculate an estimate.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <div class="divider" aria-hidden="true"></div>
-
-    <section class="menu" id="menu" aria-labelledby="menu-title">
-      <h2 class="title" id="menu-title">Explore This Week’s Meal Ideas</h2>
-      <div class="menu__field">
-        <div class="container" id="menu-list"></div>
-      </div>
-    </section>
-
-    <section class="plan" aria-labelledby="plan-title">
-      <div class="container">
-        <p class="section-kicker section-kicker_center">Bring it together</p>
-        <h2 class="title" id="plan-title">Build Your NourishFlow Plan</h2>
-        <p class="plan__descr">
-          Turn your selected meal approach into a simple day with morning, midday, and evening ideas plus a small shopping starter.
-        </p>
-        <button class="btn btn_dark" type="button" data-plan>Build My Plan</button>
-        <div class="plan__saved" data-saved-plan hidden>
-          <p class="section-kicker">Saved on this device</p>
-          <strong data-saved-plan-title></strong>
-          <p data-saved-plan-meta></p>
-          <button class="btn btn_min" type="button" data-open-saved-plan>Open Saved Plan</button>
-        </div>
-      </div>
-    </section>
 
     <div class="divider" aria-hidden="true"></div>
 
@@ -613,9 +635,15 @@
         </p>
       </div>
 
-      <nav class="footer__links" aria-label="Project links">
-        <a class="link" href="#main-content">Back to top</a>
-      </nav>
+      <div class="footer__actions">
+        <nav class="footer__links" aria-label="Project links">
+          <a class="link" href="#main-content">Back to top</a>
+        </nav>
+        <button class="link footer__data-button" type="button" data-clear-local-data>
+          Clear local data
+        </button>
+        <p class="footer__data-status" data-local-data-status role="status"></p>
+      </div>
     </div>
   </footer>
 
@@ -635,10 +663,10 @@
       <div class="plan-summary__overview">
         <div class="plan-summary__item">
           <span class="plan-summary__label">Meal approach</span>
-          <strong data-plan-style>Whole-Food</strong>
+          <strong data-plan-approach>Whole-Food</strong>
         </div>
         <div class="plan-summary__item">
-          <span class="plan-summary__label">Daily energy</span>
+          <span class="plan-summary__label">Energy context</span>
           <strong data-plan-energy>Optional — calculate your daily estimate above</strong>
         </div>
       </div>
@@ -656,7 +684,7 @@
         <ul data-plan-shopping></ul>
       </div>
 
-      <p class="form-note">
+      <p class="plan-note">
         Your calculator preferences and any plan you save stay on this device. This plan is general meal inspiration, not medical advice.
       </p>
 

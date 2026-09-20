@@ -81,7 +81,7 @@ for (const [name, browserType] of browsers) {
     );
 
     assert.equal(
-      await page.locator("[data-plan-style]").textContent(),
+      await page.locator("[data-plan-approach]").textContent(),
       "Mediterranean",
       `${name}: plan uses selected meal approach`,
     );

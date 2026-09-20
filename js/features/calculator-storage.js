@@ -103,3 +103,23 @@ export function loadCalculatorPreferences(storage) {
     return { ...DEFAULT_CALCULATOR_PREFERENCES };
   }
 }
+
+export function clearCalculatorPreferences(storage) {
+  if (!storage) {
+    return false;
+  }
+
+  try {
+    for (const key of [
+      CALCULATOR_STORAGE_KEY,
+      PREVIOUS_STORAGE_KEY,
+      LEGACY_SEX_KEY,
+      LEGACY_RATIO_KEY,
+    ]) {
+      storage.removeItem(key);
+    }
+    return true;
+  } catch {
+    return false;
+  }
+}

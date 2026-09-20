@@ -1,5 +1,6 @@
 import { initCalculator } from "./features/calculator.js";
 import { initCarousel } from "./features/carousel.js";
+import { initLocalDataControls } from "./features/local-data.js";
 import { initMenu } from "./features/menu.js";
 import { initPlan } from "./features/plan.js";
 import { initTimer } from "./features/timer.js";
@@ -10,7 +11,12 @@ const modal = initModal();
 const plan = initPlan(modal);
 const menu = initMenu();
 
-initTabs({ onChange: plan.setStyle });
+initTabs({
+  onChange(approachId) {
+    plan.setApproach(approachId);
+    menu.setSelectedApproach(approachId);
+  },
+});
 initTimer({
   onRefresh() {
     menu.render();
@@ -19,3 +25,7 @@ initTimer({
 });
 initCarousel();
 initCalculator({ onEstimate: plan.setCalories });
+
+initLocalDataControls({
+  onCleared: plan.clearSaved,
+});

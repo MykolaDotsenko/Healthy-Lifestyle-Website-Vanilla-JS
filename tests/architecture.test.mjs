@@ -17,9 +17,10 @@ test("HTML loads one native ES-module entry point", async () => {
 
 test("composition root owns explicit callbacks without feature behavior", async () => {
   const app = await read("js/app.js");
-  assert.ok(app.trim().split(/\r?\n/).length <= 30);
+  assert.ok(app.trim().split(/\r?\n/).length <= 40);
   assert.doesNotMatch(app, /querySelector|addEventListener|localStorage/);
-  assert.match(app, /onChange:\s*plan\.setStyle/);
+  assert.match(app, /plan\.setApproach\(approachId\)/);
+  assert.match(app, /menu\.setSelectedApproach\(approachId\)/);
   assert.match(app, /onEstimate:\s*plan\.setCalories/);
   assert.match(app, /onRefresh/);
 });
@@ -27,7 +28,8 @@ test("composition root owns explicit callbacks without feature behavior", async 
 test("domain modules stay browser-independent", async () => {
   for (const path of [
     "js/domain/calculator.js",
-    "js/domain/meal-styles.js",
+    "js/domain/meal-plans.js",
+    "js/data/meal-approaches.js",
     "js/domain/weekly-cycle.js",
   ]) {
     const source = await read(path);

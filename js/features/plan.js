@@ -1,8 +1,9 @@
 import {
   getPlanVariantCount,
-  getWeeklyMealIdea,
-} from "../domain/meal-styles.js";
-import { loadPlan, savePlan } from "./plan-storage.js";
+  getWeeklyPlan,
+} from "../domain/meal-plans.js";
+import { createPlanView } from "../ui/plan-view.js";
+import { loadPlan, removePlan, savePlan } from "./plan-storage.js";
 
 export function formatCalories(calories) {
   if (!Number.isFinite(calories)) {
@@ -14,22 +15,23 @@ export function formatCalories(calories) {
 }
 
 export function buildPlanSummary({
-  styleId = "whole-food",
+  approachId = "whole-food",
   calories = null,
+  energyText = null,
   now = new Date(),
   offset = 0,
 } = {}) {
-  const meal = getWeeklyMealIdea(styleId, now, offset);
+  const weeklyPlan = getWeeklyPlan(approachId, now, offset);
 
   return {
-    styleId: meal.styleId,
-    styleLabel: meal.styleLabel,
-    energy: formatCalories(calories),
-    title: meal.title,
-    summary: meal.description,
-    meals: meal.meals.map((item) => ({ ...item })),
-    shopping: [...meal.shopping],
-    variantIndex: meal.variantIndex,
+    approachId: weeklyPlan.approachId,
+    approachLabel: weeklyPlan.approachLabel,
+    energy: energyText ?? formatCalories(calories),
+    title: weeklyPlan.title,
+    summary: weeklyPlan.description,
+    meals: weeklyPlan.meals.map((item) => ({ ...item })),
+    shopping: [...weeklyPlan.shopping],
+    variantIndex: weeklyPlan.variantIndex,
   };
 }
 
@@ -41,8 +43,8 @@ export function formatPlanText(plan) {
 
   return [
     "NourishFlow plan",
-    `Meal approach: ${plan.styleLabel}`,
-    `Daily energy: ${plan.energy}`,
+    `Meal approach: ${plan.approachLabel}`,
+    `Energy context: ${plan.energy}`,
     `Plan: ${plan.title}`,
     "",
     ...mealLines,
@@ -59,45 +61,6 @@ function getLocalStorage() {
   }
 }
 
-function formatSavedDate(value) {
-  const date = new Date(value);
-
-  if (Number.isNaN(date.getTime())) {
-    return "Saved on this device";
-  }
-
-  return `Saved ${new Intl.DateTimeFormat(undefined, {
-    month: "short",
-    day: "numeric",
-  }).format(date)}`;
-}
-
-function createMealItem(meal) {
-  const item = document.createElement("article");
-  item.className = "plan-meal";
-
-  const slot = document.createElement("p");
-  slot.className = "plan-meal__slot";
-  slot.textContent = meal.slot;
-
-  const title = document.createElement("h3");
-  title.className = "plan-meal__title";
-  title.textContent = meal.title;
-
-  const description = document.createElement("p");
-  description.className = "plan-meal__description";
-  description.textContent = meal.description;
-
-  item.append(slot, title, description);
-  return item;
-}
-
-function createShoppingItem(value) {
-  const item = document.createElement("li");
-  item.textContent = value;
-  return item;
-}
-
 export function initPlan(
   modal,
   {
@@ -105,87 +68,63 @@ export function initPlan(
     getNow = () => new Date(),
   } = {},
 ) {
-  let styleId = "whole-food";
+  let approachId = "whole-food";
   let calories = null;
   let variantOffset = 0;
   let currentPlan = null;
   let savedRecord = loadPlan(storage);
 
-  const styleOutput = document.querySelector("[data-plan-style]");
-  const energyOutput = document.querySelector("[data-plan-energy]");
-  const planTitle = document.querySelector("[data-plan-title]");
-  const planSummary = document.querySelector("[data-plan-summary]");
-  const mealsOutput = document.querySelector("[data-plan-meals]");
-  const shoppingOutput = document.querySelector("[data-plan-shopping]");
-  const status = document.querySelector("[data-plan-status]");
-  const savedPanel = document.querySelector("[data-saved-plan]");
-  const savedTitle = document.querySelector("[data-saved-plan-title]");
-  const savedMeta = document.querySelector("[data-saved-plan-meta]");
+  const view = createPlanView();
   const savedOpenButton = document.querySelector("[data-open-saved-plan]");
+  const removeSavedButton = document.querySelector("[data-remove-saved-plan]");
   const swapButton = document.querySelector("[data-swap-plan]");
   const saveButton = document.querySelector("[data-save-plan]");
   const copyButton = document.querySelector("[data-copy-plan]");
 
-  function renderSavedPlan() {
-    if (!savedPanel || !savedTitle || !savedMeta) {
-      return;
-    }
-
-    savedPanel.hidden = !savedRecord;
-
-    if (!savedRecord) {
-      return;
-    }
-
-    savedTitle.textContent =
-      `${savedRecord.plan.styleLabel} · ${savedRecord.plan.title}`;
-    savedMeta.textContent = formatSavedDate(savedRecord.savedAt);
-  }
-
-  function renderPlan(plan) {
-    if (styleOutput) styleOutput.textContent = plan.styleLabel;
-    if (energyOutput) energyOutput.textContent = plan.energy;
-    if (planTitle) planTitle.textContent = plan.title;
-    if (planSummary) planSummary.textContent = plan.summary;
-    if (status) status.textContent = "";
-
-    mealsOutput?.replaceChildren(...plan.meals.map(createMealItem));
-    shoppingOutput?.replaceChildren(...plan.shopping.map(createShoppingItem));
-  }
-
   function openPlan(plan) {
     currentPlan = plan;
-    renderPlan(plan);
+    view.renderPlan(plan);
     modal.open();
   }
 
-  function openCurrentPlan() {
+  function openCurrentPlan({ energyText = null } = {}) {
     openPlan(
       buildPlanSummary({
-        styleId,
+        approachId,
         calories,
+        energyText,
         now: getNow(),
         offset: variantOffset,
       }),
     );
   }
 
+  function alignStateToPlan(plan) {
+    approachId = plan.approachId;
+    const variantCount = getPlanVariantCount(approachId);
+    const baseline = getWeeklyPlan(approachId, getNow(), 0).variantIndex;
+    variantOffset =
+      ((plan.variantIndex - baseline) % variantCount + variantCount) %
+      variantCount;
+  }
+
   async function copyCurrentPlan() {
-    if (!currentPlan || !status) {
+    if (!currentPlan) {
       return;
     }
 
     try {
       await navigator.clipboard.writeText(formatPlanText(currentPlan));
-      status.textContent = "Plan copied to your clipboard.";
+      view.setDialogStatus("Plan copied to your clipboard.");
     } catch {
-      status.textContent =
-        "Copy is unavailable here. You can still select the plan text manually.";
+      view.setDialogStatus(
+        "Copy is unavailable here. You can still select the plan text manually.",
+      );
     }
   }
 
   function saveCurrentPlan() {
-    if (!currentPlan || !status) {
+    if (!currentPlan) {
       return;
     }
 
@@ -193,16 +132,17 @@ export function initPlan(
 
     if (savePlan(storage, currentPlan, savedAt)) {
       savedRecord = {
-        version: 1,
+        version: 2,
         savedAt: savedAt.toISOString(),
         plan: currentPlan,
       };
-      renderSavedPlan();
-      status.textContent = "Plan saved on this device.";
+      view.renderSavedPlan(savedRecord);
+      view.setPageStatus("");
+      view.setDialogStatus("Plan saved on this device.");
       return;
     }
 
-    status.textContent = "This browser could not save the plan.";
+    view.setDialogStatus("This browser could not save the plan.");
   }
 
   document.querySelectorAll("[data-plan]").forEach((trigger) => {
@@ -213,9 +153,10 @@ export function initPlan(
   });
 
   swapButton?.addEventListener("click", () => {
+    const preservedEnergy = currentPlan?.energy ?? null;
     variantOffset =
-      (variantOffset + 1) % getPlanVariantCount(styleId);
-    openCurrentPlan();
+      (variantOffset + 1) % getPlanVariantCount(approachId);
+    openCurrentPlan({ energyText: preservedEnergy });
   });
 
   saveButton?.addEventListener("click", saveCurrentPlan);
@@ -223,16 +164,29 @@ export function initPlan(
 
   savedOpenButton?.addEventListener("click", () => {
     if (savedRecord) {
+      alignStateToPlan(savedRecord.plan);
       openPlan(savedRecord.plan);
     }
   });
 
-  renderSavedPlan();
+  removeSavedButton?.addEventListener("click", () => {
+    if (!savedRecord) {
+      return;
+    }
+
+    if (removePlan(storage)) {
+      savedRecord = null;
+      view.renderSavedPlan(null);
+      view.setPageStatus("Saved plan removed from this device.");
+    }
+  });
+
+  view.renderSavedPlan(savedRecord);
 
   return {
-    setStyle(nextStyleId) {
-      if (typeof nextStyleId === "string" && nextStyleId) {
-        styleId = nextStyleId;
+    setApproach(nextApproachId) {
+      if (typeof nextApproachId === "string" && nextApproachId) {
+        approachId = nextApproachId;
         variantOffset = 0;
       }
     },
@@ -241,6 +195,11 @@ export function initPlan(
     },
     refreshWeekly() {
       variantOffset = 0;
+    },
+    clearSaved() {
+      savedRecord = null;
+      view.renderSavedPlan(null);
+      view.setPageStatus("");
     },
   };
 }

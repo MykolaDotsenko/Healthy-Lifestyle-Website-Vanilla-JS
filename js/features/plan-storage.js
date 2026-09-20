@@ -1,13 +1,17 @@
 export const PLAN_STORAGE_KEY = "nourishflow.saved-plan";
-const PLAN_STORAGE_VERSION = 1;
+const PLAN_STORAGE_VERSION = 2;
+
+function isNonEmptyString(value) {
+  return typeof value === "string" && value.trim().length > 0 && value.length <= 500;
+}
 
 function isMeal(value) {
   return (
     value &&
     typeof value === "object" &&
-    typeof value.slot === "string" &&
-    typeof value.title === "string" &&
-    typeof value.description === "string"
+    isNonEmptyString(value.slot) &&
+    isNonEmptyString(value.title) &&
+    isNonEmptyString(value.description)
   );
 }
 
@@ -15,16 +19,39 @@ function isPlan(value) {
   return (
     value &&
     typeof value === "object" &&
-    typeof value.styleId === "string" &&
-    typeof value.styleLabel === "string" &&
-    typeof value.energy === "string" &&
-    typeof value.title === "string" &&
+    isNonEmptyString(value.approachId) &&
+    isNonEmptyString(value.approachLabel) &&
+    isNonEmptyString(value.energy) &&
+    isNonEmptyString(value.title) &&
+    isNonEmptyString(value.summary) &&
+    Number.isInteger(value.variantIndex) &&
+    value.variantIndex >= 0 &&
+    value.variantIndex < 100 &&
     Array.isArray(value.meals) &&
     value.meals.length === 3 &&
     value.meals.every(isMeal) &&
     Array.isArray(value.shopping) &&
-    value.shopping.every((item) => typeof item === "string")
+    value.shopping.length > 0 &&
+    value.shopping.length <= 24 &&
+    value.shopping.every(isNonEmptyString)
   );
+}
+
+function migrateV1Plan(plan) {
+  if (!plan || typeof plan !== "object") {
+    return null;
+  }
+
+  const migrated = {
+    ...plan,
+    approachId: plan.styleId,
+    approachLabel: plan.styleLabel,
+  };
+
+  delete migrated.styleId;
+  delete migrated.styleLabel;
+
+  return isPlan(migrated) ? migrated : null;
 }
 
 export function savePlan(storage, plan, savedAt = new Date()) {
@@ -60,16 +87,46 @@ export function loadPlan(storage) {
 
     const parsed = JSON.parse(raw);
 
-    if (
-      parsed?.version !== PLAN_STORAGE_VERSION ||
-      typeof parsed.savedAt !== "string" ||
-      !isPlan(parsed.plan)
-    ) {
+    if (typeof parsed?.savedAt !== "string" || Number.isNaN(Date.parse(parsed.savedAt))) {
       return null;
     }
 
-    return parsed;
+    if (parsed.version === PLAN_STORAGE_VERSION && isPlan(parsed.plan)) {
+      return parsed;
+    }
+
+    if (parsed.version === 1) {
+      const migratedPlan = migrateV1Plan(parsed.plan);
+
+      if (!migratedPlan) {
+        return null;
+      }
+
+      const migratedRecord = {
+        version: PLAN_STORAGE_VERSION,
+        savedAt: parsed.savedAt,
+        plan: migratedPlan,
+      };
+
+      storage.setItem(PLAN_STORAGE_KEY, JSON.stringify(migratedRecord));
+      return migratedRecord;
+    }
+
+    return null;
   } catch {
     return null;
+  }
+}
+
+export function removePlan(storage) {
+  if (!storage) {
+    return false;
+  }
+
+  try {
+    storage.removeItem(PLAN_STORAGE_KEY);
+    return true;
+  } catch {
+    return false;
   }
 }

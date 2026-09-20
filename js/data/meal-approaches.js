@@ -1,5 +1,3 @@
-import { getWeeklyCycleIndex } from "./weekly-cycle.js";
-
 function freezePlan(plan) {
   return Object.freeze({
     ...plan,
@@ -8,15 +6,15 @@ function freezePlan(plan) {
   });
 }
 
-function freezeStyle(style) {
+function freezeApproach(style) {
   return Object.freeze({
     ...style,
     weeklyPlans: Object.freeze(style.weeklyPlans.map(freezePlan)),
   });
 }
 
-export const MEAL_STYLES = Object.freeze([
-  freezeStyle({
+export const MEAL_APPROACHES = Object.freeze([
+  freezeApproach({
     id: "whole-food",
     label: "Whole-Food",
     image: "img/tabs/vegy.jpg",
@@ -133,7 +131,7 @@ export const MEAL_STYLES = Object.freeze([
       },
     ],
   }),
-  freezeStyle({
+  freezeApproach({
     id: "mediterranean",
     label: "Mediterranean",
     image: "img/tabs/elite.jpg",
@@ -250,7 +248,7 @@ export const MEAL_STYLES = Object.freeze([
       },
     ],
   }),
-  freezeStyle({
+  freezeApproach({
     id: "plant-based",
     label: "Plant-Based",
     image: "img/tabs/post.jpg",
@@ -367,7 +365,7 @@ export const MEAL_STYLES = Object.freeze([
       },
     ],
   }),
-  freezeStyle({
+  freezeApproach({
     id: "balanced",
     label: "Balanced",
     image: "img/slider/food-12.jpg",
@@ -485,38 +483,3 @@ export const MEAL_STYLES = Object.freeze([
     ],
   }),
 ]);
-
-export function getMealStyle(styleId) {
-  return MEAL_STYLES.find(({ id }) => id === styleId) ?? MEAL_STYLES[0];
-}
-
-export function getPlanVariantCount(styleId) {
-  return getMealStyle(styleId).weeklyPlans.length;
-}
-
-export function getWeeklyMealIdea(styleId, now = new Date(), offset = 0) {
-  const style = getMealStyle(styleId);
-  const count = style.weeklyPlans.length;
-  const cycleIndex = getWeeklyCycleIndex(now);
-  const variantIndex = ((cycleIndex + offset) % count + count) % count;
-  const plan = style.weeklyPlans[variantIndex];
-
-  return {
-    styleId: style.id,
-    styleLabel: style.label,
-    image: style.image,
-    imageBase: style.imageBase,
-    imageWidth: style.imageWidth,
-    imageHeight: style.imageHeight,
-    alt: style.alt,
-    title: plan.title,
-    description: plan.summary,
-    meals: plan.meals,
-    shopping: plan.shopping,
-    variantIndex,
-  };
-}
-
-export function getWeeklyMenu(now = new Date()) {
-  return MEAL_STYLES.map(({ id }) => getWeeklyMealIdea(id, now));
-}

@@ -89,6 +89,26 @@ try {
       `${viewport.width}px: four canonical meal approaches render`,
     );
 
+    await page.locator("#menu-list").scrollIntoViewIfNeeded();
+    await page.waitForFunction(() =>
+      [...document.querySelectorAll(".menu__item img")].every(
+        (image) => image.complete && image.naturalWidth > 0,
+      ),
+    );
+
+    const brokenMenuImages = await page
+      .locator(".menu__item img")
+      .evaluateAll((images) =>
+        images
+          .filter((image) => !image.complete || image.naturalWidth === 0)
+          .map((image) => image.currentSrc || image.src),
+      );
+    assert.deepEqual(
+      brokenMenuImages,
+      [],
+      `${viewport.width}px: all visible weekly menu images should load`,
+    );
+
     if (viewport.width === 320) {
       const selectedImage = await page
         .locator("#plan-whole-food img")
@@ -179,6 +199,19 @@ try {
 
     await mediterraneanTab.click();
 
+    const selectedMenuCard = page.locator(
+      '.menu__item[data-approach-id="mediterranean"]',
+    );
+    assert.equal(
+      await selectedMenuCard.getAttribute("aria-current"),
+      "true",
+      `${viewport.width}px: weekly ideas should highlight the selected approach`,
+    );
+    assert.match(
+      (await selectedMenuCard.locator(".menu__item-week").textContent()) ?? "",
+      /Your current approach/,
+    );
+
     await page.getByRole("button", { name: "Next slide" }).click();
     assert.equal(await page.locator("#current").textContent(), "02");
     assert.match(
@@ -211,7 +244,7 @@ try {
       `${viewport.width}px: dialog should focus its summary heading`,
     );
     assert.equal(
-      await page.locator("[data-plan-style]").textContent(),
+      await page.locator("[data-plan-approach]").textContent(),
       "Mediterranean",
       `${viewport.width}px: plan should use the selected approach`,
     );
@@ -284,7 +317,26 @@ try {
         await page.locator("[data-plan-meals] .plan-meal").count(),
         3,
       );
+      assert.equal(
+        await page.locator("[data-plan-approach]").textContent(),
+        "Mediterranean",
+        "saved plan should restore its original meal approach",
+      );
+
+      await page.getByRole("button", { name: "Another Set" }).click();
+      assert.equal(
+        await page.locator("[data-plan-approach]").textContent(),
+        "Mediterranean",
+        "Another Set after reload must preserve the saved meal approach",
+      );
+
       await page.keyboard.press("Escape");
+      await page.getByRole("button", { name: "Remove Saved Plan" }).click();
+      assert.equal(await page.locator("[data-saved-plan]").isVisible(), false);
+      assert.equal(
+        await page.evaluate(() => localStorage.getItem("nourishflow.saved-plan")),
+        null,
+      );
     }
 
     assert.deepEqual(

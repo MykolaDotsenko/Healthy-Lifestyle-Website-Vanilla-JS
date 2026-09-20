@@ -1,4 +1,4 @@
-import { getWeeklyMenu } from "../domain/meal-styles.js";
+import { getWeeklyPlans } from "../domain/meal-plans.js";
 
 const MENU_IMAGE_SIZES =
   "(min-width: 64rem) 25vw, (min-width: 40rem) 50vw, 100vw";
@@ -30,16 +30,22 @@ function createMenuPicture(item) {
   return picture;
 }
 
-function createMenuCard(item) {
+function createMenuCard(item, selectedApproachId) {
+  const isSelected = item.approachId === selectedApproachId;
   const card = document.createElement("article");
   card.className = "menu__item";
-  card.dataset.styleId = item.styleId;
+  card.classList.toggle("menu__item_selected", isSelected);
+  card.dataset.approachId = item.approachId;
+
+  if (isSelected) {
+    card.setAttribute("aria-current", "true");
+  }
 
   const picture = createMenuPicture(item);
 
   const style = document.createElement("p");
-  style.className = "menu__item-style";
-  style.textContent = item.styleLabel;
+  style.className = "menu__item-approach";
+  style.textContent = item.approachLabel;
 
   const title = document.createElement("h3");
   title.className = "menu__item-subtitle";
@@ -51,7 +57,9 @@ function createMenuCard(item) {
 
   const footer = document.createElement("p");
   footer.className = "menu__item-week";
-  footer.textContent = "This week's meal idea";
+  footer.textContent = isSelected
+    ? "Your current approach · This week's plan"
+    : "This week's meal idea";
 
   card.append(picture, style, title, description, footer);
 
@@ -61,6 +69,7 @@ function createMenuCard(item) {
 export function renderMenu({
   selector = "#menu-list",
   now = new Date(),
+  selectedApproachId = "whole-food",
 } = {}) {
   const container = document.querySelector(selector);
 
@@ -68,16 +77,29 @@ export function renderMenu({
     return;
   }
 
-  const items = getWeeklyMenu(now);
-  container.replaceChildren(...items.map(createMenuCard));
+  const items = getWeeklyPlans(now);
+  container.replaceChildren(
+    ...items.map((item) => createMenuCard(item, selectedApproachId)),
+  );
 }
 
 export function initMenu(options = {}) {
+  let selectedApproachId = options.selectedApproachId ?? "whole-food";
+
   function render(now = new Date()) {
-    renderMenu({ ...options, now });
+    renderMenu({ ...options, now, selectedApproachId });
+  }
+
+  function setSelectedApproach(nextApproachId) {
+    if (typeof nextApproachId !== "string" || !nextApproachId) {
+      return;
+    }
+
+    selectedApproachId = nextApproachId;
+    render();
   }
 
   render();
 
-  return { render };
+  return { render, setSelectedApproach };
 }

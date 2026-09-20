@@ -31,6 +31,6 @@ test("live product metadata and copy avoid portfolio-demo framing", () => {
 test("primary navigation labels describe real destinations", () => {
   assert.match(html, />Meal Approaches<\/a>/);
   assert.match(html, />Calorie Estimate<\/a>/);
-  assert.match(html, /href="#meal-styles"/);
+  assert.match(html, /href="#meal-approaches"/);
   assert.match(html, /href="#calculator"/);
 });

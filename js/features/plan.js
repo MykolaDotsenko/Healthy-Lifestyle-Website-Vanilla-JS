@@ -112,7 +112,7 @@ export function initPlan(
   let currentPlan = null;
   let savedRecord = loadPlan(storage);
 
-  const styleOutput = document.querySelector("[data-plan-style]");
+  const approachOutput = document.querySelector("[data-plan-style]");
   const energyOutput = document.querySelector("[data-plan-energy]");
   const planTitle = document.querySelector("[data-plan-title]");
   const planSummary = document.querySelector("[data-plan-summary]");
@@ -145,7 +145,7 @@ export function initPlan(
   }
 
   function renderPlan(plan) {
-    if (styleOutput) styleOutput.textContent = plan.approachLabel;
+    if (approachOutput) approachOutput.textContent = plan.approachLabel;
     if (energyOutput) energyOutput.textContent = plan.energy;
     if (planTitle) planTitle.textContent = plan.title;
     if (planSummary) planSummary.textContent = plan.summary;
@@ -205,7 +205,7 @@ export function initPlan(
 
     if (savePlan(storage, currentPlan, savedAt)) {
       savedRecord = {
-        version: 1,
+        version: 2,
         savedAt: savedAt.toISOString(),
         plan: currentPlan,
       };

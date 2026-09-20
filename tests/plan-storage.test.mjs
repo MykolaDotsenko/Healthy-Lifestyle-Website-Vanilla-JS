@@ -4,6 +4,7 @@ import test from "node:test";
 import {
   PLAN_STORAGE_KEY,
   loadPlan,
+  removePlan,
   savePlan,
 } from "../js/features/plan-storage.js";
 
@@ -18,6 +19,10 @@ class FakeStorage {
 
   setItem(key, value) {
     this.values.set(key, String(value));
+  }
+
+  removeItem(key) {
+    this.values.delete(key);
   }
 }
 
@@ -64,4 +69,28 @@ test("invalid plan shapes are not persisted", () => {
   const storage = new FakeStorage();
   assert.equal(savePlan(storage, { styleId: "balanced" }), false);
   assert.equal(storage.getItem(PLAN_STORAGE_KEY), null);
+});
+
+test("rejects structurally incomplete saved plans", () => {
+  const storage = new FakeStorage();
+
+  assert.equal(savePlan(storage, { ...plan, summary: "" }), false);
+  assert.equal(savePlan(storage, { ...plan, variantIndex: -1 }), false);
+  assert.equal(savePlan(storage, { ...plan, meals: plan.meals.slice(0, 2) }), false);
+  assert.equal(storage.getItem(PLAN_STORAGE_KEY), null);
+});
+
+test("removes a saved plan without affecting unrelated storage", () => {
+  const storage = new FakeStorage({
+    [PLAN_STORAGE_KEY]: JSON.stringify({
+      version: 1,
+      savedAt: "2026-09-20T12:00:00.000Z",
+      plan,
+    }),
+    unrelated: "keep",
+  });
+
+  assert.equal(removePlan(storage), true);
+  assert.equal(storage.getItem(PLAN_STORAGE_KEY), null);
+  assert.equal(storage.getItem("unrelated"), "keep");
 });

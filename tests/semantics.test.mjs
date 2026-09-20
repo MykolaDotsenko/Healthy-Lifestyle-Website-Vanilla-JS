@@ -56,11 +56,23 @@ test("calculator controls use native labels, groups, and output", () => {
   assert.match(html, /revised Harris–Benedict/);
 });
 
-test("CTA flow starts with the calculator and builds the plan later", () => {
-  assert.match(html, /href="#meal-styles"/);
+test("CTA flow prioritizes the core planning task before planning tips", () => {
+  assert.match(html, /href="#meal-approaches"/);
   assert.ok(count(html, /href="#calculator"/g) >= 2);
   assert.equal(count(html, /data-plan>/g), 1);
   assert.doesNotMatch(html, /href="#"/);
+
+  const order = [
+    'id="meal-approaches"',
+    'id="calculator"',
+    'id="menu"',
+    'aria-labelledby="plan-title"',
+    'class="offer"',
+    'class="weekly"',
+  ].map((marker) => html.indexOf(marker));
+
+  assert.ok(order.every((value) => value >= 0));
+  assert.deepEqual([...order].sort((a, b) => a - b), order);
 });
 
 test("product surface does not request personal information", () => {
@@ -79,6 +91,8 @@ test("plan dialog is labeled and exposes practical actions", () => {
   assert.match(html, /data-copy-plan/);
   assert.match(html, /data-plan-meals/);
   assert.match(html, /data-plan-shopping/);
+  assert.match(html, /data-remove-saved-plan/);
+  assert.match(html, /data-clear-local-data/);
 });
 
 test("carousel controls remain native buttons and slides have visible captions", () => {

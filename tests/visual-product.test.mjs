@@ -21,13 +21,21 @@ test("first screen stays product-first with a real NourishFlow identity", () => 
 });
 
 test("visual system keeps the original light product language", () => {
-  assert.match(css, /--color-surface:\s*#ffffff/);
-  assert.match(css, /--color-surface-blue:\s*rgba\(146, 242, 255, 0\.18\)/);
-  assert.match(css, /--color-surface-yellow:\s*rgba\(249, 254, 126, 0\.28\)/);
-  assert.match(css, /--color-accent:\s*#54ed39/);
+  assert.match(css, /--color-surface:\s*#fffefa/);
+  assert.match(css, /--color-surface-blue:\s*rgba\(215, 239, 233, 0\.52\)/);
+  assert.match(css, /--color-surface-yellow:\s*rgba\(246, 241, 188, 0\.52\)/);
+  assert.match(css, /--color-accent:\s*#79d86d/);
+  assert.match(css, /--color-accent-strong:\s*#2f7d45/);
+  assert.match(css, /--color-accent-soft:\s*#eef9eb/);
   assert.match(css, /\.bgc_blue\s*\{/);
   assert.match(css, /\.offer \.bgc_y\s*\{/);
   assert.doesNotMatch(css, /fonts\.googleapis\.com|\bInter,/);
+});
+
+test("brand treatment stays calm, distinctive, and product-first", () => {
+  assert.match(css, /\.header__link::after\s*\{[\s\S]*block-size:\s*0\.1875rem/);
+  assert.match(css, /\.tabheader__item_active\s*\{[\s\S]*var\(--color-accent-soft\)/);
+  assert.match(css, /\.tabcontent img\s*\{[\s\S]*saturate\(0\.84\)/);
 });
 
 test("first-screen heading has visible product hierarchy", () => {

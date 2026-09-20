@@ -32,19 +32,27 @@ const browser = await chromium.launch({ headless: true });
 
 try {
   for (const viewport of viewports) {
-    const context = await browser.newContext({ viewport });
+    const context = await browser.newContext({
+      viewport,
+      hasTouch: viewport.width <= 390,
+      isMobile: viewport.width <= 390,
+    });
     const page = await context.newPage();
 
     await page.goto(baseUrl, { waitUntil: "domcontentloaded" });
     await assertNoAccessibilityViolations(page, `${viewport.width}px initial page`);
 
-    await page.getByRole("tab", { name: "Premium", exact: true }).click();
+    await page
+      .getByRole("tab", { name: "Mediterranean", exact: true })
+      .click();
     await assertNoAccessibilityViolations(
       page,
       `${viewport.width}px after tab activation`,
     );
 
-    await page.getByRole("button", { name: "Build My Plan" }).first().click();
+    await page
+      .getByRole("button", { name: "Build My Plan", exact: true })
+      .click();
     await assertNoAccessibilityViolations(
       page,
       `${viewport.width}px plan dialog open`,
@@ -57,4 +65,6 @@ try {
   await browser.close();
 }
 
-console.log(`Axe accessibility scan passed for ${viewports.length} viewports and interactive states.`);
+console.log(
+  `Axe accessibility scan passed for ${viewports.length} viewports and interactive states.`,
+);

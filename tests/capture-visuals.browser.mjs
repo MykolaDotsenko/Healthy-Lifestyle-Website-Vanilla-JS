@@ -13,6 +13,14 @@ const shots = [
 async function loadLazyContent(page) {
   await page.evaluate(async () => {
     const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    const images = [...document.images];
+
+    for (const image of images) {
+      if (image.loading === "lazy") {
+        image.loading = "eager";
+      }
+    }
+
     const step = Math.max(420, Math.floor(window.innerHeight * 0.7));
 
     for (let y = 0; y < document.documentElement.scrollHeight; y += step) {
@@ -20,19 +28,25 @@ async function loadLazyContent(page) {
       await delay(80);
     }
 
-    window.scrollTo(0, document.documentElement.scrollHeight);
-    await delay(160);
-    window.scrollTo(0, 0);
-  });
+    const settleImages = Promise.allSettled(
+      images.map(
+        (image) =>
+          new Promise((resolve) => {
+            if (image.complete) {
+              resolve();
+              return;
+            }
 
-  await page.waitForFunction(
-    () =>
-      [...document.images].every(
-        (image) => image.loading !== "lazy" || image.complete,
+            image.addEventListener("load", resolve, { once: true });
+            image.addEventListener("error", resolve, { once: true });
+          }),
       ),
-    null,
-    { timeout: 5_000 },
-  );
+    );
+
+    await Promise.race([settleImages, delay(4_000)]);
+    window.scrollTo(0, 0);
+    await delay(120);
+  });
 }
 
 await mkdir(outputDir, { recursive: true });

@@ -20,7 +20,8 @@ test("carousel layout styling stays in CSS instead of JavaScript", () => {
 });
 
 test("carousel keeps native figure semantics and accessible button pickers", () => {
-  assert.doesNotMatch(source, /aria-roledescription|setAttribute\("role", "group"\)/);
+  assert.doesNotMatch(source, /aria-roledescription/);
+  assert.doesNotMatch(source, /slide\.setAttribute\("role"/);
   assert.match(source, /carousel-indicator/);
   assert.match(source, /aria-current/);
   assert.match(source, /aria-disabled/);

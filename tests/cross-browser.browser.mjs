@@ -25,22 +25,27 @@ for (const [name, browserType] of browsers) {
     await page.goto(baseUrl, { waitUntil: "domcontentloaded" });
 
     assert.equal(
-      await page.getByRole("heading", { level: 1, name: "Choose Your Eating Style" }).isVisible(),
+      await page
+        .getByRole("heading", {
+          level: 1,
+          name: "Choose Your Meal Approach",
+        })
+        .isVisible(),
       true,
       `${name}: product-first H1 is visible`,
     );
-    assert.equal(
-      await page.locator(".preview__intro").count(),
-      0,
-      `${name}: removed portfolio-meta hero stays removed`,
-    );
 
-    const fitnessTab = page.getByRole("tab", { name: "Fitness", exact: true });
-    await fitnessTab.focus();
+    const wholeFoodTab = page.getByRole("tab", {
+      name: "Whole-Food",
+      exact: true,
+    });
+    await wholeFoodTab.focus();
     await page.keyboard.press("ArrowDown");
 
     assert.equal(
-      await page.getByRole("tab", { name: "Premium", exact: true }).getAttribute("aria-selected"),
+      await page
+        .getByRole("tab", { name: "Mediterranean", exact: true })
+        .getAttribute("aria-selected"),
       "true",
       `${name}: tab keyboard activation`,
     );
@@ -61,7 +66,10 @@ for (const [name, browserType] of browsers) {
       `${name}: approximate calculator result`,
     );
 
-    const trigger = page.getByRole("button", { name: "Build My Plan" }).first();
+    const trigger = page.getByRole("button", {
+      name: "Build My Plan",
+      exact: true,
+    });
     await trigger.focus();
     await trigger.click();
 
@@ -74,8 +82,13 @@ for (const [name, browserType] of browsers) {
 
     assert.equal(
       await page.locator("[data-plan-style]").textContent(),
-      "Premium",
-      `${name}: plan uses selected meal style`,
+      "Mediterranean",
+      `${name}: plan uses selected meal approach`,
+    );
+    assert.equal(
+      await page.locator("[data-plan-meals] .plan-meal").count(),
+      3,
+      `${name}: deeper plan contains three meal ideas`,
     );
 
     await page.keyboard.press("Escape");

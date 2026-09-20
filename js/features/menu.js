@@ -73,9 +73,11 @@ export function renderMenu({
 }
 
 export function initMenu(options = {}) {
-  renderMenu(options);
+  function render(now = new Date()) {
+    renderMenu({ ...options, now });
+  }
 
-  document.addEventListener("nourishflow:weekly-refresh", () => {
-    renderMenu({ ...options, now: new Date() });
-  });
+  render();
+
+  return { render };
 }

@@ -7,9 +7,15 @@ import { initModal } from "./ui/modal.js";
 import { initTabs } from "./ui/tabs.js";
 
 const modal = initModal();
-initPlan(modal);
-initTabs();
-initTimer();
-initMenu();
+const plan = initPlan(modal);
+const menu = initMenu();
+
+initTabs({ onChange: plan.setStyle });
+initTimer({
+  onRefresh() {
+    menu.render();
+    plan.refreshWeekly();
+  },
+});
 initCarousel();
-initCalculator();
+initCalculator({ onEstimate: plan.setCalories });

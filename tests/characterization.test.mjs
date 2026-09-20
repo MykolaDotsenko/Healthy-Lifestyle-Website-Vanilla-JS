@@ -50,11 +50,11 @@ test("composition owns cross-feature wiring explicitly", () => {
     assert.match(app, new RegExp("\\b" + name + "\\b"));
   }
 
-  assert.match(app, /plan\.setStyle\(styleId\)/);
-  assert.match(app, /menu\.setSelectedStyle\(styleId\)/);
+  assert.match(app, /plan\.setApproach\(approachId\)/);
+  assert.match(app, /menu\.setSelectedApproach\(approachId\)/);
   assert.match(app, /onEstimate:\s*plan\.setCalories/);
   assert.match(app, /onRefresh/);
-  assert.match(menu, /getWeeklyMenu/);
+  assert.match(menu, /getWeeklyPlans/);
   assert.match(plan, /buildPlanSummary/);
   assert.doesNotMatch([app, plan, timer].join("\n"), /CustomEvent|nourishflow:/);
 });

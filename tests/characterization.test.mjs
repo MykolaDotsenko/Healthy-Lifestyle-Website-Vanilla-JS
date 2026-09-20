@@ -33,6 +33,8 @@ test("core product surface stays intact", () => {
   assert.match(html, />Build My Plan<\/button>/);
   assert.match(html, /id="plan-dialog"/);
   assert.match(html, /data-saved-plan/);
+  assert.match(html, /data-remove-saved-plan/);
+  assert.match(html, /data-clear-local-data/);
 });
 
 test("composition owns cross-feature wiring explicitly", () => {
@@ -48,7 +50,8 @@ test("composition owns cross-feature wiring explicitly", () => {
     assert.match(app, new RegExp("\\b" + name + "\\b"));
   }
 
-  assert.match(app, /onChange:\s*plan\.setStyle/);
+  assert.match(app, /plan\.setStyle\(styleId\)/);
+  assert.match(app, /menu\.setSelectedStyle\(styleId\)/);
   assert.match(app, /onEstimate:\s*plan\.setCalories/);
   assert.match(app, /onRefresh/);
   assert.match(menu, /getWeeklyMenu/);

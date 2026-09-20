@@ -1,7 +1,7 @@
 import {
   getPlanVariantCount,
-  getWeeklyMealIdea,
-} from "../domain/meal-styles.js";
+  getWeeklyPlan,
+} from "../domain/meal-plans.js";
 import { loadPlan, removePlan, savePlan } from "./plan-storage.js";
 
 export function formatCalories(calories) {
@@ -14,17 +14,17 @@ export function formatCalories(calories) {
 }
 
 export function buildPlanSummary({
-  styleId = "whole-food",
+  approachId = "whole-food",
   calories = null,
   energyText = null,
   now = new Date(),
   offset = 0,
 } = {}) {
-  const meal = getWeeklyMealIdea(styleId, now, offset);
+  const meal = getWeeklyPlan(approachId, now, offset);
 
   return {
-    styleId: meal.styleId,
-    styleLabel: meal.styleLabel,
+    approachId: meal.approachId,
+    approachLabel: meal.approachLabel,
     energy: energyText ?? formatCalories(calories),
     title: meal.title,
     summary: meal.description,
@@ -42,7 +42,7 @@ export function formatPlanText(plan) {
 
   return [
     "NourishFlow plan",
-    `Meal approach: ${plan.styleLabel}`,
+    `Meal approach: ${plan.approachLabel}`,
     `Daily energy: ${plan.energy}`,
     `Plan: ${plan.title}`,
     "",
@@ -106,7 +106,7 @@ export function initPlan(
     getNow = () => new Date(),
   } = {},
 ) {
-  let styleId = "whole-food";
+  let approachId = "whole-food";
   let calories = null;
   let variantOffset = 0;
   let currentPlan = null;
@@ -140,12 +140,12 @@ export function initPlan(
     }
 
     savedTitle.textContent =
-      `${savedRecord.plan.styleLabel} · ${savedRecord.plan.title}`;
+      `${savedRecord.plan.approachLabel} · ${savedRecord.plan.title}`;
     savedMeta.textContent = formatSavedDate(savedRecord.savedAt);
   }
 
   function renderPlan(plan) {
-    if (styleOutput) styleOutput.textContent = plan.styleLabel;
+    if (styleOutput) styleOutput.textContent = plan.approachLabel;
     if (energyOutput) energyOutput.textContent = plan.energy;
     if (planTitle) planTitle.textContent = plan.title;
     if (planSummary) planSummary.textContent = plan.summary;
@@ -164,7 +164,7 @@ export function initPlan(
   function openCurrentPlan({ energyText = null } = {}) {
     openPlan(
       buildPlanSummary({
-        styleId,
+        approachId,
         calories,
         energyText,
         now: getNow(),
@@ -174,9 +174,9 @@ export function initPlan(
   }
 
   function alignStateToPlan(plan) {
-    styleId = plan.styleId;
-    const variantCount = getPlanVariantCount(styleId);
-    const baseline = getWeeklyMealIdea(styleId, getNow(), 0).variantIndex;
+    approachId = plan.approachId;
+    const variantCount = getPlanVariantCount(approachId);
+    const baseline = getWeeklyPlan(approachId, getNow(), 0).variantIndex;
     variantOffset =
       ((plan.variantIndex - baseline) % variantCount + variantCount) %
       variantCount;
@@ -227,7 +227,7 @@ export function initPlan(
   swapButton?.addEventListener("click", () => {
     const preservedEnergy = currentPlan?.energy ?? null;
     variantOffset =
-      (variantOffset + 1) % getPlanVariantCount(styleId);
+      (variantOffset + 1) % getPlanVariantCount(approachId);
     openCurrentPlan({ energyText: preservedEnergy });
   });
 
@@ -258,9 +258,9 @@ export function initPlan(
   renderSavedPlan();
 
   return {
-    setStyle(nextStyleId) {
-      if (typeof nextStyleId === "string" && nextStyleId) {
-        styleId = nextStyleId;
+    setApproach(nextApproachId) {
+      if (typeof nextApproachId === "string" && nextApproachId) {
+        approachId = nextApproachId;
         variantOffset = 0;
       }
     },

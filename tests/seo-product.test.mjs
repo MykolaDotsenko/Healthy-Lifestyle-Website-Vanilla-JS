@@ -8,7 +8,7 @@ const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const html = await readFile(resolve(root, "index.html"), "utf8");
 
 test("document exposes product-first metadata", () => {
-  assert.match(html, /<title>NourishFlow — Meal Ideas & Daily Energy<\/title>/);
+  assert.match(html, /<title>NourishFlow — Meal Ideas &amp; Daily Energy<\/title>/);
   assert.match(html, /name="description"/);
   assert.match(html, /rel="canonical"/);
   assert.match(html, /property="og:title"/);
@@ -25,7 +25,7 @@ test("live product metadata and copy avoid portfolio-demo framing", () => {
   );
   assert.doesNotMatch(html, /Preview Request|Demo price:|Nothing was sent or stored/i);
   assert.match(html, /Build My Plan/);
-  assert.match(html, /Meal Ideas & Daily Energy/);
+  assert.match(html, /Meal Ideas &amp; Daily Energy/);
 });
 
 test("primary navigation labels describe real destinations", () => {

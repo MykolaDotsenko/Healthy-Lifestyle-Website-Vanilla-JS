@@ -2,7 +2,7 @@ import {
   getPlanVariantCount,
   getWeeklyMealIdea,
 } from "../domain/meal-styles.js";
-import { loadPlan, savePlan } from "./plan-storage.js";
+import { loadPlan, removePlan, savePlan } from "./plan-storage.js";
 
 export function formatCalories(calories) {
   if (!Number.isFinite(calories)) {
@@ -16,6 +16,7 @@ export function formatCalories(calories) {
 export function buildPlanSummary({
   styleId = "whole-food",
   calories = null,
+  energyText = null,
   now = new Date(),
   offset = 0,
 } = {}) {
@@ -24,7 +25,7 @@ export function buildPlanSummary({
   return {
     styleId: meal.styleId,
     styleLabel: meal.styleLabel,
-    energy: formatCalories(calories),
+    energy: energyText ?? formatCalories(calories),
     title: meal.title,
     summary: meal.description,
     meals: meal.meals.map((item) => ({ ...item })),
@@ -122,6 +123,7 @@ export function initPlan(
   const savedTitle = document.querySelector("[data-saved-plan-title]");
   const savedMeta = document.querySelector("[data-saved-plan-meta]");
   const savedOpenButton = document.querySelector("[data-open-saved-plan]");
+  const removeSavedButton = document.querySelector("[data-remove-saved-plan]");
   const swapButton = document.querySelector("[data-swap-plan]");
   const saveButton = document.querySelector("[data-save-plan]");
   const copyButton = document.querySelector("[data-copy-plan]");
@@ -159,15 +161,25 @@ export function initPlan(
     modal.open();
   }
 
-  function openCurrentPlan() {
+  function openCurrentPlan({ energyText = null } = {}) {
     openPlan(
       buildPlanSummary({
         styleId,
         calories,
+        energyText,
         now: getNow(),
         offset: variantOffset,
       }),
     );
+  }
+
+  function alignStateToPlan(plan) {
+    styleId = plan.styleId;
+    const variantCount = getPlanVariantCount(styleId);
+    const baseline = getWeeklyMealIdea(styleId, getNow(), 0).variantIndex;
+    variantOffset =
+      ((plan.variantIndex - baseline) % variantCount + variantCount) %
+      variantCount;
   }
 
   async function copyCurrentPlan() {
@@ -213,9 +225,10 @@ export function initPlan(
   });
 
   swapButton?.addEventListener("click", () => {
+    const preservedEnergy = currentPlan?.energy ?? null;
     variantOffset =
       (variantOffset + 1) % getPlanVariantCount(styleId);
-    openCurrentPlan();
+    openCurrentPlan({ energyText: preservedEnergy });
   });
 
   saveButton?.addEventListener("click", saveCurrentPlan);
@@ -223,7 +236,22 @@ export function initPlan(
 
   savedOpenButton?.addEventListener("click", () => {
     if (savedRecord) {
+      alignStateToPlan(savedRecord.plan);
       openPlan(savedRecord.plan);
+    }
+  });
+
+  removeSavedButton?.addEventListener("click", () => {
+    if (!savedRecord) {
+      return;
+    }
+
+    if (removePlan(storage)) {
+      savedRecord = null;
+      renderSavedPlan();
+      if (status) {
+        status.textContent = "Saved plan removed from this device.";
+      }
     }
   });
 

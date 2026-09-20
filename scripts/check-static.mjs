@@ -3,7 +3,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
-const forbiddenMergeMarkers = ["<<<<<<<", "=======", ">>>>>>>"];
+const mergeMarkerPattern = /^(?:<<<<<<< .+|=======|>>>>>>> .+)$/m;
 
 async function read(relativePath) {
   return readFile(resolve(root, relativePath), "utf8");
@@ -75,10 +75,8 @@ async function assertNoMergeMarkers() {
 
   for (const relativePath of sourceFiles) {
     const content = await read(relativePath);
-    for (const marker of forbiddenMergeMarkers) {
-      if (content.includes(marker)) {
-        throw new Error(`${relativePath} contains unresolved merge marker: ${marker}`);
-      }
+    if (mergeMarkerPattern.test(content)) {
+      throw new Error(`${relativePath} contains an unresolved merge marker`);
     }
   }
 }

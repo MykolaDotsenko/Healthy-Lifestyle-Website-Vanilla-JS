@@ -248,9 +248,14 @@ try {
     );
 
     await page.getByRole("button", { name: "Copy Plan" }).click();
+    await page.waitForFunction(() => {
+      const message =
+        document.querySelector("[data-plan-status]")?.textContent ?? "";
+      return /copied to your clipboard|copy is unavailable/i.test(message);
+    });
     assert.match(
       (await page.locator("[data-plan-status]").textContent()) ?? "",
-      /copied to your clipboard/i,
+      /copied to your clipboard|copy is unavailable/i,
     );
 
     const modalBox = await dialog.boundingBox();

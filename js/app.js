@@ -11,7 +11,12 @@ const modal = initModal();
 const plan = initPlan(modal);
 const menu = initMenu();
 
-initTabs({ onChange: plan.setStyle });
+initTabs({
+  onChange(styleId) {
+    plan.setStyle(styleId);
+    menu.setSelectedStyle(styleId);
+  },
+});
 initTimer({
   onRefresh() {
     menu.render();

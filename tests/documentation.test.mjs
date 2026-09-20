@@ -19,6 +19,7 @@ test("README presents the useful product flow before engineering detail", () => 
   assert.match(readme, /Morning, Midday, and Evening/);
   assert.match(readme, /save one plan locally/i);
   assert.match(readme, /Privacy and product integrity/);
+  assert.match(readme, /img\/brand\/nourishflow-readme-preview\.png/);
   assert.doesNotMatch(
     readme,
     /Request forms are local-only demos|Current feature baseline|Known baseline limitations/,

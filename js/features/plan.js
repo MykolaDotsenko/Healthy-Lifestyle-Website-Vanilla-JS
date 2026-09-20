@@ -1,12 +1,27 @@
 import { getWeeklyMealIdea } from "../domain/meal-styles.js";
 
-function formatCalories(calories) {
+export function formatCalories(calories) {
   if (!Number.isFinite(calories)) {
     return "Add your details in the energy calculator";
   }
 
   const rounded = Math.round(calories / 10) * 10;
   return `≈ ${new Intl.NumberFormat().format(rounded)} kcal/day`;
+}
+
+export function buildPlanSummary({
+  styleId = "fitness",
+  calories = null,
+  now = new Date(),
+} = {}) {
+  const meal = getWeeklyMealIdea(styleId, now);
+
+  return {
+    styleLabel: meal.styleLabel,
+    energy: formatCalories(calories),
+    mealTitle: meal.title,
+    mealDescription: meal.description,
+  };
 }
 
 export function initPlan(modal) {
@@ -44,13 +59,7 @@ export function initPlan(modal) {
 
   document.querySelectorAll("[data-plan]").forEach((trigger) => {
     trigger.addEventListener("click", () => {
-      const meal = getWeeklyMealIdea(styleId);
-      const plan = {
-        styleLabel: meal.styleLabel,
-        energy: formatCalories(calories),
-        mealTitle: meal.title,
-        mealDescription: meal.description,
-      };
+      const plan = buildPlanSummary({ styleId, calories });
 
       const styleOutput = document.querySelector("[data-plan-style]");
       const energyOutput = document.querySelector("[data-plan-energy]");

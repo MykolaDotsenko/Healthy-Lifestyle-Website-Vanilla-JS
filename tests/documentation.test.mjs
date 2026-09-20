@@ -13,28 +13,37 @@ const [readme, architecture, quality, license, pkg] = await Promise.all([
   readFile(resolve(root, "package.json"), "utf8"),
 ]);
 
-test("README presents the product before implementation history", () => {
+test("README presents the useful product flow before engineering detail", () => {
   assert.match(readme, /^# NourishFlow/m);
-  assert.match(readme, /Why this project exists/);
-  assert.match(readme, /What it demonstrates/);
+  assert.match(readme, /## Product/);
+  assert.match(readme, /Morning, Midday, and Evening/);
+  assert.match(readme, /save one plan locally/i);
   assert.match(readme, /Privacy and product integrity/);
-  assert.doesNotMatch(readme, /Current feature baseline|Known baseline limitations|later roadmap PRs/);
+  assert.doesNotMatch(
+    readme,
+    /Request forms are local-only demos|Current feature baseline|Known baseline limitations/,
+  );
 });
 
-test("architecture documentation matches the current module surface", () => {
+test("architecture documentation matches explicit composition and persistence", () => {
   assert.match(architecture, /domain\/calculator\.js/);
-  assert.match(architecture, /calculator-storage\.js/);
-  assert.match(architecture, /timer\.js/);
-  assert.match(architecture, /rolling|rolls forward|weekly boundary/i);
+  assert.match(architecture, /plan-storage\.js/);
+  assert.match(architecture, /onChange/);
+  assert.match(architecture, /onEstimate/);
+  assert.match(architecture, /onRefresh/);
+  assert.match(architecture, /Monday 09:00 boundary/i);
   assert.match(architecture, /Deliberate non-goals/);
+  assert.doesNotMatch(architecture, /document-level event bus.*used/i);
 });
 
-test("quality documentation names executable browser gates", () => {
+test("quality documentation names executable browser and visual gates", () => {
   assert.match(quality, /Automated accessibility/);
   assert.match(quality, /Chromium/);
   assert.match(quality, /Firefox/);
   assert.match(quality, /WebKit/);
   assert.match(quality, /320 × 800/);
+  assert.match(quality, /Visual audit artifacts/);
+  assert.match(quality, /nourishflow-visual-audit/);
 });
 
 test("package and repository license/description agree with current product", () => {

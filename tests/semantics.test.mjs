@@ -27,7 +27,14 @@ test("tabs expose the WAI tab contract in logical DOM order", () => {
   assert.equal(count(html, /role="tab"/g), 4);
   assert.equal(count(html, /role="tabpanel"/g), 4);
   assert.equal(count(html, /aria-selected="true"/g), 1);
-  assert.equal(count(html, /tabindex="-1"/g), 3);
+
+  const tabButtons = [
+    ...html.matchAll(/<button(?=[^>]*role="tab")[^>]*>[\s\S]*?<\/button>/g),
+  ].map((match) => match[0]);
+  assert.equal(
+    tabButtons.filter((button) => button.includes('tabindex="-1"')).length,
+    3,
+  );
   assert.match(html, /aria-orientation="vertical"/);
   assert.ok(
     html.indexOf('role="tablist"') < html.indexOf('role="tabpanel"'),

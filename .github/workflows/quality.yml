@@ -61,3 +61,13 @@ jobs:
           node tests/reflow.browser.mjs
           node tests/accessibility.browser.mjs
           node tests/cross-browser.browser.mjs
+          node tests/capture-visuals.browser.mjs
+
+      - name: Upload visual audit screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nourishflow-visual-audit
+          path: artifacts/visual-audit/*.png
+          if-no-files-found: error
+          retention-days: 7

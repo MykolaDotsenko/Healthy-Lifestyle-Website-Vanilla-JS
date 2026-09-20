@@ -270,5 +270,9 @@ export function initPlan(
     refreshWeekly() {
       variantOffset = 0;
     },
+    clearSaved() {
+      savedRecord = null;
+      renderSavedPlan();
+    },
   };
 }

@@ -857,7 +857,7 @@
     line-height: 1.65;
   }
 
-  .form-note {
+  .plan-note {
     margin-block-start: var(--space-3);
     color: var(--color-text-muted);
     font-size: 0.875rem;
@@ -1100,7 +1100,7 @@
     inline-size: 100%;
   }
 
-  .menu__item-style,
+  .menu__item-approach,
   .menu__item-week {
     padding-inline: var(--space-5);
     color: var(--color-text-muted);
@@ -1109,7 +1109,7 @@
     letter-spacing: 0.04em;
   }
 
-  .menu__item-style {
+  .menu__item-approach {
     margin-block-start: var(--space-4);
   }
 

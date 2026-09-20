@@ -244,7 +244,7 @@ try {
       `${viewport.width}px: dialog should focus its summary heading`,
     );
     assert.equal(
-      await page.locator("[data-plan-style]").textContent(),
+      await page.locator("[data-plan-approach]").textContent(),
       "Mediterranean",
       `${viewport.width}px: plan should use the selected approach`,
     );
@@ -318,14 +318,14 @@ try {
         3,
       );
       assert.equal(
-        await page.locator("[data-plan-style]").textContent(),
+        await page.locator("[data-plan-approach]").textContent(),
         "Mediterranean",
         "saved plan should restore its original meal approach",
       );
 
       await page.getByRole("button", { name: "Another Set" }).click();
       assert.equal(
-        await page.locator("[data-plan-style]").textContent(),
+        await page.locator("[data-plan-approach]").textContent(),
         "Mediterranean",
         "Another Set after reload must preserve the saved meal approach",
       );

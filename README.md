@@ -23,8 +23,8 @@ It is intentionally **not** presented as a functioning meal-delivery company. Re
 | Carousel | Index-based, resize-safe, button-controlled, no autoplay |
 | Dialog | Native `<dialog>`, initial focus, Escape, focus restoration |
 | Calculator | Pure domain calculation, validation, safe versioned preferences |
-| Forms | Native validation, explicit local-only privacy boundary |
-| Timer | Rolling weekly menu-refresh countdown that never goes negative |
+| Plan | Local meal-style + energy + weekly-idea summary with clipboard copy |
+| Weekly cycle | Deterministic Monday rotation shared by the menu and countdown |
 | Performance | Responsive AVIF/WebP sources, JPEG fallback, intrinsic sizing, lazy below-fold media |
 | Quality | Unit/static checks, HTML validation, axe, responsive and cross-browser journeys |
 
@@ -34,7 +34,9 @@ It is intentionally **not** presented as a functioning meal-delivery company. Re
 js/
 ├── app.js
 ├── domain/
-│   └── calculator.js
+│   ├── calculator.js
+│   ├── meal-styles.js
+│   └── weekly-cycle.js
 ├── ui/
 │   ├── modal.js
 │   └── tabs.js
@@ -42,12 +44,12 @@ js/
     ├── calculator.js
     ├── calculator-storage.js
     ├── carousel.js
-    ├── forms.js
     ├── menu.js
+    ├── plan.js
     └── timer.js
 ```
 
-`app.js` is the composition root. The calculator keeps formula/validation logic independent from the DOM. Persistence is isolated behind a small storage adapter. Features stay shallow and explicit rather than introducing framework-like abstractions.
+`app.js` is the composition root. Calculator rules, meal-style data, and weekly-cycle logic live in browser-independent domain modules. Persistence is isolated behind a small storage adapter, while the plan feature coordinates selected style and energy events without introducing global state infrastructure.
 
 See [ARCHITECTURE.md](ARCHITECTURE.md) for boundaries and trade-offs.
 
@@ -86,11 +88,11 @@ node scripts/optimize-images.mjs
 
 ## Privacy and product integrity
 
-- request forms do not call a backend;
-- no request payload is persisted;
-- the countdown tracks a transparent weekly menu-refresh cycle rather than a fake promotion deadline;
-- intrusive timed/scroll-triggered modal opening was removed;
-- calorie output is labeled as a general-information adult estimate, not medical advice.
+- the product asks for no name, phone number, account, or other personal details;
+- only calculator preferences are stored locally in a versioned key;
+- unknown future storage schemas are preserved rather than destructively downgraded;
+- meal ideas genuinely rotate on the same Monday boundary shown by the countdown;
+- calorie output is presented as an approximate general-information adult maintenance estimate, not medical advice.
 
 ## Run locally
 
@@ -119,7 +121,7 @@ See [QUALITY.md](QUALITY.md) for the complete verification model.
 
 - **No framework:** chosen deliberately to expose web-platform fundamentals and keep runtime complexity low.
 - **No bundler:** native modules are sufficient for this project size.
-- **Static forms:** honest demo behavior is preferred over a fake or unreliable backend.
+- **Local plan:** the useful end state is a copyable summary rather than a fake request submission or simulated backend.
 - **JPEG fallbacks retained:** originals remain for compatibility and social-preview safety, while supporting browsers receive responsive AVIF/WebP sources.
 - **Calculator formula preserved:** architecture and validation were improved without silently changing the original calculation model.
 

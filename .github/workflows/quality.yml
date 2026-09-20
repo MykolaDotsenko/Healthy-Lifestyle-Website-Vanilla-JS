@@ -64,7 +64,7 @@ jobs:
           node tests/capture-visuals.browser.mjs
 
       - name: Upload visual audit screenshots
-        if: always()
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: nourishflow-visual-audit

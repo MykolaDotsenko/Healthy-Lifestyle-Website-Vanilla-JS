@@ -30,8 +30,15 @@ export function initTabs() {
       panel.classList.toggle("fade", isActive);
     });
 
+    const activeTab = tabs[activeIndex];
+    document.dispatchEvent(
+      new CustomEvent("nourishflow:meal-style", {
+        detail: { styleId: activeTab.dataset.styleId ?? "" },
+      }),
+    );
+
     if (focus) {
-      tabs[activeIndex].focus();
+      activeTab.focus();
     }
   }
 

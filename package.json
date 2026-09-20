@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "node scripts/serve.mjs",
     "check:static": "node scripts/check-static.mjs",
-    "test": "node --test tests/characterization.test.mjs tests/semantics.test.mjs tests/responsive-css.test.mjs tests/architecture.test.mjs tests/calculator-domain.test.mjs tests/calculator-storage.test.mjs tests/tabs-accessibility.test.mjs tests/carousel.test.mjs tests/dialog.test.mjs tests/promotion.test.mjs tests/performance.test.mjs tests/seo-product.test.mjs tests/visual-product.test.mjs tests/documentation.test.mjs tests/hygiene.test.mjs tests/meal-plans.test.mjs tests/plan.test.mjs tests/plan-storage.test.mjs tests/local-data.test.mjs",
+    "test": "node --test tests/characterization.test.mjs tests/semantics.test.mjs tests/responsive-css.test.mjs tests/architecture.test.mjs tests/calculator-domain.test.mjs tests/calculator-storage.test.mjs tests/tabs-accessibility.test.mjs tests/carousel.test.mjs tests/dialog.test.mjs tests/promotion.test.mjs tests/performance.test.mjs tests/seo-product.test.mjs tests/visual-product.test.mjs tests/documentation.test.mjs tests/hygiene.test.mjs tests/meal-plans.test.mjs tests/plan.test.mjs tests/plan-storage.test.mjs tests/local-data.test.mjs tests/deployment.test.mjs",
     "check": "npm run check:syntax && npm run check:static && npm test",
     "check:syntax": "node scripts/check-syntax.mjs"
   },

@@ -51,7 +51,7 @@ test("legacy placeholder responsive rules are gone", () => {
 
 
 test("mobile-first product chrome stays compact at 320-390px", () => {
-  assert.match(css, /--section-space:\s*clamp\(2\.75rem, 8vw, 6\.5rem\)/);
+  assert.match(css, /--section-space:\s*clamp\(2\.5rem, 7vw, 5\.75rem\)/);
   assert.match(css, /\.header__links\s*\{[^}]*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/s);
   assert.match(css, /\.tabheader\s*\{[^}]*padding:\s*var\(--space-4\)/s);
   assert.match(css, /\.header__right-block \.btn,[\s\S]*\.offer__action \.btn\s*\{[^}]*inline-size:\s*100%/s);
